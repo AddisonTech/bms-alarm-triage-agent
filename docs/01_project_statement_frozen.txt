@@ -1,0 +1,174 @@
+AGENT PRO -- WEEK 1 PROJECT STATEMENT
+AS INITIALLY CONCEIVED (FROZEN)
+ASCII ONLY
+TEMPLATE AUTHOR PAUL NUSSBAUM, PHD
+PROJECT IDEA AUTHOR: Addison Smith
+
+## PURPOSE OF THIS DOCUMENT
+
+This captures the student's project idea as first conceived, in plain
+language, before domain research and before any code. It is filled in
+from the answers gathered using ProjectIdea_Questions.txt.
+
+Once the student approves it, this document is FROZEN. Do NOT edit it
+later to reflect what was learned or what changed. New discoveries from
+subject-matter experts, online research, and implementation belong in
+separate documents (a research delta and an as-built reconciliation), so
+that the change over time stays visible. The gap between this first idea
+and what actually gets built is one of the most valuable parts of the
+student's portfolio, and it only exists if this document stays frozen.
+
+This is a high-level statement. It does not record the ten design-domain
+decisions or the detailed build decisions -- those are made later and
+live in their own documents.
+
+FIELD NOTE
+A field answered with "Not applicable," "Not decided yet," or "Unsure"
+is a complete, valid answer at this stage. Do not leave a field blank;
+record the honest answer.
+
+========================================================================
+PROJECT STATEMENT
+=================
+
+PROJECT NAME:
+BMS Alarm Triage Agent
+
+DATE FROZEN:
+Not frozen yet -- pending approval
+
+DOMAIN
+Building automation systems, facilities operations, and controls
+engineering. This project comes from my professional experience working
+with building equipment and controls and from my move into a controls
+engineering role where reviewing alarm data across buildings is part of
+the work.
+
+THE PROBLEM
+A building automation system in a commercial or industrial facility can
+generate hundreds of alarms per day. Many are nuisance alarms, such as
+chattering sensors, alarms that clear by themselves, or repeated reports
+of the same condition.
+
+Important problems can become buried in that volume. Engineers may stop
+paying close attention to the alarm queue, causing real failures to be
+discovered later through occupant complaints instead of earlier through
+the data the building system already produced.
+
+PRIMARY USER
+The primary user is a controls or facilities engineer responsible for
+one or more buildings who needs to review an overnight alarm queue.
+
+A service manager deciding which sites or conditions require attention
+could also benefit from the results later.
+
+WHY I CARE
+This problem is personal to me because I have spent my career working
+on the equipment side of building automation, including wiring,
+commissioning, and troubleshooting the systems that generate these
+alarms.
+
+I am moving into a controls engineering role where reviewing alarm data
+will be part of my work, so this project addresses a real problem I
+expect to encounter professionally.
+
+HOW IT IS DONE TODAY
+A controls or facilities engineer reviews the alarm queue manually,
+identifies repeated or nuisance alarms, decides which conditions appear
+important, and looks at related trend data when additional context is
+needed.
+
+The engineer then uses that information and professional judgment to
+decide which problems deserve attention first.
+
+WHAT THE AGENT COULD DO
+The agent would take an exported alarm log and the corresponding trend
+data for a defined period.
+
+It would identify repeated occurrences of the same condition so they do
+not overwhelm the results, determine which conditions appear most worthy
+of investigation, examine the related trend information when needed,
+and produce a short ranked list of the conditions a human engineer
+should look at first.
+
+For each item, the agent would provide a reason for the ranking and a
+recommended next action. If it does not have enough evidence to classify
+a condition, it would identify that condition as unresolved rather than
+guessing.
+
+The agent would recommend what deserves attention. It would not make
+changes to a building automation system.
+
+WHAT "WORKING" WOULD LOOK LIKE
+A good result would reduce a large raw alarm queue to a much smaller
+list of distinct conditions while still placing the important conditions
+near the top.
+
+The output should avoid unnecessary nuisance escalations and should
+provide evidence supporting each condition it ranks.
+
+I would evaluate the project against a labeled set of alarm examples.
+My initial target is for at least four of five conditions that should be
+escalated to appear in the agent's top five, while greatly reducing the
+raw alarm volume and keeping false escalations low.
+
+DOES IT NEED AN AGENT? (FIT CHECK)
+Task repeats:                 yes
+Output can be auto-judged:    yes
+Agent can work end to end:    yes
+"Done" is objective:          yes
+Verdict:
+An autonomous agent appears to be a good fit because the information
+needed for later steps depends on what the agent discovers in earlier
+steps. It may first identify a suspicious alarm condition, then examine
+the related trend data, reevaluate the condition, and decide whether
+additional investigation is necessary. The output can also be evaluated
+against labeled examples.
+
+RISK SANITY CHECK (PRELIMINARY)
+Not an off-limits idea:       confirmed
+Touches a high-risk area:     no identified high-risk area; the system
+recommends a reading order to a human and
+does not control building equipment
+Capabilities needed:          local access to alarm and trend data; no
+internet access required; no need for the
+agent to write and run its own code
+All three at once:            no
+Note: this is an early heads-up only. The full risk classification is
+a separate step later.
+
+EXPERT / SME PLAN
+Not decided yet.
+
+INITIAL ASSUMPTIONS
+I currently believe that a large share of building automation alarms can
+be reduced into a much smaller number of distinct conditions by
+collapsing repeated nuisance alarms.
+
+I also believe that alarm history combined with related trend data can
+help distinguish conditions that deserve an engineer's attention from
+conditions that are likely nuisance, and that a ranked short list would
+be more useful to an engineer than the raw alarm queue.
+
+OPEN QUESTIONS
+I need to research what existing building automation platforms already
+provide for alarm suppression and alarm rationalization and determine
+where those existing capabilities stop.
+
+I also need to learn whether established alarm-management practices or
+standards provide useful guidance for deciding which conditions deserve
+priority.
+
+Other open questions include whether an appropriate public alarm dataset
+exists or whether synthetic data is the better approach, and what level
+of AI capability is actually needed for the classification portion of
+the project.
+
+NOTE
+These sections are intentionally frozen. Later discoveries should not
+replace them; they should be compared against them so the student can
+show how their understanding evolved.
+
+========================================================================
+END OF PROJECT STATEMENT -- FROZEN ONCE APPROVED
+================================================
