@@ -1,0 +1,87 @@
+{
+  "_note": [
+    "Every threshold and weight the agent uses. Changed by a human,",
+    "reviewed, and benchmarked before it takes effect. The agent never",
+    "writes to this file and never adjusts a value at run time, per P1-C3",
+    "and P4-C8."
+  ],
+
+  "model": {
+    "_note": "Local model served by Ollama over localhost. No hosted API.",
+    "name": "llama3.1:8b-instruct-q4_K_M",
+    "endpoint": "http://127.0.0.1:11434/api/generate",
+    "timeout_s": 120,
+    "temperature": 0.0,
+    "max_attempts": 2
+  },
+
+  "input_limits": {
+    "_note": "Checked at N2 so an oversized export fails with an instruction rather than an out-of-memory error, per P5-C7.",
+    "max_alarm_rows": 200000,
+    "max_trend_rows": 4000000,
+    "max_window_span_hours": 168,
+    "max_window_mismatch_minutes": 60
+  },
+
+  "clustering": {
+    "_note": "Events on one point separated by less than the gap belong to one condition.",
+    "condition_gap_s": 21600
+  },
+
+  "nuisance": {
+    "_note": "ISA-18.2 categories as recorded in docs/02_research_delta.md 2.2. Evaluated in this order; the first match is the classification applied.",
+    "chattering_min_alarms": 5,
+    "chattering_median_gap_s": 600,
+    "repeating_min_alarms": 3,
+    "repeating_median_reclear_gap_s": 1800,
+    "fleeting_max_active_s": 600,
+    "stale_min_active_s": 43200
+  },
+
+  "preliminary_score": {
+    "_note": "Alarm-side evidence only. Each term is a weight times a component normalised to 0..1, and the components are reported alongside the score.",
+    "weight_priority": 0.35,
+    "weight_alarm_count": 0.25,
+    "weight_repeat_count": 0.15,
+    "weight_active_duration": 0.25,
+    "weight_nuisance_category": -0.20,
+    "reference_alarm_count": 10,
+    "reference_repeat_count": 5,
+    "reference_active_hours": 12.0
+  },
+
+  "reassessment": {
+    "_note": "The N7 rule set from P0-C2. Quantities are multiples of the point's own deadband unless named otherwise, so one setting behaves the same on a temperature point and a pressure point.",
+    "r_d1_max_overshoot_deadbands": 1.0,
+    "r_d2_min_excursion_duration_s": 600,
+    "r_d3_stability_duration_s": 3600,
+    "r_d3_stability_margin_deadbands": 1.0,
+    "r_p1_sustained_fraction": 0.6,
+    "r_p2_min_drift_deadbands_per_hour": 0.1,
+    "r_p2_max_reversal_deadbands": 1.0,
+    "r_p3_min_peak_deadbands": 4.0
+  },
+
+  "safety": {
+    "_note": "Recommendations describe diagnostic steps. A control action verb in an N8 recommendation is a failed attempt, per P4-C1 and P2-C3.",
+    "forbidden_verbs": [
+      "adjust", "change", "command", "close", "cycle", "disable", "enable",
+      "increase", "decrease", "lower", "raise", "modify", "open", "override",
+      "reset", "restart", "schedule", "set", "setpoint", "shut", "start",
+      "stop", "switch", "turn", "write"
+    ]
+  },
+
+  "report": {
+    "_note": "The operator marks an outcome per escalation; marked reports are saved to the feedback directory and retained, per P4-C4.",
+    "feedback_dirname": "feedback",
+    "outcome_options": ["correct", "false escalation", "missed"]
+  },
+
+  "evaluation": {
+    "_note": "Fixed 2026-09-03, before any holdout data was opened. Not revised after results are seen, per P5-C1.",
+    "false_escalation_ceiling": 0.20,
+    "top_n": 5,
+    "top_n_min_capture": 4
+  }
+}
