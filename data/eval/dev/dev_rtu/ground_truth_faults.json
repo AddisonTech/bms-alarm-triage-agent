@@ -1,0 +1,61 @@
+{
+  "faults": [
+    {
+      "end_sample": 1440,
+      "end_time": "2026-07-21T23:59:00-07:00",
+      "equipment": "RTU-31",
+      "equipment_type": "RTU",
+      "fault_id": "dev_rtu-C01-stale",
+      "fault_type": "refrigerant_undercharge",
+      "severity": "high",
+      "start_sample": 210,
+      "start_time": "2026-07-21T03:30:00-07:00"
+    },
+    {
+      "end_sample": 1440,
+      "end_time": "2026-07-21T23:59:00-07:00",
+      "equipment": "RTU-31",
+      "equipment_type": "RTU",
+      "fault_id": "dev_rtu-C02-severe",
+      "fault_type": "condenser_fouling",
+      "severity": "high",
+      "start_sample": 240,
+      "start_time": "2026-07-21T04:00:00-07:00"
+    },
+    {
+      "end_sample": 1440,
+      "end_time": "2026-07-21T23:59:00-07:00",
+      "equipment": "RTU-31",
+      "equipment_type": "RTU",
+      "fault_id": "dev_rtu-C03-drift",
+      "fault_type": "economizer_damper_stuck",
+      "severity": "moderate",
+      "start_sample": 0,
+      "start_time": "2026-07-21T00:00:00-07:00"
+    },
+    {
+      "end_sample": 1440,
+      "end_time": "2026-07-21T23:59:00-07:00",
+      "equipment": "RTU-31",
+      "equipment_type": "RTU",
+      "fault_id": "dev_rtu-C04-moderate",
+      "fault_type": "supply_fan_belt_slipping",
+      "severity": "low",
+      "start_sample": 420,
+      "start_time": "2026-07-21T07:00:00-07:00"
+    },
+    {
+      "end_sample": 1440,
+      "end_time": "2026-07-21T23:59:00-07:00",
+      "equipment": "RTU-31-B",
+      "equipment_type": "RTU",
+      "fault_id": "dev_rtu-C05-severe",
+      "fault_type": "condenser_fouling",
+      "severity": "high",
+      "start_sample": 240,
+      "start_time": "2026-07-21T04:00:00-07:00"
+    }
+  ],
+  "note": "HVAC fault ground truth. Declared in the generator's source layer and never derived from alarm mechanics. This is the only file the evaluation harness scores against.",
+  "window": "dev_rtu"
+}

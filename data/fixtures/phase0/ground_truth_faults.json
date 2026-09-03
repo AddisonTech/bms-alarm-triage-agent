@@ -1,0 +1,50 @@
+{
+  "faults": [
+    {
+      "end_sample": 1440,
+      "end_time": "2026-07-13T23:59:00-07:00",
+      "equipment": "RTU-3",
+      "equipment_type": "RTU",
+      "fault_id": "phase0-C03-stale",
+      "fault_type": "refrigerant_undercharge",
+      "severity": "high",
+      "start_sample": 210,
+      "start_time": "2026-07-13T03:30:00-07:00"
+    },
+    {
+      "end_sample": 1440,
+      "end_time": "2026-07-13T23:59:00-07:00",
+      "equipment": "AHU-1",
+      "equipment_type": "AHU_SINGLE_DUCT",
+      "fault_id": "phase0-C04-severe",
+      "fault_type": "cooling_coil_valve_leaking",
+      "severity": "high",
+      "start_sample": 240,
+      "start_time": "2026-07-13T04:00:00-07:00"
+    },
+    {
+      "end_sample": 1440,
+      "end_time": "2026-07-13T23:59:00-07:00",
+      "equipment": "VAV-2-14",
+      "equipment_type": "VAV",
+      "fault_id": "phase0-C06-drift",
+      "fault_type": "damper_stuck_partially_open",
+      "severity": "moderate",
+      "start_sample": 0,
+      "start_time": "2026-07-13T00:00:00-07:00"
+    },
+    {
+      "end_sample": 1440,
+      "end_time": "2026-07-13T23:59:00-07:00",
+      "equipment": "AHU-1",
+      "equipment_type": "AHU_SINGLE_DUCT",
+      "fault_id": "phase0-C08-moderate",
+      "fault_type": "supply_fan_belt_slipping",
+      "severity": "low",
+      "start_sample": 420,
+      "start_time": "2026-07-13T07:00:00-07:00"
+    }
+  ],
+  "note": "HVAC fault ground truth. Declared in the generator's source layer and never derived from alarm mechanics. This is the only file the evaluation harness scores against.",
+  "window": "phase0"
+}

@@ -1,0 +1,16 @@
+.venv/
+__pycache__/
+*.pyc
+.pytest_cache/
+*.egg-info/
+build/
+dist/
+
+# Run output. The agent writes reports, run logs, and the cross-session run
+# history into an operator-chosen output directory; none of it is source.
+runs/
+out/
+
+# Real alarm exports are customer identifying and never enter the
+# repository, per P4-C2. Only synthetic data under data/ is committed.
+private/

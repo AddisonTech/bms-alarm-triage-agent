@@ -1,0 +1,10 @@
+# The frozen test corpus under data/ must be committed exactly as the
+# generator produced it. Line-ending conversion would rewrite those bytes
+# on checkout and break the byte-for-byte reproducibility requirement, so
+# nothing under data/ is treated as convertible text.
+data/** -text
+
+# Everything else follows the repository's existing convention.
+*.txt text
+*.md text
+*.py text

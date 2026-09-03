@@ -1,0 +1,42 @@
+{
+  "alarm_row_count": 222,
+  "fault_count": 4,
+  "files": {
+    "alarm_behavior_labels.json": {
+      "bytes": 2536,
+      "sha256": "ea4ac9ef499c61577dc5d61795ae8cfeb166e2bd2f432682c9ecbcd91497167d"
+    },
+    "alarm_export.csv": {
+      "bytes": 24103,
+      "sha256": "ade7914c15af7c3c938bd1bbb74050fab34b9bbbf8fd39a5731efee1c3e00402"
+    },
+    "ground_truth_faults.json": {
+      "bytes": 1587,
+      "sha256": "f5d5c476f6ecfd1f8b809f0ed848c4a7214f15a7667086dd3c7168d6b2a96651"
+    },
+    "malformed_alarm_export.csv": {
+      "bytes": 4388,
+      "sha256": "1237701dbc04f14094cdad64f207b8528387c520ebd9a78d41654ec60bfbd3a6"
+    },
+    "recorded_model_response.json": {
+      "bytes": 1947,
+      "sha256": "8dc53a8eeb26cc46111590b0a3167b5135974e28e7a7abbb78bc6911bb2e7d8a"
+    },
+    "source_untrended_series.csv": {
+      "bytes": 92776,
+      "sha256": "d7d8a4fd39f7a7954abba06c103d47eb5150b072ca659a29821acd6014091219"
+    },
+    "trend_export.csv": {
+      "bytes": 662433,
+      "sha256": "7f601066d0e8dd0444ff96cd119bfa90415820231ee8e8b8b8fb6a907f24f672"
+    }
+  },
+  "generator_version": "1.0.0",
+  "note": "Frozen corpus. Regenerating with this seed must reproduce every digest below. Do not regenerate during agent development.",
+  "point_count": 9,
+  "sample_interval_s": 60,
+  "seed": "bms-alarm-triage-corpus-v1",
+  "window": "phase0",
+  "window_samples": 1440,
+  "window_start": "2026-07-13T00:00:00-07:00"
+}

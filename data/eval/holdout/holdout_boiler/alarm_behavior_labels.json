@@ -1,0 +1,96 @@
+{
+  "labels": [
+    {
+      "behavior_label": "stale",
+      "case_id": "holdout_boiler-C01",
+      "equipment": "BLR-71",
+      "equipment_type": "BOILER",
+      "fixture_intent": "R-P1",
+      "in_trend_export": true,
+      "point_path": "SYN1/BLR-71/HW_SUP_TEMP"
+    },
+    {
+      "behavior_label": "repeating",
+      "case_id": "holdout_boiler-C02",
+      "equipment": "BLR-71",
+      "equipment_type": "BOILER",
+      "fixture_intent": "R-P3",
+      "in_trend_export": true,
+      "point_path": "SYN1/BLR-71/STACK_TEMP"
+    },
+    {
+      "behavior_label": "none",
+      "case_id": "holdout_boiler-C03",
+      "equipment": "BLR-71",
+      "equipment_type": "BOILER",
+      "fixture_intent": "R-P2",
+      "in_trend_export": true,
+      "point_path": "SYN1/BLR-71/HW_RET_TEMP"
+    },
+    {
+      "behavior_label": "none",
+      "case_id": "holdout_boiler-C04",
+      "equipment": "BLR-71",
+      "equipment_type": "BOILER",
+      "fixture_intent": "none, band UNCHANGED",
+      "in_trend_export": true,
+      "point_path": "SYN1/BLR-71/FIRING_RATE"
+    },
+    {
+      "behavior_label": "repeating",
+      "case_id": "holdout_boiler-C05",
+      "equipment": "BLR-71-B",
+      "equipment_type": "BOILER",
+      "fixture_intent": "R-P3",
+      "in_trend_export": true,
+      "point_path": "SYN1/BLR-71-B/HW_SUP_TEMP"
+    },
+    {
+      "behavior_label": "chattering",
+      "case_id": "holdout_boiler-C06",
+      "equipment": "BLR-71",
+      "equipment_type": "BOILER",
+      "fixture_intent": "R-D1",
+      "in_trend_export": true,
+      "point_path": "SYN1/BLR-71/COMB_AIR_DP"
+    },
+    {
+      "behavior_label": "fleeting",
+      "case_id": "holdout_boiler-C07",
+      "equipment": "BLR-71-B",
+      "equipment_type": "BOILER",
+      "fixture_intent": "R-D2",
+      "in_trend_export": true,
+      "point_path": "SYN1/BLR-71-B/STACK_TEMP"
+    },
+    {
+      "behavior_label": "chattering",
+      "case_id": "holdout_boiler-C08",
+      "equipment": "BLR-71-B",
+      "equipment_type": "BOILER",
+      "fixture_intent": "R-D3",
+      "in_trend_export": true,
+      "point_path": "SYN1/BLR-71-B/HW_RET_TEMP"
+    },
+    {
+      "behavior_label": "repeating",
+      "case_id": "holdout_boiler-C09",
+      "equipment": "BLR-71-B",
+      "equipment_type": "BOILER",
+      "fixture_intent": "none, band UNCHANGED",
+      "in_trend_export": true,
+      "point_path": "SYN1/BLR-71-B/FIRING_RATE"
+    },
+    {
+      "behavior_label": "none",
+      "case_id": "holdout_boiler-C10",
+      "equipment": "BLR-71-B",
+      "equipment_type": "BOILER",
+      "fixture_intent": "not reached, unresolved at N6",
+      "in_trend_export": false,
+      "point_path": "SYN1/BLR-71-B/COMB_AIR_DP"
+    }
+  ],
+  "note": "Alarm-behavior labels created by the generator, plus the N7 rule each fixture case was built to exercise. Never used for scoring and deliberately separate from ground_truth_faults.",
+  "window": "holdout_boiler"
+}

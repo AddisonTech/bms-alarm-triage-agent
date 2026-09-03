@@ -1,0 +1,61 @@
+{
+  "faults": [
+    {
+      "end_sample": 1440,
+      "end_time": "2026-07-20T23:59:00-07:00",
+      "equipment": "AHU-11",
+      "equipment_type": "AHU_SINGLE_DUCT",
+      "fault_id": "dev_ahu_single_duct-C01-stale",
+      "fault_type": "cooling_coil_valve_stuck",
+      "severity": "high",
+      "start_sample": 210,
+      "start_time": "2026-07-20T03:30:00-07:00"
+    },
+    {
+      "end_sample": 1440,
+      "end_time": "2026-07-20T23:59:00-07:00",
+      "equipment": "AHU-11",
+      "equipment_type": "AHU_SINGLE_DUCT",
+      "fault_id": "dev_ahu_single_duct-C02-severe",
+      "fault_type": "cooling_coil_valve_leaking",
+      "severity": "high",
+      "start_sample": 240,
+      "start_time": "2026-07-20T04:00:00-07:00"
+    },
+    {
+      "end_sample": 1440,
+      "end_time": "2026-07-20T23:59:00-07:00",
+      "equipment": "AHU-11",
+      "equipment_type": "AHU_SINGLE_DUCT",
+      "fault_id": "dev_ahu_single_duct-C03-drift",
+      "fault_type": "outside_air_damper_leaking",
+      "severity": "moderate",
+      "start_sample": 0,
+      "start_time": "2026-07-20T00:00:00-07:00"
+    },
+    {
+      "end_sample": 1440,
+      "end_time": "2026-07-20T23:59:00-07:00",
+      "equipment": "AHU-11",
+      "equipment_type": "AHU_SINGLE_DUCT",
+      "fault_id": "dev_ahu_single_duct-C04-moderate",
+      "fault_type": "supply_fan_belt_slipping",
+      "severity": "low",
+      "start_sample": 420,
+      "start_time": "2026-07-20T07:00:00-07:00"
+    },
+    {
+      "end_sample": 1440,
+      "end_time": "2026-07-20T23:59:00-07:00",
+      "equipment": "AHU-11-B",
+      "equipment_type": "AHU_SINGLE_DUCT",
+      "fault_id": "dev_ahu_single_duct-C05-severe",
+      "fault_type": "cooling_coil_valve_leaking",
+      "severity": "high",
+      "start_sample": 240,
+      "start_time": "2026-07-20T04:00:00-07:00"
+    }
+  ],
+  "note": "HVAC fault ground truth. Declared in the generator's source layer and never derived from alarm mechanics. This is the only file the evaluation harness scores against.",
+  "window": "dev_ahu_single_duct"
+}

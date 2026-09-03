@@ -1,0 +1,96 @@
+{
+  "labels": [
+    {
+      "behavior_label": "stale",
+      "case_id": "holdout_chiller-C01",
+      "equipment": "CH-61",
+      "equipment_type": "CHILLER",
+      "fixture_intent": "R-P1",
+      "in_trend_export": true,
+      "point_path": "SYN1/CH-61/CHW_SUP_TEMP"
+    },
+    {
+      "behavior_label": "repeating",
+      "case_id": "holdout_chiller-C02",
+      "equipment": "CH-61",
+      "equipment_type": "CHILLER",
+      "fixture_intent": "R-P3",
+      "in_trend_export": true,
+      "point_path": "SYN1/CH-61/CHW_RET_TEMP"
+    },
+    {
+      "behavior_label": "none",
+      "case_id": "holdout_chiller-C03",
+      "equipment": "CH-61",
+      "equipment_type": "CHILLER",
+      "fixture_intent": "R-P2",
+      "in_trend_export": true,
+      "point_path": "SYN1/CH-61/COND_APPROACH"
+    },
+    {
+      "behavior_label": "none",
+      "case_id": "holdout_chiller-C04",
+      "equipment": "CH-61",
+      "equipment_type": "CHILLER",
+      "fixture_intent": "none, band UNCHANGED",
+      "in_trend_export": true,
+      "point_path": "SYN1/CH-61/EVAP_PRESS"
+    },
+    {
+      "behavior_label": "repeating",
+      "case_id": "holdout_chiller-C05",
+      "equipment": "CH-61-B",
+      "equipment_type": "CHILLER",
+      "fixture_intent": "R-P3",
+      "in_trend_export": true,
+      "point_path": "SYN1/CH-61-B/CHW_SUP_TEMP"
+    },
+    {
+      "behavior_label": "chattering",
+      "case_id": "holdout_chiller-C06",
+      "equipment": "CH-61",
+      "equipment_type": "CHILLER",
+      "fixture_intent": "R-D1",
+      "in_trend_export": true,
+      "point_path": "SYN1/CH-61/OIL_PRESS"
+    },
+    {
+      "behavior_label": "fleeting",
+      "case_id": "holdout_chiller-C07",
+      "equipment": "CH-61-B",
+      "equipment_type": "CHILLER",
+      "fixture_intent": "R-D2",
+      "in_trend_export": true,
+      "point_path": "SYN1/CH-61-B/CHW_RET_TEMP"
+    },
+    {
+      "behavior_label": "chattering",
+      "case_id": "holdout_chiller-C08",
+      "equipment": "CH-61-B",
+      "equipment_type": "CHILLER",
+      "fixture_intent": "R-D3",
+      "in_trend_export": true,
+      "point_path": "SYN1/CH-61-B/COND_APPROACH"
+    },
+    {
+      "behavior_label": "repeating",
+      "case_id": "holdout_chiller-C09",
+      "equipment": "CH-61-B",
+      "equipment_type": "CHILLER",
+      "fixture_intent": "none, band UNCHANGED",
+      "in_trend_export": true,
+      "point_path": "SYN1/CH-61-B/EVAP_PRESS"
+    },
+    {
+      "behavior_label": "none",
+      "case_id": "holdout_chiller-C10",
+      "equipment": "CH-61-B",
+      "equipment_type": "CHILLER",
+      "fixture_intent": "not reached, unresolved at N6",
+      "in_trend_export": false,
+      "point_path": "SYN1/CH-61-B/OIL_PRESS"
+    }
+  ],
+  "note": "Alarm-behavior labels created by the generator, plus the N7 rule each fixture case was built to exercise. Never used for scoring and deliberately separate from ground_truth_faults.",
+  "window": "holdout_chiller"
+}

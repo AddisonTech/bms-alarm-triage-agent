@@ -1,0 +1,96 @@
+{
+  "labels": [
+    {
+      "behavior_label": "stale",
+      "case_id": "holdout_ahu_dual_duct-C01",
+      "equipment": "AHU-21",
+      "equipment_type": "AHU_DUAL_DUCT",
+      "fixture_intent": "R-P1",
+      "in_trend_export": true,
+      "point_path": "SYN1/AHU-21/CLG_DUCT_TEMP"
+    },
+    {
+      "behavior_label": "repeating",
+      "case_id": "holdout_ahu_dual_duct-C02",
+      "equipment": "AHU-21",
+      "equipment_type": "AHU_DUAL_DUCT",
+      "fixture_intent": "R-P3",
+      "in_trend_export": true,
+      "point_path": "SYN1/AHU-21/HTG_DUCT_TEMP"
+    },
+    {
+      "behavior_label": "none",
+      "case_id": "holdout_ahu_dual_duct-C03",
+      "equipment": "AHU-21",
+      "equipment_type": "AHU_DUAL_DUCT",
+      "fixture_intent": "R-P2",
+      "in_trend_export": true,
+      "point_path": "SYN1/AHU-21/MIXED_AIR_TEMP"
+    },
+    {
+      "behavior_label": "none",
+      "case_id": "holdout_ahu_dual_duct-C04",
+      "equipment": "AHU-21",
+      "equipment_type": "AHU_DUAL_DUCT",
+      "fixture_intent": "none, band UNCHANGED",
+      "in_trend_export": true,
+      "point_path": "SYN1/AHU-21/CLG_SP"
+    },
+    {
+      "behavior_label": "repeating",
+      "case_id": "holdout_ahu_dual_duct-C05",
+      "equipment": "AHU-21-B",
+      "equipment_type": "AHU_DUAL_DUCT",
+      "fixture_intent": "R-P3",
+      "in_trend_export": true,
+      "point_path": "SYN1/AHU-21-B/CLG_DUCT_TEMP"
+    },
+    {
+      "behavior_label": "chattering",
+      "case_id": "holdout_ahu_dual_duct-C06",
+      "equipment": "AHU-21",
+      "equipment_type": "AHU_DUAL_DUCT",
+      "fixture_intent": "R-D1",
+      "in_trend_export": true,
+      "point_path": "SYN1/AHU-21/HTG_DMPR_POS"
+    },
+    {
+      "behavior_label": "fleeting",
+      "case_id": "holdout_ahu_dual_duct-C07",
+      "equipment": "AHU-21-B",
+      "equipment_type": "AHU_DUAL_DUCT",
+      "fixture_intent": "R-D2",
+      "in_trend_export": true,
+      "point_path": "SYN1/AHU-21-B/HTG_DUCT_TEMP"
+    },
+    {
+      "behavior_label": "chattering",
+      "case_id": "holdout_ahu_dual_duct-C08",
+      "equipment": "AHU-21-B",
+      "equipment_type": "AHU_DUAL_DUCT",
+      "fixture_intent": "R-D3",
+      "in_trend_export": true,
+      "point_path": "SYN1/AHU-21-B/MIXED_AIR_TEMP"
+    },
+    {
+      "behavior_label": "repeating",
+      "case_id": "holdout_ahu_dual_duct-C09",
+      "equipment": "AHU-21-B",
+      "equipment_type": "AHU_DUAL_DUCT",
+      "fixture_intent": "none, band UNCHANGED",
+      "in_trend_export": true,
+      "point_path": "SYN1/AHU-21-B/CLG_SP"
+    },
+    {
+      "behavior_label": "none",
+      "case_id": "holdout_ahu_dual_duct-C10",
+      "equipment": "AHU-21-B",
+      "equipment_type": "AHU_DUAL_DUCT",
+      "fixture_intent": "not reached, unresolved at N6",
+      "in_trend_export": false,
+      "point_path": "SYN1/AHU-21-B/HTG_DMPR_POS"
+    }
+  ],
+  "note": "Alarm-behavior labels created by the generator, plus the N7 rule each fixture case was built to exercise. Never used for scoring and deliberately separate from ground_truth_faults.",
+  "window": "holdout_ahu_dual_duct"
+}

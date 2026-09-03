@@ -1,0 +1,34 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "bms-alarm-triage-agent"
+version = "0.1.0"
+description = "Turns a raw building automation alarm queue into a short ranked list of what to look at first."
+readme = "README.md"
+requires-python = ">=3.11"
+license = { text = "MIT" }
+authors = [{ name = "Addison Smith" }]
+
+# The model is served locally by Ollama over localhost and is reached with
+# urllib from the standard library, so there is no HTTP client dependency
+# and no cloud SDK anywhere in the runtime path (P2-C1, P2-C2).
+dependencies = ["langgraph>=0.2"]
+
+[project.optional-dependencies]
+dev = ["pytest>=8"]
+
+[project.scripts]
+bms-triage = "bms_alarm_triage.cli:main"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+# tools/ holds the alarm-log generator and the evaluation harness. Neither
+# is product, so neither is packaged; keeping them out of the wheel is the
+# mechanical half of the rule that the agent must not import the generator.
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["src", "."]
+addopts = "-q"

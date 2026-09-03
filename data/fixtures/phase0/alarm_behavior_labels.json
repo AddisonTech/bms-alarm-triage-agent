@@ -1,0 +1,87 @@
+{
+  "labels": [
+    {
+      "behavior_label": "chattering",
+      "case_id": "phase0-C01",
+      "equipment": "AHU-1",
+      "equipment_type": "AHU_SINGLE_DUCT",
+      "fixture_intent": "R-D1",
+      "in_trend_export": true,
+      "point_path": "SYN1/AHU-1/SA_SP"
+    },
+    {
+      "behavior_label": "fleeting",
+      "case_id": "phase0-C02",
+      "equipment": "VAV-2-14",
+      "equipment_type": "VAV",
+      "fixture_intent": "R-D2",
+      "in_trend_export": true,
+      "point_path": "SYN1/VAV-2-14/AIRFLOW"
+    },
+    {
+      "behavior_label": "stale",
+      "case_id": "phase0-C03",
+      "equipment": "RTU-3",
+      "equipment_type": "RTU",
+      "fixture_intent": "R-P1",
+      "in_trend_export": true,
+      "point_path": "SYN1/RTU-3/DA_TEMP"
+    },
+    {
+      "behavior_label": "repeating",
+      "case_id": "phase0-C04",
+      "equipment": "AHU-1",
+      "equipment_type": "AHU_SINGLE_DUCT",
+      "fixture_intent": "R-P3",
+      "in_trend_export": true,
+      "point_path": "SYN1/AHU-1/SA_TEMP"
+    },
+    {
+      "behavior_label": "chattering",
+      "case_id": "phase0-C05",
+      "equipment": "AHU-1",
+      "equipment_type": "AHU_SINGLE_DUCT",
+      "fixture_intent": "R-D3",
+      "in_trend_export": true,
+      "point_path": "SYN1/AHU-1/RA_TEMP"
+    },
+    {
+      "behavior_label": "none",
+      "case_id": "phase0-C06",
+      "equipment": "VAV-2-14",
+      "equipment_type": "VAV",
+      "fixture_intent": "R-P2",
+      "in_trend_export": true,
+      "point_path": "SYN1/VAV-2-14/ZONE_TEMP"
+    },
+    {
+      "behavior_label": "none",
+      "case_id": "phase0-C07",
+      "equipment": "RTU-3",
+      "equipment_type": "RTU",
+      "fixture_intent": "not reached, unresolved at N6",
+      "in_trend_export": false,
+      "point_path": "SYN1/RTU-3/COMP_STATUS"
+    },
+    {
+      "behavior_label": "none",
+      "case_id": "phase0-C08",
+      "equipment": "AHU-1",
+      "equipment_type": "AHU_SINGLE_DUCT",
+      "fixture_intent": "none, band UNCHANGED",
+      "in_trend_export": true,
+      "point_path": "SYN1/AHU-1/SF_SPD"
+    },
+    {
+      "behavior_label": "repeating",
+      "case_id": "phase0-C09",
+      "equipment": "RTU-3",
+      "equipment_type": "RTU",
+      "fixture_intent": "none, band UNCHANGED",
+      "in_trend_export": true,
+      "point_path": "SYN1/RTU-3/SA_TEMP"
+    }
+  ],
+  "note": "Alarm-behavior labels created by the generator, plus the N7 rule each fixture case was built to exercise. Never used for scoring and deliberately separate from ground_truth_faults.",
+  "window": "phase0"
+}

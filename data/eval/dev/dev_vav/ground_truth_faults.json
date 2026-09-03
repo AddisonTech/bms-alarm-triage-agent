@@ -1,0 +1,61 @@
+{
+  "faults": [
+    {
+      "end_sample": 1440,
+      "end_time": "2026-07-22T23:59:00-07:00",
+      "equipment": "VAV-4-01",
+      "equipment_type": "VAV",
+      "fault_id": "dev_vav-C01-stale",
+      "fault_type": "damper_stuck_closed",
+      "severity": "high",
+      "start_sample": 210,
+      "start_time": "2026-07-22T03:30:00-07:00"
+    },
+    {
+      "end_sample": 1440,
+      "end_time": "2026-07-22T23:59:00-07:00",
+      "equipment": "VAV-4-01",
+      "equipment_type": "VAV",
+      "fault_id": "dev_vav-C02-severe",
+      "fault_type": "reheat_valve_leaking",
+      "severity": "high",
+      "start_sample": 240,
+      "start_time": "2026-07-22T04:00:00-07:00"
+    },
+    {
+      "end_sample": 1440,
+      "end_time": "2026-07-22T23:59:00-07:00",
+      "equipment": "VAV-4-01",
+      "equipment_type": "VAV",
+      "fault_id": "dev_vav-C03-drift",
+      "fault_type": "damper_stuck_partially_open",
+      "severity": "moderate",
+      "start_sample": 0,
+      "start_time": "2026-07-22T00:00:00-07:00"
+    },
+    {
+      "end_sample": 1440,
+      "end_time": "2026-07-22T23:59:00-07:00",
+      "equipment": "VAV-4-01",
+      "equipment_type": "VAV",
+      "fault_id": "dev_vav-C04-moderate",
+      "fault_type": "airflow_sensor_drift",
+      "severity": "low",
+      "start_sample": 420,
+      "start_time": "2026-07-22T07:00:00-07:00"
+    },
+    {
+      "end_sample": 1440,
+      "end_time": "2026-07-22T23:59:00-07:00",
+      "equipment": "VAV-4-01-B",
+      "equipment_type": "VAV",
+      "fault_id": "dev_vav-C05-severe",
+      "fault_type": "reheat_valve_leaking",
+      "severity": "high",
+      "start_sample": 240,
+      "start_time": "2026-07-22T04:00:00-07:00"
+    }
+  ],
+  "note": "HVAC fault ground truth. Declared in the generator's source layer and never derived from alarm mechanics. This is the only file the evaluation harness scores against.",
+  "window": "dev_vav"
+}

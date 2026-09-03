@@ -1,0 +1,34 @@
+{
+  "alarm_row_count": 222,
+  "fault_count": 5,
+  "files": {
+    "alarm_behavior_labels.json": {
+      "bytes": 2794,
+      "sha256": "6ba910d1809ac4a2af294902af9909f369ead9ab1bff62e5ac034d64bcec96e4"
+    },
+    "alarm_export.csv": {
+      "bytes": 25674,
+      "sha256": "db01be18a32772c907b3979806f43ab1013faae6436d7c498c2f0ceac5ca3211"
+    },
+    "ground_truth_faults.json": {
+      "bytes": 1879,
+      "sha256": "d9a02ff6897871bcca28b1be7a4c7fab1a971e10ab7c4ce84b56e5ba29ad7c48"
+    },
+    "source_untrended_series.csv": {
+      "bytes": 98296,
+      "sha256": "9ec053dceb94e507e08c0172c34e3c200b1c7c3003905ab96f0060b02ed320e5"
+    },
+    "trend_export.csv": {
+      "bytes": 786273,
+      "sha256": "ac8f333d41107e4bc9d5f45396fc6301e95082d8ad73de182a6846cd2735174f"
+    }
+  },
+  "generator_version": "1.0.0",
+  "note": "Frozen corpus. Regenerating with this seed must reproduce every digest below. Do not regenerate during agent development.",
+  "point_count": 10,
+  "sample_interval_s": 60,
+  "seed": "bms-alarm-triage-corpus-v1",
+  "window": "dev_fcu",
+  "window_samples": 1440,
+  "window_start": "2026-07-23T00:00:00-07:00"
+}

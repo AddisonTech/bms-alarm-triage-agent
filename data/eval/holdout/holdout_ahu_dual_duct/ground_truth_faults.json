@@ -1,0 +1,61 @@
+{
+  "faults": [
+    {
+      "end_sample": 1440,
+      "end_time": "2026-07-28T23:59:00-07:00",
+      "equipment": "AHU-21",
+      "equipment_type": "AHU_DUAL_DUCT",
+      "fault_id": "holdout_ahu_dual_duct-C01-stale",
+      "fault_type": "heating_coil_valve_stuck",
+      "severity": "high",
+      "start_sample": 210,
+      "start_time": "2026-07-28T03:30:00-07:00"
+    },
+    {
+      "end_sample": 1440,
+      "end_time": "2026-07-28T23:59:00-07:00",
+      "equipment": "AHU-21",
+      "equipment_type": "AHU_DUAL_DUCT",
+      "fault_id": "holdout_ahu_dual_duct-C02-severe",
+      "fault_type": "cooling_coil_valve_leaking",
+      "severity": "high",
+      "start_sample": 240,
+      "start_time": "2026-07-28T04:00:00-07:00"
+    },
+    {
+      "end_sample": 1440,
+      "end_time": "2026-07-28T23:59:00-07:00",
+      "equipment": "AHU-21",
+      "equipment_type": "AHU_DUAL_DUCT",
+      "fault_id": "holdout_ahu_dual_duct-C03-drift",
+      "fault_type": "mixing_damper_leaking",
+      "severity": "moderate",
+      "start_sample": 0,
+      "start_time": "2026-07-28T00:00:00-07:00"
+    },
+    {
+      "end_sample": 1440,
+      "end_time": "2026-07-28T23:59:00-07:00",
+      "equipment": "AHU-21",
+      "equipment_type": "AHU_DUAL_DUCT",
+      "fault_id": "holdout_ahu_dual_duct-C04-moderate",
+      "fault_type": "supply_fan_belt_slipping",
+      "severity": "low",
+      "start_sample": 420,
+      "start_time": "2026-07-28T07:00:00-07:00"
+    },
+    {
+      "end_sample": 1440,
+      "end_time": "2026-07-28T23:59:00-07:00",
+      "equipment": "AHU-21-B",
+      "equipment_type": "AHU_DUAL_DUCT",
+      "fault_id": "holdout_ahu_dual_duct-C05-severe",
+      "fault_type": "cooling_coil_valve_leaking",
+      "severity": "high",
+      "start_sample": 240,
+      "start_time": "2026-07-28T04:00:00-07:00"
+    }
+  ],
+  "note": "HVAC fault ground truth. Declared in the generator's source layer and never derived from alarm mechanics. This is the only file the evaluation harness scores against.",
+  "window": "holdout_ahu_dual_duct"
+}

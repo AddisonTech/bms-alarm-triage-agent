@@ -1,0 +1,25 @@
+{
+  "by_case_id": {
+    "phase0-C03": {
+      "reason": "Discharge air temperature stepped above its limit early in the window and never returned to normal, which matches a standing condition rather than a transient one.",
+      "recommended_step": "Verify refrigerant charge and check the discharge sensor reading against a handheld measurement at the unit."
+    },
+    "phase0-C04": {
+      "reason": "Supply air temperature repeatedly departs from its limit by several times the deadband and is still in excursion at the end of the window.",
+      "recommended_step": "Inspect the cooling coil valve for leak-through and review the valve command against the measured coil temperature."
+    },
+    "phase0-C06": {
+      "reason": "Zone temperature rises steadily across the whole window without reversing, so the few late alarms understate a condition that has been degrading all day.",
+      "recommended_step": "Inspect the terminal damper position feedback and confirm the measured airflow against the design value for the box."
+    },
+    "phase0-C08": {
+      "reason": "Supply fan speed exceeds its limit in recurring intervals that are too long to be transient, though the peak deviation stays modest.",
+      "recommended_step": "Inspect the fan belt and drive coupling, and review the static pressure trend for the same interval."
+    }
+  },
+  "default": {
+    "reason": "The trend segment for this point stays past its alarm limit well beyond the configured deadband, so the alarm reflects a real excursion rather than boundary noise.",
+    "recommended_step": "Inspect the sensor and its wiring at the device, then compare the trended value against a handheld reading at the same point."
+  },
+  "note": "Recorded N8 responses so the explain node can be tested without calling a model. Keyed by case_id, with a default for any case not listed. No recommendation contains a control action verb, per the forbidden-verb rule in P4-C1."
+}

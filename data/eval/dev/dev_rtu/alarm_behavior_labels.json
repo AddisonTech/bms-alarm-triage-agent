@@ -1,0 +1,96 @@
+{
+  "labels": [
+    {
+      "behavior_label": "stale",
+      "case_id": "dev_rtu-C01",
+      "equipment": "RTU-31",
+      "equipment_type": "RTU",
+      "fixture_intent": "R-P1",
+      "in_trend_export": true,
+      "point_path": "SYN1/RTU-31/DA_TEMP"
+    },
+    {
+      "behavior_label": "repeating",
+      "case_id": "dev_rtu-C02",
+      "equipment": "RTU-31",
+      "equipment_type": "RTU",
+      "fixture_intent": "R-P3",
+      "in_trend_export": true,
+      "point_path": "SYN1/RTU-31/SA_TEMP"
+    },
+    {
+      "behavior_label": "none",
+      "case_id": "dev_rtu-C03",
+      "equipment": "RTU-31",
+      "equipment_type": "RTU",
+      "fixture_intent": "R-P2",
+      "in_trend_export": true,
+      "point_path": "SYN1/RTU-31/COND_PRESS"
+    },
+    {
+      "behavior_label": "none",
+      "case_id": "dev_rtu-C04",
+      "equipment": "RTU-31",
+      "equipment_type": "RTU",
+      "fixture_intent": "none, band UNCHANGED",
+      "in_trend_export": true,
+      "point_path": "SYN1/RTU-31/SUCT_PRESS"
+    },
+    {
+      "behavior_label": "repeating",
+      "case_id": "dev_rtu-C05",
+      "equipment": "RTU-31-B",
+      "equipment_type": "RTU",
+      "fixture_intent": "R-P3",
+      "in_trend_export": true,
+      "point_path": "SYN1/RTU-31-B/DA_TEMP"
+    },
+    {
+      "behavior_label": "chattering",
+      "case_id": "dev_rtu-C06",
+      "equipment": "RTU-31",
+      "equipment_type": "RTU",
+      "fixture_intent": "R-D1",
+      "in_trend_export": true,
+      "point_path": "SYN1/RTU-31/COMP_STATUS"
+    },
+    {
+      "behavior_label": "fleeting",
+      "case_id": "dev_rtu-C07",
+      "equipment": "RTU-31-B",
+      "equipment_type": "RTU",
+      "fixture_intent": "R-D2",
+      "in_trend_export": true,
+      "point_path": "SYN1/RTU-31-B/SA_TEMP"
+    },
+    {
+      "behavior_label": "chattering",
+      "case_id": "dev_rtu-C08",
+      "equipment": "RTU-31-B",
+      "equipment_type": "RTU",
+      "fixture_intent": "R-D3",
+      "in_trend_export": true,
+      "point_path": "SYN1/RTU-31-B/COND_PRESS"
+    },
+    {
+      "behavior_label": "repeating",
+      "case_id": "dev_rtu-C09",
+      "equipment": "RTU-31-B",
+      "equipment_type": "RTU",
+      "fixture_intent": "none, band UNCHANGED",
+      "in_trend_export": true,
+      "point_path": "SYN1/RTU-31-B/SUCT_PRESS"
+    },
+    {
+      "behavior_label": "none",
+      "case_id": "dev_rtu-C10",
+      "equipment": "RTU-31-B",
+      "equipment_type": "RTU",
+      "fixture_intent": "not reached, unresolved at N6",
+      "in_trend_export": false,
+      "point_path": "SYN1/RTU-31-B/COMP_STATUS"
+    }
+  ],
+  "note": "Alarm-behavior labels created by the generator, plus the N7 rule each fixture case was built to exercise. Never used for scoring and deliberately separate from ground_truth_faults.",
+  "window": "dev_rtu"
+}
