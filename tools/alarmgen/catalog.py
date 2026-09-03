@@ -589,7 +589,7 @@ PHASE0_LAYOUT: list[tuple[str, str, str, str]] = [
     ("RTU", "RTU-3", "DA_TEMP", STALE),
     ("AHU_SINGLE_DUCT", "AHU-1", "SA_TEMP", SEVERE),
     ("AHU_SINGLE_DUCT", "AHU-1", "RA_TEMP", RECOVERED),
-    ("VAV", "VAV-2-14", "ZONE_TEMP", DRIFT),
+    ("VAV", "VAV-2-14", "DMPR_POS", DRIFT),
     ("RTU", "RTU-3", "COMP_STATUS", NO_TREND),
     ("AHU_SINGLE_DUCT", "AHU-1", "SF_SPD", MODERATE),
     ("RTU", "RTU-3", "SA_TEMP", REPEATING),

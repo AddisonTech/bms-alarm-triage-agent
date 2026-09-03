@@ -6,10 +6,10 @@
     },
     "phase0-C04": {
       "reason": "Supply air temperature repeatedly departs from its limit by several times the deadband and is still in excursion at the end of the window.",
-      "recommended_step": "Inspect the cooling coil valve for leak-through and review the valve command against the measured coil temperature."
+      "recommended_step": "Inspect the cooling coil valve for leak-through and review the valve position feedback against the measured coil temperature."
     },
     "phase0-C06": {
-      "reason": "Zone temperature rises steadily across the whole window without reversing, so the few late alarms understate a condition that has been degrading all day.",
+      "reason": "Damper position climbs steadily across the whole window without reversing, so the single late alarm understates a condition that has been degrading all day.",
       "recommended_step": "Inspect the terminal damper position feedback and confirm the measured airflow against the design value for the box."
     },
     "phase0-C08": {

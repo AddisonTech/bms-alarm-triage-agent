@@ -305,13 +305,14 @@ RECORDED_MODEL_RESPONSE: dict[str, object] = {
             ),
             "recommended_step": (
                 "Inspect the cooling coil valve for leak-through and review "
-                "the valve command against the measured coil temperature."
+                "the valve position feedback against the measured coil "
+                "temperature."
             ),
         },
         "phase0-C06": {
             "reason": (
-                "Zone temperature rises steadily across the whole window "
-                "without reversing, so the few late alarms understate a "
+                "Damper position climbs steadily across the whole window "
+                "without reversing, so the single late alarm understates a "
                 "condition that has been degrading all day."
             ),
             "recommended_step": (

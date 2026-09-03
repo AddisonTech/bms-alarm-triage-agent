@@ -52,7 +52,7 @@
       "equipment_type": "VAV",
       "fixture_intent": "R-P2",
       "in_trend_export": true,
-      "point_path": "SYN1/VAV-2-14/ZONE_TEMP"
+      "point_path": "SYN1/VAV-2-14/DMPR_POS"
     },
     {
       "behavior_label": "none",
