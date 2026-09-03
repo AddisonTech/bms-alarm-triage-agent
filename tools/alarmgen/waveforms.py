@@ -153,15 +153,23 @@ def excursion_then_stable(
     period: int,
     rng: Random,
 ) -> list[float]:
-    """Look bad early, then recover and sit well inside normal.
+    """Look bad for hours, then recover and sit well inside normal.
 
-    This is the build guide's required demote case. The alarm side has to
-    be heavy for the case to be preliminarily suspicious at all, so the
-    value oscillates across the limit while the excursion is active and
-    produces a run of alarm and return-to-normal pairs. The peaks are set
-    far enough past the limit that R-D1 cannot claim boundary noise, which
-    leaves R-D2 SELF_RECOVERED_AND_STABLE as the rule that fires once the
-    trend settles well inside normal and stays there.
+    This is the build guide's required demote case, and what it has to
+    demonstrate is that trend evidence changed a judgment. That only works
+    if the condition would not already have been called nuisance without
+    the trend: a chattering excursion here would be classified into a
+    nuisance category at N4 and the reassessment would have changed
+    nothing. So the excursion is sustained rather than chattering, on a
+    high priority point. It scores well on alarm-side evidence alone and
+    reads as a real standing condition, until the trend shows it cleared
+    itself hours ago and stayed clear.
+
+    A swing of zero gives that flat sustained excursion. A non-zero swing
+    oscillates across the limit instead, which is available but is not
+    what the demote case uses. Either way the peaks sit far enough past
+    the limit that R-D1 cannot call it boundary noise, leaving R-D3
+    SELF_RECOVERED_AND_STABLE as the rule that fires.
     """
     start, end = window
     out: list[float] = []

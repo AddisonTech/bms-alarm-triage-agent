@@ -342,8 +342,8 @@ BEHAVIOR_LABEL: dict[str, str] = {
     CHATTER: "chattering",
     FLEETING: "fleeting",
     STALE: "stale",
-    SEVERE: "repeating",
-    RECOVERED: "chattering",
+    SEVERE: "none",
+    RECOVERED: "none",
     DRIFT: "none",
     MODERATE: "none",
     REPEATING: "repeating",
@@ -399,11 +399,14 @@ def _values_for(kind: str, tpl: PointTemplate, rng: Random) -> list[float]:
             window=(240, n), period=240, duty=0.55, rng=rng,
         )
     if kind == RECOVERED:
-        # Peaks at 1.55 deadbands past the limit, so R-D1 is ruled out and
-        # R-D3 is the rule that fires once the value settles inside.
+        # A flat six hour excursion three deadbands past the limit, then a
+        # sixteen hour stable recovery. Sustained rather than chattering,
+        # so N4 does not classify it into a nuisance category and the
+        # demotion is genuinely the trend evidence doing the work. R-D1 is
+        # ruled out by the overshoot, R-D2 by the dwell, and R-D3 fires.
         return waveforms.excursion_then_stable(
-            n=n, base=tpl.base, center=beyond(0.15), swing=db * 1.40,
-            recovered=inside(6.0), noise=db * 0.05, window=(120, 240),
+            n=n, base=tpl.base, center=beyond(3.0), swing=0.0,
+            recovered=inside(6.0), noise=tpl.noise, window=(120, 480),
             period=6, rng=rng,
         )
     if kind == DRIFT:

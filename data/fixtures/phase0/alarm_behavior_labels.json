@@ -28,7 +28,7 @@
       "point_path": "SYN1/RTU-3/DA_TEMP"
     },
     {
-      "behavior_label": "repeating",
+      "behavior_label": "none",
       "case_id": "phase0-C04",
       "equipment": "AHU-1",
       "equipment_type": "AHU_SINGLE_DUCT",
@@ -37,7 +37,7 @@
       "point_path": "SYN1/AHU-1/SA_TEMP"
     },
     {
-      "behavior_label": "chattering",
+      "behavior_label": "none",
       "case_id": "phase0-C05",
       "equipment": "AHU-1",
       "equipment_type": "AHU_SINGLE_DUCT",

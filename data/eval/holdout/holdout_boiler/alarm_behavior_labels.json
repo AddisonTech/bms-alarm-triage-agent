@@ -10,7 +10,7 @@
       "point_path": "SYN1/BLR-71/HW_SUP_TEMP"
     },
     {
-      "behavior_label": "repeating",
+      "behavior_label": "none",
       "case_id": "holdout_boiler-C02",
       "equipment": "BLR-71",
       "equipment_type": "BOILER",
@@ -37,7 +37,7 @@
       "point_path": "SYN1/BLR-71/FIRING_RATE"
     },
     {
-      "behavior_label": "repeating",
+      "behavior_label": "none",
       "case_id": "holdout_boiler-C05",
       "equipment": "BLR-71-B",
       "equipment_type": "BOILER",
@@ -64,7 +64,7 @@
       "point_path": "SYN1/BLR-71-B/STACK_TEMP"
     },
     {
-      "behavior_label": "chattering",
+      "behavior_label": "none",
       "case_id": "holdout_boiler-C08",
       "equipment": "BLR-71-B",
       "equipment_type": "BOILER",

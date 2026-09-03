@@ -10,7 +10,7 @@
       "point_path": "SYN1/RTU-31/DA_TEMP"
     },
     {
-      "behavior_label": "repeating",
+      "behavior_label": "none",
       "case_id": "dev_rtu-C02",
       "equipment": "RTU-31",
       "equipment_type": "RTU",
@@ -37,7 +37,7 @@
       "point_path": "SYN1/RTU-31/SUCT_PRESS"
     },
     {
-      "behavior_label": "repeating",
+      "behavior_label": "none",
       "case_id": "dev_rtu-C05",
       "equipment": "RTU-31-B",
       "equipment_type": "RTU",
@@ -64,7 +64,7 @@
       "point_path": "SYN1/RTU-31-B/SA_TEMP"
     },
     {
-      "behavior_label": "chattering",
+      "behavior_label": "none",
       "case_id": "dev_rtu-C08",
       "equipment": "RTU-31-B",
       "equipment_type": "RTU",

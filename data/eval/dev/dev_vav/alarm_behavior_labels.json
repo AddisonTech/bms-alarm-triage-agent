@@ -10,7 +10,7 @@
       "point_path": "SYN1/VAV-4-01/ZONE_TEMP"
     },
     {
-      "behavior_label": "repeating",
+      "behavior_label": "none",
       "case_id": "dev_vav-C02",
       "equipment": "VAV-4-01",
       "equipment_type": "VAV",
@@ -37,7 +37,7 @@
       "point_path": "SYN1/VAV-4-01/RHT_VLV_POS"
     },
     {
-      "behavior_label": "repeating",
+      "behavior_label": "none",
       "case_id": "dev_vav-C05",
       "equipment": "VAV-4-01-B",
       "equipment_type": "VAV",
@@ -64,7 +64,7 @@
       "point_path": "SYN1/VAV-4-01-B/AIRFLOW"
     },
     {
-      "behavior_label": "chattering",
+      "behavior_label": "none",
       "case_id": "dev_vav-C08",
       "equipment": "VAV-4-01-B",
       "equipment_type": "VAV",

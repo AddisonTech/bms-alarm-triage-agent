@@ -10,7 +10,7 @@
       "point_path": "SYN1/FCU-51/ZONE_TEMP"
     },
     {
-      "behavior_label": "repeating",
+      "behavior_label": "none",
       "case_id": "dev_fcu-C02",
       "equipment": "FCU-51",
       "equipment_type": "FCU",
@@ -37,7 +37,7 @@
       "point_path": "SYN1/FCU-51/CHW_VLV_POS"
     },
     {
-      "behavior_label": "repeating",
+      "behavior_label": "none",
       "case_id": "dev_fcu-C05",
       "equipment": "FCU-51-B",
       "equipment_type": "FCU",
@@ -64,7 +64,7 @@
       "point_path": "SYN1/FCU-51-B/COIL_TEMP"
     },
     {
-      "behavior_label": "chattering",
+      "behavior_label": "none",
       "case_id": "dev_fcu-C08",
       "equipment": "FCU-51-B",
       "equipment_type": "FCU",

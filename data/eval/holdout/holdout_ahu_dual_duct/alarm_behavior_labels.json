@@ -10,7 +10,7 @@
       "point_path": "SYN1/AHU-21/CLG_DUCT_TEMP"
     },
     {
-      "behavior_label": "repeating",
+      "behavior_label": "none",
       "case_id": "holdout_ahu_dual_duct-C02",
       "equipment": "AHU-21",
       "equipment_type": "AHU_DUAL_DUCT",
@@ -37,7 +37,7 @@
       "point_path": "SYN1/AHU-21/CLG_SP"
     },
     {
-      "behavior_label": "repeating",
+      "behavior_label": "none",
       "case_id": "holdout_ahu_dual_duct-C05",
       "equipment": "AHU-21-B",
       "equipment_type": "AHU_DUAL_DUCT",
@@ -64,7 +64,7 @@
       "point_path": "SYN1/AHU-21-B/HTG_DUCT_TEMP"
     },
     {
-      "behavior_label": "chattering",
+      "behavior_label": "none",
       "case_id": "holdout_ahu_dual_duct-C08",
       "equipment": "AHU-21-B",
       "equipment_type": "AHU_DUAL_DUCT",

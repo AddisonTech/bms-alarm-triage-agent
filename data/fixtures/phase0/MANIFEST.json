@@ -1,22 +1,22 @@
 {
-  "alarm_row_count": 222,
+  "alarm_row_count": 186,
   "fault_count": 4,
   "files": {
     "alarm_behavior_labels.json": {
-      "bytes": 2536,
-      "sha256": "ea4ac9ef499c61577dc5d61795ae8cfeb166e2bd2f432682c9ecbcd91497167d"
+      "bytes": 2525,
+      "sha256": "2215db1c28f5d50686a9c5e6d054756fa30b0649f979e2eb9b9f94376ef53418"
     },
     "alarm_export.csv": {
-      "bytes": 24103,
-      "sha256": "ade7914c15af7c3c938bd1bbb74050fab34b9bbbf8fd39a5731efee1c3e00402"
+      "bytes": 20219,
+      "sha256": "bc0f65bbab7e5befd05ddf6211fb6660283297481ef6215b024fcf5e484d5b32"
     },
     "ground_truth_faults.json": {
       "bytes": 1587,
       "sha256": "f5d5c476f6ecfd1f8b809f0ed848c4a7214f15a7667086dd3c7168d6b2a96651"
     },
     "malformed_alarm_export.csv": {
-      "bytes": 4388,
-      "sha256": "1237701dbc04f14094cdad64f207b8528387c520ebd9a78d41654ec60bfbd3a6"
+      "bytes": 4314,
+      "sha256": "d82003b08c77406cc88bae96a66994ea6beb353a5905bb63f4e240a63b2df74a"
     },
     "recorded_model_response.json": {
       "bytes": 1947,
@@ -28,7 +28,7 @@
     },
     "trend_export.csv": {
       "bytes": 662433,
-      "sha256": "7f601066d0e8dd0444ff96cd119bfa90415820231ee8e8b8b8fb6a907f24f672"
+      "sha256": "1457a7e4a8c597acdff015ed1fc4a5f59b958d2cabe0c6c3635ba940c392c107"
     }
   },
   "generator_version": "1.0.0",

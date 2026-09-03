@@ -10,7 +10,7 @@
       "point_path": "SYN1/CH-61/CHW_SUP_TEMP"
     },
     {
-      "behavior_label": "repeating",
+      "behavior_label": "none",
       "case_id": "holdout_chiller-C02",
       "equipment": "CH-61",
       "equipment_type": "CHILLER",
@@ -37,7 +37,7 @@
       "point_path": "SYN1/CH-61/EVAP_PRESS"
     },
     {
-      "behavior_label": "repeating",
+      "behavior_label": "none",
       "case_id": "holdout_chiller-C05",
       "equipment": "CH-61-B",
       "equipment_type": "CHILLER",
@@ -64,7 +64,7 @@
       "point_path": "SYN1/CH-61-B/CHW_RET_TEMP"
     },
     {
-      "behavior_label": "chattering",
+      "behavior_label": "none",
       "case_id": "holdout_chiller-C08",
       "equipment": "CH-61-B",
       "equipment_type": "CHILLER",
