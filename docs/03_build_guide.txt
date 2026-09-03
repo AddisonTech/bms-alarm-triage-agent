@@ -1,0 +1,1221 @@
+AGENT PRO BUILD GUIDE
+STUDENT DECISIONS -- CLUSTER-BASED
+ASCII ONLY
+
+PROJECT: BMS Alarm Triage Agent
+STUDENT: Addison Smith
+STUDENT ID: addsmi1720
+REPOSITORY: github.com/AddisonTech/bms-alarm-triage-agent
+LICENSE: MIT
+DATE: 2026-08-26
+FROZEN PROJECT DOCUMENT: docs/01_project_statement_frozen.txt (frozen 2026-08-11)
+RESEARCH DOCUMENT: docs/02_research_delta.md (2026-08-14)
+REVISED: 2026-09-03
+
+REVISION RECORD
+---------------
+2026-09-03  Two decisions locked and written into this guide, replacing
+            the placeholder language that stood in their place.
+
+            1. N7 reassessment method. Reassessment is a fixed ordered
+               set of deterministic promote and demote rules evaluated
+               against the preliminary score. It is not model
+               re-ranking and it is not score adjustment. The
+               preliminary score is never modified. The reason a
+               condition moved is always a named rule that fired.
+               Affects P0-C1, P0-C2, P0-C3, P1-C2, P4-C3, P4-C5.
+
+            2. False escalation ceiling. The ceiling is 20 percent: no
+               more than one escalation in five may be wrong. Fixed on
+               this date, before any holdout data was opened.
+               Affects P2-C5, P4-C7, P5-C1, P5-C6.
+
+            No other design decision was changed and no capability was
+            added. Every cluster's Future Expansion entries remain out
+            of scope.
+
+========================================================================
+PHASE 0 - WALKING SKELETON
+========================================================================
+
+Cluster: P0-C1 Happy Path Flowchart
+Topic: One successful end-to-end path through the agent, drawn as a
+linear flowchart (Mermaid, ASCII only). No branches, retries, or
+error paths -- those belong to later phases. Also records the target
+operating system and any hardware the agent must talk to.
+
+Student Decision:
+Ordered steps for one successful run:
+
+  1. Operator exports an alarm log from the BAS for a chosen time
+     window and exports the matching trend data for the same window
+     and the same equipment.
+  2. Agent ingests both files from disk.
+  3. Agent validates that the two files cover the same time window
+     and reference the same points.
+  4. Agent normalizes both into a common internal schema.
+  5. Agent groups raw alarm events into distinct conditions,
+     collapsing chattering, fleeting, and repeating events.
+  6. Agent gives the distinct conditions a preliminary rank based on
+     alarm-side evidence alone.
+  7. Agent retrieves the matching trend segment for each preliminarily
+     ranked condition. Conditions with no usable matching trend data
+     are marked unresolved rather than guessed about.
+  8. Agent reassesses the remaining conditions by evaluating a fixed
+     ordered set of deterministic promote and demote rules against the
+     trend evidence. The preliminary score is not modified. The first
+     rule that fires sets the condition's band, the band assigns the
+     final disposition of escalate or nuisance, and the final ranked
+     escalation list is ordered by band and then by preliminary score.
+     The rule set is specified in P0-C2.
+  9. Agent uses a local language model to write a short reason and a
+     recommended next diagnostic step for each final escalated condition.
+  10. Agent writes a triage report and a run log to the output
+      directory.
+  11. Operator opens the triage report.
+
+What kicks it off: the operator runs the agent from the command line
+with two file paths. What the operator has in hand at the end: a
+short ranked list of final escalated conditions with a reason and a
+recommended next diagnostic step for each, a record of conditions
+classified as nuisance, a separate list of unresolved conditions,
+and a run log.
+
+Version-one simplification: the agent retrieves a matching trend
+segment for every preliminarily ranked condition rather than deciding
+selectively which conditions deserve a trend lookup. Local indexed
+lookup is inexpensive, and applying the same evidence step to every
+candidate makes evaluation more consistent.
+
+Mermaid flowchart:
+
+  flowchart TD
+    N1[N1 ingest] --> N2[N2 validate]
+    N2 --> N3[N3 normalize]
+    N3 --> N4[N4 cluster]
+    N4 --> N5[N5 preliminary rank]
+    N5 --> N6[N6 evidence]
+    N6 --> N7[N7 reassess]
+    N7 --> N8[N8 explain]
+    N8 --> N9[N9 report]
+
+Operating system: Windows 11. This is not a detail to gloss over,
+because the coding LLM defaults to Linux assumptions. All file paths
+must be built with pathlib, not string concatenation with forward
+slashes. Any subprocess handling must use Windows compatible calls.
+
+Hardware: no attached hardware. The agent never touches a building
+control system, a controller, or any device. It reads exported files
+from disk. GPU acceleration is available locally (NVIDIA RTX PRO 500,
+6 GB VRAM) and is used to serve the local language model, but the
+agent must also run on CPU alone.
+
+Reasoning:
+This is the sequence that turns a several thousand line alarm export
+into a short list a service technician can act on. The preliminary
+rank is deliberately not final: trend evidence is retrieved and then
+used to reassess each candidate before the final disposition and rank
+are produced. Reassessment moves a condition only by a named rule
+firing, never by adjusting the score, so any change of judgment is
+inspectable as a rule that fired rather than buried in arithmetic. Steps 7, 8, and 10 exist so the agent never bluffs and
+every claim it makes is traceable back to evidence and to a log line.
+
+Future Expansion:
+Live BAS connection rather than manual export, streaming ingest,
+multi-site rollup across a portfolio.
+
+
+Cluster: P0-C2 Node Contracts
+Topic: For each flowchart node: the node name, the type of input it
+consumes, and the type of output it produces, stated in natural
+language. These contracts define the state schema for the eventual
+LangGraph state machine, and are how a reference entry is matched to
+a node.
+
+Student Decision:
+
+  N1 ingest
+    IN:  alarm_export_path, trend_export_path (two file paths as text)
+    OUT: raw_alarm_rows (untouched rows from the alarm export)
+         raw_trend_series (untouched rows from the trend export)
+
+  N2 validate
+    IN:  raw_alarm_rows, raw_trend_series
+    OUT: validated_alarm_rows (rows confirmed parseable and in window)
+         validated_trend_series (series confirmed to cover the same
+         window and the same point identities)
+
+  N3 normalize
+    IN:  validated_alarm_rows, validated_trend_series
+    OUT: canonical_alarm_events (one record per alarm transition, with
+         timestamp, point path, equipment reference, alarm class,
+         reported priority, transition type, value at transition, and
+         a reference back to the original export row)
+         canonical_trend_frames (one time indexed series per point)
+
+  N4 cluster
+    IN:  canonical_alarm_events
+    OUT: distinct_conditions (one record per real condition, holding
+         the member events that were collapsed into it, the point
+         identity, the start and end time, and the nuisance
+         classification applied)
+
+  N5 preliminary rank
+    IN:  distinct_conditions
+    OUT: preliminary_ranked_conditions (the same conditions in
+         preliminary order, each with an alarm-side numeric score and
+         the component values that produced it)
+
+  N6 evidence
+    IN:  preliminary_ranked_conditions, canonical_trend_frames
+    OUT: evidence_augmented_conditions (conditions with the matching
+         trend segment attached for reassessment)
+         evidence_unresolved_conditions (conditions with no usable
+         matching trend segment, each carrying the reason evidence
+         could not be obtained)
+
+  N7 reassess
+    IN:  evidence_augmented_conditions
+    OUT: final_escalated_conditions (conditions reassessed by the N7
+         reassessment rule set below, each carrying its unmodified
+         preliminary score, the band assigned to it, the identifier of
+         the rule that set that band, and the identifiers of every
+         other rule that fired, ordered by band and then by
+         preliminary score)
+         final_nuisance_conditions (conditions the rule set placed in
+         the nuisance disposition, carrying the same rule record)
+
+  N8 explain
+    IN:  final_escalated_conditions
+    OUT: explained_escalated_conditions (each final escalated condition
+         plus a short written reason and a recommended next diagnostic
+         step)
+
+  N9 report
+    IN:  explained_escalated_conditions, final_nuisance_conditions,
+         evidence_unresolved_conditions
+    OUT: triage_report_file (path to the written report)
+         run_log_file (path to the written run log)
+
+Every output name above is unique across the whole flowchart.
+
+N7 REASSESSMENT RULE SET (locked 2026-09-03)
+
+Reassessment is deterministic promote and demote rules evaluated
+against the preliminary score. It is not model re-ranking and it is
+not score adjustment. The preliminary score produced by N5 is carried
+through N7 unmodified.
+
+Each condition arriving at N7 carries its preliminary score, the
+component values that produced that score, the nuisance
+classification applied by N4, and the trend segment attached by N6.
+The rules below are evaluated in the fixed order shown. Every rule
+that fires is recorded. The first rule that fires sets the condition's
+band; rules firing after it are recorded for audit but do not change
+the band. A condition for which no rule fires is banded UNCHANGED.
+
+The order below is the evaluation order, and rule identifiers ascend in
+that same order so the list can be read top to bottom as it runs. The
+order within the demote rules is deliberate. More than one demote rule
+can be true of the same condition, and the earlier rule states the more
+specific finding: an alarm that never left the deadband is boundary
+noise whatever else is true of it, and an excursion too brief to dwell
+is better described that way than as one that recovered, since every
+brief excursion also recovers.
+
+Demote rules, evaluated first:
+
+  R-D1 TREND_WITHIN_DEADBAND
+    Fires when no sample in the trend segment passes the alarm
+    threshold by more than the configured deadband. The alarm fired on
+    boundary noise rather than on a real process excursion.
+    Band: DEMOTED.
+
+  R-D2 EXCURSION_BELOW_MINIMUM_DURATION
+    Fires when the total time the trend spends beyond the threshold is
+    less than the configured minimum excursion duration. A fleeting
+    excursion with no dwell behind it.
+    Band: DEMOTED.
+
+  R-D3 SELF_RECOVERED_AND_STABLE
+    Fires when the condition returned to normal and every later sample
+    in the segment stays on the normal side of the threshold by more
+    than the deadband for at least the configured stability duration.
+    The condition cleared itself and did not come back.
+    Band: DEMOTED.
+
+Promote rules, evaluated after the demote rules:
+
+  R-P1 SUSTAINED_EXCURSION
+    Fires when the trend stays beyond the threshold for at least the
+    configured sustained fraction of the segment and has not returned
+    to normal by the end of the segment. A standing condition.
+    Band: PROMOTED.
+
+  R-P2 MONOTONIC_DRIFT
+    Fires when the trend moves away from the threshold across the
+    segment at or above the configured drift slope without reversing
+    by more than the deadband. Degrading behavior rather than a fixed
+    offset.
+    Band: PROMOTED.
+
+  R-P3 EXCURSION_MAGNITUDE
+    Fires when the peak deviation beyond the threshold is at least the
+    configured magnitude multiple of the deadband.
+    Band: PROMOTED.
+
+Every quantity named as configured above is a configuration value per
+P1-C3, changed by a human and never by the agent.
+
+Disposition from band:
+
+  PROMOTED   escalate.
+  DEMOTED    nuisance.
+  UNCHANGED  nuisance if N4 classified the condition into a nuisance
+             category, that is chattering, fleeting, or repeating;
+             escalate otherwise.
+
+Final order within final_escalated_conditions:
+
+  1. band, PROMOTED before UNCHANGED
+  2. preliminary score, descending
+  3. condition start time, ascending
+  4. point path, ascending
+
+Keys 3 and 4 exist so that the ordering is a total order and two runs
+over the same corpus produce byte-identical output.
+
+A condition with no attached trend segment never reaches N7, because
+N6 has already placed it in evidence_unresolved_conditions. N7 asserts
+this on entry, and that assertion is where the P4-C1 rule that nothing
+is escalated without trend evidence is enforced.
+
+Reasoning:
+Each node has one job and explicitly typed outputs, so any stage can
+be tested on its own and a bad result can be traced to exactly one
+node. N7 exists because trend evidence must be able to change the
+agent's preliminary judgment rather than merely decorate it. Banding
+is first-match so that every movement has exactly one stated cause,
+which is what lets a reassessment be reviewed by someone who did not
+write it. Leaving the preliminary score untouched keeps the alarm-side
+evidence and the trend-side evidence separately visible in the report
+instead of collapsing both into a single number. N8 is
+split out from N9 deliberately: it is the only node in the entire
+graph that calls a language model, which means the whole
+non-deterministic surface of this project sits in one testable place.
+
+Future Expansion:
+A feedback node that records which escalations the operator accepted
+or rejected.
+
+
+Cluster: P0-C3 Node Tests and Phase Gate
+Topic: A pytest case per node using realistic fixture data, with
+LLM calls faked for determinism. Gate: all node tests pass and the
+skeleton runs end to end before Phase 1 begins. The coding LLM writes
+the tests; the student runs them. The gate is strict on structure, not
+on output quality.
+
+Student Decision:
+Fixture data, all synthetic and committed to the repository:
+
+  - A small alarm export of roughly 200 rows covering a 24 hour
+    window across three pieces of equipment, generated from LBNL
+    trend data. It contains at least one chattering point (many rapid
+    transitions), one fleeting alarm, one stale alarm that never
+    returns to normal, one genuine fault condition, one preliminarily
+    suspicious condition whose trend evidence causes reassessment to
+    nuisance, one condition with a modest preliminary score that trend
+    evidence promotes so that it rises in the final order, and one
+    condition with no supporting trend data so the unresolved path is
+    exercised.
+  - The matching trend export for that same window and those same
+    points.
+  - A malformed alarm export with unparseable rows and a mismatched
+    time window, for the validation node.
+  - A recorded language model response for N8, so the explain node
+    can be tested without calling a model at all.
+
+Gate agreed: every node has a passing pytest case on this fixture
+data and the whole path runs end to end. Judged on structure, not on
+output quality. Quality belongs to Phase 5.
+
+Reasoning:
+The fixture deliberately contains one of each nuisance type and one
+unsupported condition, so the skeleton cannot pass while quietly
+skipping a branch of the logic. It exercises the N7 rule set in both
+directions, because a reassessment node that can only demote is a veto
+rather than a reassessment. Faking the model call keeps the tests
+deterministic and fast.
+
+Future Expansion:
+Fixture set expanded to cover additional equipment types and vendor
+export formats.
+
+
+PHASE 0 REFLECTION
+Did anything believed earlier turn out to be incomplete or incorrect?
+Yes. The original project statement assumed the agent would be graded
+on a single pass over one dataset. Writing out the node contracts made
+it clear that the explain node is the only place a language model is
+involved at all, and that every other step is ordinary deterministic
+code. That is a smaller agent than originally pictured, and a more
+defensible one.
+
+
+========================================================================
+PHASE 1 - FOUNDATION
+========================================================================
+
+Cluster: P1-C1 Memory Strategy
+Topic: What the agent remembers within and across sessions.
+
+Student Decision:
+Within a session, the agent carries only the LangGraph state defined
+by the node contracts above. There is no conversational memory and no
+chat history.
+
+Across sessions, the agent persists one thing: a run history record
+containing the point identity, condition signature, and outcome of
+each prior run. This exists so a condition that appears in run after
+run can be flagged as a repeat.
+
+Reasoning:
+This is a batch analysis tool, not a chat assistant. Conversational
+memory would add cost and non-determinism with nothing gained. Repeat
+detection across runs is the only cross-session state that earns its
+complexity, because a condition recurring every week is a different
+problem from one appearing once.
+
+Future Expansion:
+A per-site knowledge store holding equipment history and prior
+resolutions.
+
+
+Cluster: P1-C2 Reasoning and Planning Approach
+Topic: How the agent reasons and plans (chain-of-thought, decomposition,
+ReAct-style interleaving of reasoning and action, multi-step planning).
+
+Student Decision:
+Fixed sequential pipeline. No dynamic planning, no ReAct style
+interleaving, no agent-chosen tool use. The order of operations is
+decided at design time and does not change at run time. The language
+model is used at exactly one step, N8, to turn a structured condition
+record plus its trend evidence into two sentences of plain English.
+
+Reassessment at N7 is a fixed ordered set of deterministic promote and
+demote rules, specified in P0-C2. It is not a model decision and it is
+not an arithmetic adjustment of the preliminary score. The model has no
+role in classification or in ranking at any point in the graph.
+
+Reasoning:
+This directly answers the question of whether this should be an agent
+at all. The honest answer is that most of this problem is not agentic.
+Parsing, clustering, preliminary ranking, evidence matching, and
+trend-based reassessment are deterministic engineering problems with
+correct answers, and handing them to a model
+would make results vary run to run and make the accuracy targets
+meaningless. The judgment call, describing why a condition matters and
+what a technician should check next, is the one place model reasoning
+genuinely earns its place. Building it any other way would be forcing
+the problem to need an agent.
+
+Future Expansion:
+Model assisted ranking as a comparison arm, run against the rule based
+baseline, only after the baseline is measured.
+
+
+Cluster: P1-C3 Adapting From Feedback
+Topic: Whether and how the agent's reasoning changes based on past
+outcomes.
+
+Student Decision:
+No. The agent uses the same approach every run regardless of outcome.
+Ranking weights live in a config file and are changed by a human.
+
+Reasoning:
+Self-adjusting weights would make every run's results depend on the
+history of prior runs, which destroys reproducibility and makes the
+evaluation numbers impossible to interpret. For a tool whose output
+sends a technician to a roof, predictable beats adaptive.
+
+Future Expansion:
+Weight tuning informed by recorded operator acceptance, applied
+manually between versions.
+
+
+Cluster: P1-C4 Agent Architecture and Orchestration
+Topic: Single-agent vs multi-agent design, coordination and communication
+between agents, and how adaptable/scalable the architecture needs to be.
+
+Student Decision:
+Single agent, LangGraph state machine, nine nodes as defined in
+P0-C2. No sub-agents, no inter-agent messaging.
+
+Reasoning:
+The problem is one linear pipeline over one dataset. Multiple agents
+would add coordination overhead with nothing to coordinate. LangGraph
+is the choice over LangChain because it makes state explicit and
+inspectable at every node boundary, which matters when the whole
+point of the project is traceability. Langflow was rejected because
+it is a paid observability layer for something this project logs
+itself.
+
+Future Expansion:
+Per-site parallel execution if the tool is ever run across a
+portfolio, which would be concurrency rather than a redesign.
+
+
+Cluster: P1-C5 User Interaction Design
+Topic: How a person interacts with the agent, and whether human
+intervention mid-task is supported.
+
+Student Decision:
+Command line. Two input file paths and one output directory. Single
+shot, non-interactive: the operator starts a run and reads the report
+when it finishes. No mid-task intervention. The human role is at both
+ends, choosing the export window at the start and deciding what to act
+on at the end.
+
+Reasoning:
+The user is a controls engineer or service technician who already
+works at a terminal. A CLI keeps all effort on the logic rather than
+on a front end. Mid-task intervention would be meaningless in a
+pipeline that runs in seconds.
+
+Future Expansion:
+A web dashboard with trend plots rendered inline.
+
+
+PHASE 1 REFLECTION
+The foundation questions sharpened the position that this project is
+mostly deterministic code with one narrow language model step. That was
+implicit before Phase 1 and is now an explicit, defended decision.
+
+
+========================================================================
+PHASE 2 - CORE AGENT
+========================================================================
+
+Cluster: P2-C1 Primary Workflow, Models, and Multimodal Use
+Topic: The agent's core end-to-end task, the model(s) used, and any
+multimodal (image/audio/other) requirements.
+
+Student Decision:
+The workflow captured in P0-C1 still holds without change.
+
+Models: local open models served by Ollama. No hosted API in the
+runtime path. Model selection follows the principle of the smallest
+model that performs the step, and the only step requiring a model is
+N8 explain. Starting point is a small instruction-tuned open model in
+the 7B to 8B class, which fits comfortably in 6 GB VRAM at reduced
+precision. Model choice is a config value, not a code constant, so a
+larger or smaller model can be swapped without touching logic.
+
+Multimodal: none. Text and numeric time series only. No images, no
+audio.
+
+Reasoning:
+Alarm data from real buildings is customer data, so local serving
+removes the data-handling question entirely and also makes runs free
+and repeatable. Since the model only writes two sentences from an
+already structured input, a large model would be paying for capability
+the task does not use.
+
+Future Expansion:
+An optional hosted model backend behind a config flag, if a specific
+step is ever shown to need it.
+
+
+Cluster: P2-C2 Tools and External Integrations
+Topic: External tools, APIs, and functions the agent calls.
+
+Student Decision:
+No external tools and no network calls at run time. The agent reads
+two local files, calls a locally served model over localhost, and
+writes local files. No BAS API, no cloud service, no web access.
+
+Critically: the agent has no write path to any building control
+system under any configuration. It reads exported files only.
+
+Reasoning:
+A building control system runs real equipment. An agent with a write
+path is a liability with no upside for a tool whose entire purpose is
+triage and recommendation. Keeping the integration surface at zero
+also removes an entire category of failure and security concern.
+
+Future Expansion:
+Read-only BAS connectivity, if and only if a strictly read-only
+credential path can be guaranteed.
+
+
+Cluster: P2-C3 Error Handling and Resilience
+Topic: How the agent recovers from failed calls, unavailable services, or
+bad model output. Also where any error handling deferred from a Phase 0
+reference entry is restored or explicitly declined.
+
+Student Decision:
+Fail loud on input problems. Mismatched time windows, missing point
+identities, and unparseable rows stop the run with a clear message
+naming the offending file and row. No silent skipping of records.
+
+For the model call at N8: retry once. On a second failure, that
+condition moves to the unresolved list with the failure recorded as
+the reason, and the run continues. One condition failing must never
+kill a run.
+
+Stop limit: two attempts per condition, hard. There is no loop that
+can run away, because the pipeline is a fixed sequence with a known
+number of model calls equal to the number of final escalated conditions.
+
+Bad model output is caught by validating that N8 returned both a
+reason and a recommended step, and that the recommendation does not
+contain a control action verb. Failing that check counts as a failed
+attempt.
+
+Reasoning:
+Silent data loss in a tool that people use to decide where to send a
+technician is the worst possible failure mode. An operator must always
+be able to see exactly what the agent could not process and why.
+
+Future Expansion:
+Partial run resume from a checkpoint for very large exports.
+
+
+Cluster: P2-C4 Conversation Flow and Interaction Pattern
+Topic: How interactions start, continue, and end; streaming behavior.
+
+Student Decision:
+Single-turn and non-conversational. One command starts the run, the
+run completes, files are written, the process exits. No streaming, no
+multi-turn dialogue, no follow-up questions.
+
+Reasoning:
+There is nothing to converse about. The input is two files and the
+output is a report. Adding turns would be interface for its own sake.
+
+Future Expansion:
+A follow-up query mode allowing an operator to ask about a specific
+condition from a completed run.
+
+
+Cluster: P2-C5 Early Evaluation Criteria
+Topic: First-pass, informal criteria for judging a good response from a
+bad one (distinct from the full evaluation pipeline in Phase 5).
+
+Student Decision:
+The judgment is external and objective. The agent never rates its own
+output.
+
+First-pass checks:
+  - On an evaluation case with five conditions that should be
+    escalated, did at least four of those five appear in the agent's
+    top five final escalated conditions? This preserves the original
+    project target that important conditions must rise near the top,
+    not merely appear somewhere in a long list.
+  - Was the final escalated list an order of magnitude shorter than
+    the raw alarm event count?
+  - Was the false escalation rate at or below the 20 percent ceiling
+    fixed in P5-C1, that is no more than one escalation in five wrong?
+  - Did any condition get finally escalated without an attached trend
+    segment? That is an automatic fail, checked by assertion, not
+    judgment.
+  - Does each recommendation describe a diagnostic step rather than a
+    control action? Checked against a forbidden-verb list.
+
+Reasoning:
+Every one of these is a test that passes or fails against labeled data
+or a rule. Asking a model whether it did a good job would produce a
+number that means nothing.
+
+Future Expansion:
+A human review rubric applied to the written quality of the
+recommendations, separate from the correctness checks above.
+
+
+PHASE 2 REFLECTION
+The error handling questions surfaced something not previously
+considered: bad model output needs a structural check, not just a
+retry. The forbidden-verb check on recommendations came directly out of
+this phase and did not exist in the original project statement.
+
+
+========================================================================
+PHASE 3 - KNOWLEDGE
+========================================================================
+
+Cluster: P3-C1 Retrieval Approach
+Topic: How the agent retrieves knowledge beyond the base model -- RAG,
+embedding-based search, keyword search, hybrid approaches, and whether
+relational/graph-based reasoning over that knowledge is needed. Retrieval
+speed/scale needs, at a design level.
+
+Student Decision:
+No RAG, no embeddings, no vector store. Evidence retrieval is direct
+lookup: given a condition with a point identity and a time range, pull
+the matching trend segment by index. Deterministic, exact, and fast.
+
+Relational reasoning across pieces of information is not needed in
+version one. Each condition is evaluated against its own point's
+trend data.
+
+Speed and scale: not a constraint. A 24 hour export for one site fits
+in memory.
+
+Reasoning:
+The knowledge the agent needs is numeric time series indexed by point
+and timestamp. That is a lookup problem with a correct answer, not a
+semantic search problem. Adding embeddings would introduce approximate
+matching to a step that can be exact, which would be strictly worse.
+
+Future Expansion:
+Cross point correlation, where several points on one piece of
+equipment are recognized as one root cause. That is genuinely
+relational and is the natural next step.
+
+
+Cluster: P3-C2 Data Sources and Preparation
+Topic: What data sources feed the knowledge base and how that data is
+cleaned, transformed, and quality-checked.
+
+Student Decision:
+Two data sources.
+
+1. LBNL fault detection and diagnostics datasets (DOI
+   10.25984/1881324). These supply labeled HVAC trend data with known
+   fault ground truth. This is the scoring source.
+
+2. A synthetic alarm log layer generated on top of that LBNL trend
+   data. LBNL provides trends and fault labels but does not provide
+   alarm logs, so the generator is the bridge between them. It
+   reproduces standard BAS alarm mechanics: threshold and deadband,
+   on delay and off delay, return to normal, and repeat behavior. It
+   is deterministic, it is frozen before any agent code is written,
+   and it is never shipped as part of the product.
+
+Preparation: resample trend data to a uniform interval, align
+timestamps to a single timezone, normalize point naming into the
+canonical schema, and inject selected synthetic alarm behaviors such
+as chatter or fleeting alarms deliberately so those alarm-behavior
+labels are known by construction.
+
+Label validity, stated plainly because it is the make-or-break issue
+for this project: underlying HVAC fault ground-truth labels come from
+the LBNL dataset by timestamp and are never created by the alarm-log
+generator. The generator may create and therefore label synthetic
+alarm behaviors such as chatter, but those behavior labels are kept
+separate from the LBNL fault ground truth. The generator is never
+allowed to decide whether an underlying HVAC fault exists. If the
+generator is imperfect, the damage lands on alarm-log realism, not on
+the independent HVAC fault ground truth used for scoring.
+
+Realism is validated separately by comparing generated alarm
+distributions against one anonymized real alarm export for shape only.
+That comparison is a sanity check and is never an input to scoring.
+
+Reasoning:
+This directly addresses the known trap that an alarm triage agent
+sounds excellent right up until it turns out there are no labeled
+examples of which alarms deserved escalation. The answer is not to
+hope such a dataset appears. The answer is to build on a dataset where
+the faults are already labeled by someone else, and to generate only
+the alarm layer that sits on top of those labels. Underlying HVAC
+fault ground truth never comes from anything this project wrote.
+
+Future Expansion:
+A second public labeled dataset for cross validation. A blind holdout
+subset labeled by a subject matter expert.
+
+
+Cluster: P3-C3 Keeping Knowledge Current
+Topic: Whether any knowledge needs to stay current in real time, versus a
+static knowledge base being sufficient.
+
+Student Decision:
+Not applicable. Static. Every run is scoped to a fixed historical time
+window supplied by the operator. Nothing needs to stay current.
+
+Reasoning:
+The agent analyzes a past window on demand. There is no live state to
+keep fresh.
+
+Future Expansion:
+Becomes relevant only if a live BAS connection is ever added.
+
+
+PHASE 3 REFLECTION
+This phase forced the labeling argument to be written down completely
+rather than held as an assumption. The distinction between what is
+scored (LBNL labels) and what is only checked for realism (the
+generated alarm layer) is now explicit, and it is the single most
+important claim in this document.
+
+
+========================================================================
+PHASE 4 - SAFETY AND OPERATIONS
+========================================================================
+
+Cluster: P4-C1 Content and Behavioral Safety Rules
+Topic: What the agent must never say or do; layered safety filters and
+escalation behavior.
+
+Student Decision:
+Absolute rules:
+  - Never write to a building control system. No write path exists.
+  - Never recommend a control action, setpoint change, override,
+    schedule change, or equipment start or stop. Recommendations are
+    limited to diagnostic steps such as what to inspect or verify.
+    Enforced by a forbidden-verb check on N8 output.
+  - Never escalate a condition without attached trend evidence.
+  - Never present an inference as an observation. If the trend data
+    does not show it, the agent does not claim it.
+
+General toxic or biased conversational output is not a material
+project-specific risk because the tool is non-conversational and the
+model is constrained to short technical explanations and diagnostic
+next steps. No separate conversational moderation layer is planned.
+
+Reasoning:
+This is a safety adjacent domain. The equipment involved includes
+chillers, air handlers, and generators serving live data halls. An
+agent that phrases a guess as a fact, or a control change as a
+recommendation, can cause real damage through a human acting on it.
+The agent has no authority over equipment and its language must never
+imply otherwise.
+
+Future Expansion:
+None. These rules are permanent.
+
+
+Cluster: P4-C2 Privacy, Compliance, and Licensing
+Topic: Privacy rules, organizational policy, licensing, and regulatory
+requirements. Licensing includes borrowed code: any reference entry whose
+source license is unknown is flagged here.
+
+Student Decision:
+Privacy: real alarm exports contain customer site names, equipment
+tags, and point paths, all of which are customer identifying. Real
+data is anonymized before any use, is used only for the realism shape
+comparison, and is never committed to the repository. The repository
+contains only synthetic data and public LBNL references.
+
+Licensing: project is MIT. LBNL dataset is used under its published
+terms with the DOI cited. No borrowed code with an unknown license is
+in the project. Every dependency is free and open source, and the
+license of each is recorded.
+
+Compliance: no regulated data categories are involved. Building
+telemetry is not personal data. Organizational policy is respected by
+keeping all processing local and all customer data out of version
+control.
+
+Reasoning:
+The simple correct answer to customer identifying data is to not put
+it in a public repository, and to not send it anywhere. Both are
+satisfied by design rather than by process.
+
+Future Expansion:
+A formal anonymization utility rather than a manual step.
+
+
+Cluster: P4-C3 Security and Audit Logging
+Topic: Security posture and audit-trail logging of what the agent did and
+why.
+
+Student Decision:
+Yes, a full audit trail is required, not optional.
+
+Every run writes a log recording: node entry and exit, record counts
+in and out at each node, the full prompt and the full response for
+every model call, timings per node, every configuration value in
+effect, the input file paths and their checksums, every N7 rule that
+fired against every condition together with the band it produced, and
+the reason any condition landed on the unresolved list.
+
+Security posture: the agent runs locally under the operator's own
+account, reads only the two files it is given, writes only to its
+output directory, and makes no outbound network connection.
+
+Reasoning:
+If a run produces a wrong answer, "the AI got it wrong" is not an
+acceptable explanation. The log must let a human reconstruct exactly
+what happened without rerunning anything. Logging the prompts and
+responses in full is the part people skip and the part that matters
+most, because the model step is the only non-deterministic surface in
+the whole system.
+
+Future Expansion:
+Structured log output shipped to an external system for fleet-level
+review.
+
+
+Cluster: P4-C4 Feedback Loop Design
+Topic: The mechanism by which user feedback, failures, or monitoring data
+get collected for future improvement (see P5-C3 for how it's used).
+
+Student Decision:
+A minimal mechanism in version one. The triage report includes an
+outcome column the operator can mark: correct, false escalation, or
+missed. Marked reports are saved to a feedback directory and are
+retained. Collection only. Nothing consumes them yet.
+
+Reasoning:
+Building the collection mechanism early is cheap and means real
+outcome data starts accumulating from the first run. Building the
+consumption side before any data exists would be building for
+imagined feedback.
+
+Future Expansion:
+Automated intake of marked reports into a labeled corpus.
+
+
+Cluster: P4-C5 Transparency and Human Oversight
+Topic: How much the agent explains its reasoning, and how a human can
+review, override, or halt it.
+
+Student Decision:
+Every escalated condition shows: the member alarm events that were
+collapsed into it, the nuisance classification applied, the numeric
+score with its component values broken out, the trend segment used as
+evidence, the band assigned at N7 with the identifier of the rule that
+set it and the identifiers of every other rule that fired, and the
+written reason. An operator can see exactly why something ranked where
+it did, and where trend evidence moved a condition the operator can
+name the rule that moved it.
+
+Oversight: total. The agent recommends and never acts. Every output is
+advisory. The human decides what happens. Halting is trivial since a
+run takes seconds and produces no side effects outside its output
+directory.
+
+Reasoning:
+An explainable rule based score was chosen over a learned one
+specifically so this cluster could be answered this way. Transparency
+was a design input, not a feature added afterward.
+
+Future Expansion:
+Inline trend plots in the report so the evidence is visual rather than
+tabular.
+
+
+Cluster: P4-C6 Monitoring, Reliability, and Uptime
+Topic: What gets monitored, and the reliability/uptime bar this project
+actually needs.
+
+Student Decision:
+There is no production service, so there is no uptime requirement.
+This is an on-demand local tool.
+
+What gets monitored per run and written into the run summary: total
+alarm events in, distinct conditions out, escalated count, unresolved
+count, model call failures, and total run time. A sharp move in the
+unresolved count or the escalated count between comparable runs is the
+signal that something is wrong.
+
+Reasoning:
+"It mostly works" is genuinely good enough for reliability here,
+because a failed run costs one rerun and nothing else. Correctness is
+where the bar is high, not availability.
+
+Future Expansion:
+Real monitoring if the tool is ever run as a scheduled service.
+
+
+Cluster: P4-C7 Regression Benchmarking
+Topic: How future versions get checked against the current one before
+replacing it (see P5-C2 for task/dataset-level comparison during initial
+validation).
+
+Student Decision:
+A frozen benchmark set is kept: the fixture data from P0-C3 plus a
+larger labeled evaluation set built from LBNL data. Every version runs
+the same benchmark and records top-five escalation capture, overall
+escalation recall, escalated count, unresolved count, false escalation
+count, and run time.
+
+A new version replaces the current one only if top-five escalation
+capture does not drop, overall recall does not drop, and the false
+escalation rate neither rises nor exceeds the 20 percent ceiling fixed
+in P5-C1. A version that improves volume reduction while losing recall
+is rejected, because missing real faults is the failure this tool
+exists to prevent.
+
+Reasoning:
+Without a fixed benchmark, "better" becomes an opinion. Naming in
+advance which metric is allowed to lose ground and which is not
+prevents a later version from being talked into acceptance.
+
+Future Expansion:
+Automated benchmark run on every commit.
+
+
+Cluster: P4-C8 Automated Tuning and Retraining
+Topic: Whether the agent adjusts or retrains itself automatically over
+time, versus manual updates only.
+
+Student Decision:
+No. Manual updates only. No automatic tuning, no retraining, no
+self-adjusting thresholds. Config changes are made by a human,
+reviewed, and benchmarked before they take effect.
+
+Reasoning:
+Self-tuning would break reproducibility and make it impossible to say
+why a given run produced a given result. For a tool used to direct
+field work, a human should be accountable for every threshold in it.
+
+Future Expansion:
+Assisted tuning that proposes threshold changes from accumulated
+feedback and requires human approval.
+
+
+PHASE 4 REFLECTION
+The feedback collection mechanism in P4-C4 is new. It was not in the
+original project statement, and it exists because Phase 4 made clear
+that outcome data will never exist unless something starts collecting
+it from run one, even if nothing consumes it yet.
+
+
+========================================================================
+PHASE 5 - VALIDATION
+========================================================================
+
+Cluster: P5-C1 Success Criteria and Evaluation Approach
+Topic: What "success" means concretely, what benchmarks/scenarios are
+always run, and how results guide further work.
+
+Student Decision:
+Three criteria, all measured externally against the held-out labeled
+evaluation data and consistent with the first-pass checks in P2-C5:
+
+  1. Top-five escalation capture: on an evaluation case with five
+     conditions that should be escalated, at least four of those five
+     appear among the agent's top five final escalated conditions.
+  2. Volume reduction: an order of magnitude fewer items requiring
+     human review than raw alarm events in.
+  3. False escalation rate: at or below 20 percent. No more than one
+     escalation in five may be wrong. The rate is the count of final
+     escalated conditions having no corresponding fault in the ground
+     truth, divided by the total count of final escalated conditions.
+     This ceiling was fixed on 2026-09-03, before any holdout data was
+     opened, and is not revised after results are seen.
+
+Overall escalation recall is also reported as a diagnostic metric so
+a good top-five result cannot hide faults that disappear entirely from
+the final escalated set.
+
+Always-run scenarios: the full fixture set from P0-C3, plus the
+labeled evaluation set, plus the malformed input case.
+
+The agent never judges its own output. HVAC fault correctness is
+scored against LBNL ground truth that the project did not create;
+synthetic alarm-behavior labels from the generator are evaluated
+separately where relevant.
+
+A required baseline comparison is part of success, not optional. The
+agent's results are reported alongside two simpler baselines: raw
+alarm count with no processing, and a plain deduplication script with
+no ranking and no evidence step. If the agent does not clearly beat
+the deduplication script, the honest conclusion is that the simple
+script was the right answer and the agent was unnecessary complexity.
+
+Reasoning:
+The baseline comparison is included because a complicated agent is not
+automatically better than a simple solution, and a project that never
+asks "better than what" cannot answer it. The 20 percent false
+escalation ceiling was fixed and written into this document before any
+holdout data was opened, which is what stops the number from being
+retrofitted to the result.
+
+Future Expansion:
+Precision and recall broken out per fault type rather than in
+aggregate.
+
+
+Cluster: P5-C2 Comparative and Regression Testing
+Topic: Whether performance needs to be compared across different tasks or
+datasets during validation (see P4-C7 for ongoing production regression
+checks).
+
+Student Decision:
+Yes. Performance is measured across multiple LBNL equipment types and
+fault categories, not on a single dataset, so it is clear whether the
+agent works generally or only on one kind of equipment.
+
+Train and test separation is enforced. A holdout subset of the labeled
+evaluation data is set aside at the start and is not looked at, not
+tuned against, and not used to adjust any threshold. Final reported
+numbers come from the holdout only. Tuning happens on the development
+subset.
+
+Reasoning:
+Tuning against the same examples used for the final number produces a
+result that is not a measurement of anything. Setting the holdout
+aside before any tuning begins is the only way to keep the final
+figure honest, and it has to be done at the start because it cannot be
+done retroactively.
+
+Future Expansion:
+A second independent dataset from a different source entirely.
+
+
+Cluster: P5-C3 User Feedback Into Iteration
+Topic: How collected feedback (see P4-C4) actually gets analyzed and
+turned into changes.
+
+Student Decision:
+Out of scope for version one. Feedback is collected per P4-C4 and
+retained, not analyzed.
+
+The intended path when it is in scope: review the marked reports,
+identify whether errors cluster by equipment type, nuisance category,
+or score component, adjust the corresponding config weight, and run
+the full benchmark from P4-C7 before accepting the change.
+
+Reasoning:
+Analysis needs data volume that will not exist until the tool has been
+run many times. Designing the analysis now would be designing against
+guesses.
+
+Future Expansion:
+The path above, implemented once enough marked runs exist.
+
+
+Cluster: P5-C4 Performance Tradeoffs
+Topic: Priority among accuracy, latency, and cost; whether high
+availability is a real requirement for this project.
+
+Student Decision:
+Accuracy first, by a wide margin. Latency and cost are close to
+irrelevant here. A run analyzing a 24 hour window taking two minutes
+instead of twenty seconds changes nothing about the tool's value,
+while a missed fault condition changes everything.
+
+High availability is not a requirement. This is an on-demand local
+tool with no service level to meet.
+
+Context growth and cost: this project does not have the runaway cost
+problem the question is aimed at, and the reason is structural. There
+is no reasoning loop. Context does not grow. N8 makes exactly one call
+per final escalated condition, each carrying one condition record plus
+one trend excerpt, and the full alarm log is never sent to the model
+at all. Total model calls per run equal the number of final escalated
+conditions, which is a bounded number known before the calls are made.
+Combined with the hard two-attempt stop limit from P2-C3, the worst
+case cost of a run is fixed and calculable in advance.
+
+How much of what the agent produces is kept and used: nearly all of
+it. The agent produces one reason and one recommendation per escalated
+condition and both go into the report. There is no discarded
+intermediate reasoning, because there is no intermediate reasoning.
+Running locally, the marginal cost is electricity.
+
+Reasoning:
+Deciding at design time that the model would only write final output,
+and never do intermediate reasoning, is what makes this answer
+possible. A ReAct style loop over a few thousand alarm events would
+have been expensive and slow with no accuracy gain to show for it.
+
+Future Expansion:
+Batched model calls if condition counts ever get large enough to
+matter.
+
+
+Cluster: P5-C5 Deployment Scale and Concurrency
+Topic: Whether the project needs to support more than one concurrent
+user/session, at a design level (not a specific platform choice).
+
+Student Decision:
+No. Single user, single session, one run at a time. Not needed now and
+not foreseeable within the project's scope.
+
+Reasoning:
+The user is one engineer analyzing one site's export. Concurrency
+would be solving a problem that does not exist.
+
+Future Expansion:
+Per-site parallel runs if the tool is ever applied across a portfolio.
+
+
+Cluster: P5-C6 Deployment Environment and Update Process
+Topic: What needs to be true before an update is considered safe to
+ship, at a design level (not a specific CI/CD tool choice).
+
+Student Decision:
+An update is safe to ship when all four hold:
+
+  1. Every node test from P0-C3 passes.
+  2. The full benchmark from P4-C7 runs, top-five escalation capture
+     and overall recall have not dropped, and the false escalation rate
+     has not risen and remains at or below the 20 percent ceiling.
+  3. The holdout set from P5-C2 remains untouched by whatever the
+     change was tuned against.
+  4. The run log format is still complete enough to reconstruct a run.
+
+Reasoning:
+These are the four things that, if quietly broken, would let the
+project keep producing confident output that no longer means anything.
+Item 3 is on the list because it is the easiest to violate by accident
+while chasing a better number.
+
+Future Expansion:
+Automated enforcement in CI.
+
+
+Cluster: P5-C7 Reliability Under Load
+Topic: The biggest risk if usage exceeds expectations, and whether it's
+worth designing around now.
+
+Student Decision:
+The realistic risk is not concurrent users. It is a single oversized
+input: an operator exporting a month of alarms across an entire site
+instead of a day across a few units, which would push the trend data
+past available memory and could exceed VRAM at the explain step.
+
+Mitigation designed in now, because it is cheap: a configurable cap on
+input rows and time window span, checked at N2, which stops the run
+with a clear message telling the operator to narrow the export rather
+than failing partway through with an out-of-memory error.
+
+Not worth designing around now: anything involving multiple
+simultaneous users.
+
+Reasoning:
+Naming the actual failure mode matters more than preparing for a
+generic load spike. A guard at the validate node costs almost nothing
+and turns an ugly crash into a clear instruction.
+
+Future Expansion:
+Chunked processing of large windows rather than rejecting them.
+
+
+PHASE 5 REFLECTION
+Two things changed during this phase. First, the baseline comparison in
+P5-C1 was added, because until it was asked directly this project had
+no answer to whether a plain deduplication script would do nearly as
+well. Second, the holdout discipline in P5-C2 was made explicit and
+moved to the start of the work rather than the end, since it cannot be
+established retroactively.
+
+
+========================================================================
+CARRIED LIMITATIONS
+========================================================================
+
+Stated openly rather than resolved. All three were open in the research
+document and none have closed.
+
+1. No subject matter expert interview has been conducted. The design
+   rests on published standards, vendor documentation, and the
+   author's own field experience in controls and commissioning.
+
+2. ISA-18.2 originates in the process industries. Building specific
+   guidance, ASHRAE in particular, has not been cross checked, so the
+   nuisance definitions may not map perfectly onto HVAC practice.
+
+3. The LBNL trend to alarm log conversion is unproven until the
+   generator is built and its output distributions are compared
+   against a real anonymized export.
+
+========================================================================
+END OF BUILD GUIDE -- 6 PHASES AND 31 CLUSTERS COVERED
+========================================================================
