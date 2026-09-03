@@ -85,6 +85,10 @@ def test_ground_truth_carries_no_alarm_behavior_label(corpus_dir: Path) -> None:
         "equipment_type",
         "fault_type",
         "severity",
+        # The measurements the fault manifests in. Fault information, not
+        # an alarm-behavior label, and the harness needs it to tell a
+        # correct escalation from a wrong one on the same equipment.
+        "affected_points",
         "start_sample",
         "end_sample",
         "start_time",

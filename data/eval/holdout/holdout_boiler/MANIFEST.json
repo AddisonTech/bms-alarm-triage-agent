@@ -11,8 +11,8 @@
       "sha256": "6a8653ac62d71b0c38c4e45827e959108f8c26e2fc8e7441b18277eae5ae77c3"
     },
     "ground_truth_faults.json": {
-      "bytes": 1948,
-      "sha256": "1324cb566622e3037744ba7b0e2a3087e8678d5848b2069e97adf6b8ad0ecafc"
+      "bytes": 2299,
+      "sha256": "a16685e59efbb08e2b5a3a5a9f4c91698301e0979cf3cd632135b6b8875cf1d9"
     },
     "source_untrended_series.csv": {
       "bytes": 98296,

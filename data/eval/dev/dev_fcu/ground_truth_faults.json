@@ -1,6 +1,9 @@
 {
   "faults": [
     {
+      "affected_points": [
+        "SYN1/FCU-51/ZONE_TEMP"
+      ],
       "end_sample": 1440,
       "end_time": "2026-07-23T23:59:00-07:00",
       "equipment": "FCU-51",
@@ -12,6 +15,9 @@
       "start_time": "2026-07-23T03:30:00-07:00"
     },
     {
+      "affected_points": [
+        "SYN1/FCU-51/COIL_TEMP"
+      ],
       "end_sample": 1440,
       "end_time": "2026-07-23T23:59:00-07:00",
       "equipment": "FCU-51",
@@ -23,6 +29,9 @@
       "start_time": "2026-07-23T04:00:00-07:00"
     },
     {
+      "affected_points": [
+        "SYN1/FCU-51/FAN_SPD"
+      ],
       "end_sample": 1440,
       "end_time": "2026-07-23T23:59:00-07:00",
       "equipment": "FCU-51",
@@ -34,6 +43,9 @@
       "start_time": "2026-07-23T00:00:00-07:00"
     },
     {
+      "affected_points": [
+        "SYN1/FCU-51/CHW_VLV_POS"
+      ],
       "end_sample": 1440,
       "end_time": "2026-07-23T23:59:00-07:00",
       "equipment": "FCU-51",
@@ -45,6 +57,9 @@
       "start_time": "2026-07-23T07:00:00-07:00"
     },
     {
+      "affected_points": [
+        "SYN1/FCU-51-B/ZONE_TEMP"
+      ],
       "end_sample": 1440,
       "end_time": "2026-07-23T23:59:00-07:00",
       "equipment": "FCU-51-B",

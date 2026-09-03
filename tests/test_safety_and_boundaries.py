@@ -128,25 +128,49 @@ def test_the_agent_does_not_import_the_generator():
                 assert "alarmgen" not in name, "%s imports %s" % (path.name, name)
 
 
+def imported_names(path: Path) -> list[str]:
+    tree = ast.parse(path.read_text(encoding="utf-8"))
+    names: list[str] = []
+    for node in ast.walk(tree):
+        if isinstance(node, ast.Import):
+            names.extend(alias.name for alias in node.names)
+        elif isinstance(node, ast.ImportFrom) and node.module:
+            names.append(node.module)
+    return names
+
+
 def test_the_generator_does_not_import_the_agent():
     """The dependency must not run the other way either.
 
     If the generator used the agent's own logic, the corpus would be
-    shaped by the code it exists to test.
+    shaped by the code it exists to test. This applies to the generator
+    only. The evaluation harness does import the agent, because running
+    the agent is what it is for.
     """
-    for path in sorted(TOOLS_DIR.rglob("*.py")):
-        tree = ast.parse(path.read_text(encoding="utf-8"))
-        for node in ast.walk(tree):
-            names: list[str] = []
-            if isinstance(node, ast.Import):
-                names = [alias.name for alias in node.names]
-            elif isinstance(node, ast.ImportFrom) and node.module:
-                names = [node.module]
-            for name in names:
-                assert "bms_alarm_triage" not in name, "%s imports %s" % (
-                    path.name,
-                    name,
-                )
+    for path in sorted((TOOLS_DIR / "alarmgen").rglob("*.py")):
+        for name in imported_names(path):
+            assert "bms_alarm_triage" not in name, "%s imports %s" % (
+                path.name,
+                name,
+            )
+
+
+def test_the_generator_does_not_import_the_evaluation_harness():
+    """The corpus must not be shaped by the thing that scores against it.
+
+    If the generator could see the scoring rule, a fixture case could be
+    built to satisfy it rather than to represent a real behaviour.
+    """
+    for path in sorted((TOOLS_DIR / "alarmgen").rglob("*.py")):
+        for name in imported_names(path):
+            assert "evaluate" not in name, "%s imports %s" % (path.name, name)
+
+
+def test_the_evaluation_harness_is_outside_the_agent_package():
+    """P2-C5: the judgment is external. It has to live somewhere the agent
+    cannot reach, and the agent-side check above is what keeps it there."""
+    assert (TOOLS_DIR / "evaluate" / "harness.py").is_file()
+    assert not (AGENT_DIR / "evaluate").exists()
 
 
 def test_the_generator_is_not_packaged(repo_root):

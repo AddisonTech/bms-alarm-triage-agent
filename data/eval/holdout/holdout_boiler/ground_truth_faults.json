@@ -1,6 +1,9 @@
 {
   "faults": [
     {
+      "affected_points": [
+        "SYN1/BLR-71/HW_SUP_TEMP"
+      ],
       "end_sample": 1440,
       "end_time": "2026-07-30T23:59:00-07:00",
       "equipment": "BLR-71",
@@ -12,6 +15,9 @@
       "start_time": "2026-07-30T03:30:00-07:00"
     },
     {
+      "affected_points": [
+        "SYN1/BLR-71/STACK_TEMP"
+      ],
       "end_sample": 1440,
       "end_time": "2026-07-30T23:59:00-07:00",
       "equipment": "BLR-71",
@@ -23,6 +29,9 @@
       "start_time": "2026-07-30T04:00:00-07:00"
     },
     {
+      "affected_points": [
+        "SYN1/BLR-71/HW_RET_TEMP"
+      ],
       "end_sample": 1440,
       "end_time": "2026-07-30T23:59:00-07:00",
       "equipment": "BLR-71",
@@ -34,6 +43,9 @@
       "start_time": "2026-07-30T00:00:00-07:00"
     },
     {
+      "affected_points": [
+        "SYN1/BLR-71/FIRING_RATE"
+      ],
       "end_sample": 1440,
       "end_time": "2026-07-30T23:59:00-07:00",
       "equipment": "BLR-71",
@@ -45,6 +57,9 @@
       "start_time": "2026-07-30T07:00:00-07:00"
     },
     {
+      "affected_points": [
+        "SYN1/BLR-71-B/HW_SUP_TEMP"
+      ],
       "end_sample": 1440,
       "end_time": "2026-07-30T23:59:00-07:00",
       "equipment": "BLR-71-B",

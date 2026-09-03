@@ -1,6 +1,9 @@
 {
   "faults": [
     {
+      "affected_points": [
+        "SYN1/CH-61/CHW_SUP_TEMP"
+      ],
       "end_sample": 1440,
       "end_time": "2026-07-29T23:59:00-07:00",
       "equipment": "CH-61",
@@ -12,6 +15,9 @@
       "start_time": "2026-07-29T03:30:00-07:00"
     },
     {
+      "affected_points": [
+        "SYN1/CH-61/CHW_RET_TEMP"
+      ],
       "end_sample": 1440,
       "end_time": "2026-07-29T23:59:00-07:00",
       "equipment": "CH-61",
@@ -23,6 +29,9 @@
       "start_time": "2026-07-29T04:00:00-07:00"
     },
     {
+      "affected_points": [
+        "SYN1/CH-61/COND_APPROACH"
+      ],
       "end_sample": 1440,
       "end_time": "2026-07-29T23:59:00-07:00",
       "equipment": "CH-61",
@@ -34,6 +43,9 @@
       "start_time": "2026-07-29T00:00:00-07:00"
     },
     {
+      "affected_points": [
+        "SYN1/CH-61/EVAP_PRESS"
+      ],
       "end_sample": 1440,
       "end_time": "2026-07-29T23:59:00-07:00",
       "equipment": "CH-61",
@@ -45,6 +57,9 @@
       "start_time": "2026-07-29T07:00:00-07:00"
     },
     {
+      "affected_points": [
+        "SYN1/CH-61-B/CHW_SUP_TEMP"
+      ],
       "end_sample": 1440,
       "end_time": "2026-07-29T23:59:00-07:00",
       "equipment": "CH-61-B",

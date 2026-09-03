@@ -1,6 +1,9 @@
 {
   "faults": [
     {
+      "affected_points": [
+        "SYN1/AHU-21/CLG_DUCT_TEMP"
+      ],
       "end_sample": 1440,
       "end_time": "2026-07-28T23:59:00-07:00",
       "equipment": "AHU-21",
@@ -12,6 +15,9 @@
       "start_time": "2026-07-28T03:30:00-07:00"
     },
     {
+      "affected_points": [
+        "SYN1/AHU-21/HTG_DUCT_TEMP"
+      ],
       "end_sample": 1440,
       "end_time": "2026-07-28T23:59:00-07:00",
       "equipment": "AHU-21",
@@ -23,6 +29,9 @@
       "start_time": "2026-07-28T04:00:00-07:00"
     },
     {
+      "affected_points": [
+        "SYN1/AHU-21/MIXED_AIR_TEMP"
+      ],
       "end_sample": 1440,
       "end_time": "2026-07-28T23:59:00-07:00",
       "equipment": "AHU-21",
@@ -34,6 +43,9 @@
       "start_time": "2026-07-28T00:00:00-07:00"
     },
     {
+      "affected_points": [
+        "SYN1/AHU-21/CLG_SP"
+      ],
       "end_sample": 1440,
       "end_time": "2026-07-28T23:59:00-07:00",
       "equipment": "AHU-21",
@@ -45,6 +57,9 @@
       "start_time": "2026-07-28T07:00:00-07:00"
     },
     {
+      "affected_points": [
+        "SYN1/AHU-21-B/CLG_DUCT_TEMP"
+      ],
       "end_sample": 1440,
       "end_time": "2026-07-28T23:59:00-07:00",
       "equipment": "AHU-21-B",

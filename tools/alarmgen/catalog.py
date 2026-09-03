@@ -55,6 +55,12 @@ class FaultWindow:
 
     Sample indices are inclusive of start and exclusive of end, matching
     the value series indexing used throughout the generator.
+
+    affected_points names the measurements the fault manifests in, which
+    is what an FDD benchmark label has to carry to be usable: a label that
+    said only "this air handler had a fault somewhere today" could not
+    distinguish a correct escalation from a wrong one on the same unit,
+    and every scoring arm would look perfect.
     """
 
     fault_id: str
@@ -64,6 +70,7 @@ class FaultWindow:
     severity: str
     start_sample: int
     end_sample: int
+    affected_points: tuple[str, ...]
 
 
 @dataclass(frozen=True)
@@ -544,6 +551,7 @@ def build_case(
             severity=FAULT_SEVERITY[kind],
             start_sample=start,
             end_sample=end,
+            affected_points=(point_path,),
         )
     return point, fault
 

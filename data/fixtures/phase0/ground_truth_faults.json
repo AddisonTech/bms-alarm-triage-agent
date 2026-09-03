@@ -1,6 +1,9 @@
 {
   "faults": [
     {
+      "affected_points": [
+        "SYN1/RTU-3/DA_TEMP"
+      ],
       "end_sample": 1440,
       "end_time": "2026-07-13T23:59:00-07:00",
       "equipment": "RTU-3",
@@ -12,6 +15,9 @@
       "start_time": "2026-07-13T03:30:00-07:00"
     },
     {
+      "affected_points": [
+        "SYN1/AHU-1/SA_TEMP"
+      ],
       "end_sample": 1440,
       "end_time": "2026-07-13T23:59:00-07:00",
       "equipment": "AHU-1",
@@ -23,6 +29,9 @@
       "start_time": "2026-07-13T04:00:00-07:00"
     },
     {
+      "affected_points": [
+        "SYN1/VAV-2-14/DMPR_POS"
+      ],
       "end_sample": 1440,
       "end_time": "2026-07-13T23:59:00-07:00",
       "equipment": "VAV-2-14",
@@ -34,6 +43,9 @@
       "start_time": "2026-07-13T00:00:00-07:00"
     },
     {
+      "affected_points": [
+        "SYN1/AHU-1/SF_SPD"
+      ],
       "end_sample": 1440,
       "end_time": "2026-07-13T23:59:00-07:00",
       "equipment": "AHU-1",

@@ -1,6 +1,9 @@
 {
   "faults": [
     {
+      "affected_points": [
+        "SYN1/AHU-11/SA_TEMP"
+      ],
       "end_sample": 1440,
       "end_time": "2026-07-20T23:59:00-07:00",
       "equipment": "AHU-11",
@@ -12,6 +15,9 @@
       "start_time": "2026-07-20T03:30:00-07:00"
     },
     {
+      "affected_points": [
+        "SYN1/AHU-11/SA_SP"
+      ],
       "end_sample": 1440,
       "end_time": "2026-07-20T23:59:00-07:00",
       "equipment": "AHU-11",
@@ -23,6 +29,9 @@
       "start_time": "2026-07-20T04:00:00-07:00"
     },
     {
+      "affected_points": [
+        "SYN1/AHU-11/RA_TEMP"
+      ],
       "end_sample": 1440,
       "end_time": "2026-07-20T23:59:00-07:00",
       "equipment": "AHU-11",
@@ -34,6 +43,9 @@
       "start_time": "2026-07-20T00:00:00-07:00"
     },
     {
+      "affected_points": [
+        "SYN1/AHU-11/SF_SPD"
+      ],
       "end_sample": 1440,
       "end_time": "2026-07-20T23:59:00-07:00",
       "equipment": "AHU-11",
@@ -45,6 +57,9 @@
       "start_time": "2026-07-20T07:00:00-07:00"
     },
     {
+      "affected_points": [
+        "SYN1/AHU-11-B/SA_TEMP"
+      ],
       "end_sample": 1440,
       "end_time": "2026-07-20T23:59:00-07:00",
       "equipment": "AHU-11-B",

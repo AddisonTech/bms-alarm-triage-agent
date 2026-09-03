@@ -1,6 +1,9 @@
 {
   "faults": [
     {
+      "affected_points": [
+        "SYN1/RTU-31/DA_TEMP"
+      ],
       "end_sample": 1440,
       "end_time": "2026-07-21T23:59:00-07:00",
       "equipment": "RTU-31",
@@ -12,6 +15,9 @@
       "start_time": "2026-07-21T03:30:00-07:00"
     },
     {
+      "affected_points": [
+        "SYN1/RTU-31/SA_TEMP"
+      ],
       "end_sample": 1440,
       "end_time": "2026-07-21T23:59:00-07:00",
       "equipment": "RTU-31",
@@ -23,6 +29,9 @@
       "start_time": "2026-07-21T04:00:00-07:00"
     },
     {
+      "affected_points": [
+        "SYN1/RTU-31/COND_PRESS"
+      ],
       "end_sample": 1440,
       "end_time": "2026-07-21T23:59:00-07:00",
       "equipment": "RTU-31",
@@ -34,6 +43,9 @@
       "start_time": "2026-07-21T00:00:00-07:00"
     },
     {
+      "affected_points": [
+        "SYN1/RTU-31/SUCT_PRESS"
+      ],
       "end_sample": 1440,
       "end_time": "2026-07-21T23:59:00-07:00",
       "equipment": "RTU-31",
@@ -45,6 +57,9 @@
       "start_time": "2026-07-21T07:00:00-07:00"
     },
     {
+      "affected_points": [
+        "SYN1/RTU-31-B/DA_TEMP"
+      ],
       "end_sample": 1440,
       "end_time": "2026-07-21T23:59:00-07:00",
       "equipment": "RTU-31-B",

@@ -176,6 +176,7 @@ def _ground_truth(window: WindowSpec) -> dict[str, object]:
                 "equipment_type": fault.equipment_type,
                 "fault_type": fault.fault_type,
                 "severity": fault.severity,
+                "affected_points": list(fault.affected_points),
                 "start_sample": fault.start_sample,
                 "end_sample": fault.end_sample,
                 "start_time": writers.format_timestamp(stamps[fault.start_sample]),
