@@ -106,18 +106,72 @@ action, not to the reason field, because P4-C1 forbids recommending a
 control action rather than describing one. That is unchanged. The
 thermal-domain guard in the schema still reads both fields.
 
-**2. "trend" kept in the allowed verb list.** Removing it produced
-better-reading recommendations -- "Inspect the cooling coil" rather than
-"Trend the point" -- but it is what surfaced the setpoint failure above,
-and the reported numbers take priority over the prose for now. Left as
-built. Worth revisiting once the setpoint fix has been exercised on more
-than one corpus, since the two changes are independent and only the
-combination was ever measured as failing.
+**2. "trend" kept in the allowed verb list, then removed once the
+setpoint fix was in.** Held back at first because removing it is what
+surfaced the setpoint failure above, and the reported numbers came
+before the prose. Retested afterwards on the reasoning that only the
+*combination* of the two changes had ever been measured as failing, and
+the numbers held everywhere. It is now out. See the entry below.
 
 Verification after both decisions: 391 tests pass. All three splits
 score identically, recorded and live -- fixture 182 events / 5 items /
 36.4x, dev 764 / 24 / 31.8x, holdout 548 / 18 / 30.4x, every split at
 100.0 percent recall and 0.0 percent false escalation.
+
+---
+
+## 2026-09-08 - "trend" removed from the allowed verbs
+
+P4-C1 - extended existing P4-C1 implementation: `DiagnosticVerb` is now
+seven verbs rather than eight. Trending a point in a building automation
+system means configuring a history extension on it, which is a change to
+the system rather than an observation of it, so it does not belong on a
+list whose entire purpose is that every entry is an observation.
+
+This was blocked once already. Removing it in the previous session cost
+`SYN1/AHU-21/CLG_SP` its escalation and moved pooled holdout recall to
+93.3 percent. The cause was never this verb: it was the noun "setpoint"
+on the denylist, which the changed phrasing happened to trigger. With
+that noun gone the same removal is clean, and the exact sentence that
+failed before now passes:
+
+    Review SYN1/AHU-21/CLG_SP: Check the setpoint value and ensure it is
+    correct, and verify that the temperature is within the allowed range.
+
+What it bought, stated accurately because the prediction in the previous
+entry was too generous. The model does not spread across the remaining
+verbs -- it moved from "Trend" on 15 of 15 escalations to "Review" on 13
+of 15. The verb itself is barely different on the page. The improvement
+is in the sentence after it. Offered "trend", the model wrote what it
+thought trending meant:
+
+    Trend SYN1/CH-61-B/CHW_SUP_TEMP: Look for the peak deviation past the
+    high limit to be above 4.00 deadbands.
+
+which restates a number already printed two lines above it in the
+report. Without it:
+
+    Review SYN1/CH-61-B/CHW_SUP_TEMP: Check the supply temperature trend
+    to see when it first exceeded the high limit and how long it remained
+    above it.
+
+That is a diagnostic step. The first one is not.
+
+Verification, run by the student:
+
+    .venv\Scripts\python.exe -m pytest -q
+    .venv\Scripts\python.exe -m tools.demo --split holdout --model ollama
+
+P4-C1 - implemented, VERIFIED: 390 tests pass. One fewer than the
+previous entry, because `test_every_allowed_verb_validates` is
+parametrised over the enum and there is one less verb in it. All three
+splits identical to the previous entry, recorded and live. The holdout
+was run live five
+times -- warm, three repeats, and once cold from an unloaded model -- at
+15 of 15 escalations every time, with no condition needing a second
+attempt on any run. Repeated deliberately rather than passed once,
+because the failure this replaces was a phrasing accident and one clean
+run would not have distinguished a fix from luck.
 
 ---
 

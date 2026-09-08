@@ -61,7 +61,12 @@ class DiagnosticVerb(str, Enum):
     REVIEW = "review"
     MEASURE = "measure"
     CONFIRM = "confirm"
-    TREND = "trend"
+
+    # "trend" is deliberately absent. In a BAS, trending a point means
+    # configuring a history extension, which is a change to the system
+    # rather than an observation of it. It also crowded out the verbs that
+    # send a technician to the equipment: offered the choice, the model
+    # used it for 11 of 15 holdout escalations.
 
 
 # Markers found in point paths and equipment tags. These identify which
