@@ -150,29 +150,63 @@ message if the server is down, rather than quietly substituting) or
 The model is `llama3.1:8b-instruct-q4_K_M`, the one already named in
 `config/triage.json`. It was kept after testing smaller models against
 the real N8 prompts: it is the only candidate that produced usable output
-for all 15 holdout escalations. See "Known weak spots in the live text"
-below before you decide to run live on camera.
+for all 15 holdout escalations. See "What the schema catches, and the one
+thing it does not" below before you decide to run live on camera.
 
-### Known weak spots in the live text
+### What the schema catches, and the one thing it does not
 
-Across the 15 holdout escalations the model gets the direction, the
-numbers, and the timing right every time -- it quotes the real deadband
-counts and window fractions out of the evidence. Three of the fifteen
-recommended actions contain a wrong statement about the equipment:
+N8's output is validated against a Pydantic schema before it reaches the
+report. A reply that does not validate is a failed attempt, and two
+failed attempts move the condition to the unresolved list rather than
+printing something wrong.
 
-- `SYN1/CH-61/CHW_SUP_TEMP` -- "Inspect the CH-61's **heating system**".
-  CH-61 is a chiller. This one is escalation 3 in `holdout_chiller` and
-  is the most visible of the three.
-- `SYN1/BLR-71/STACK_TEMP` -- refers to the boiler's "cooling system".
-- `SYN1/AHU-21/CLG_SP` -- calls a duct static pressure setpoint
-  "chilled water supply pressure".
+**Three checks, and what each one closes:**
 
-If one comes up, the honest answer is the useful one: N8 is the only
-non-deterministic step in the graph, it writes prose and takes no part in
-clustering, scoring, or ranking, and the safety gate it passes through
-blocks control-action verbs but cannot catch a wrong noun. A 4-bit 8B
-model running locally is what this trades away. The escalation itself,
-its rank, and its evidence are unaffected.
+| Check | What it blocks |
+|---|---|
+| `verb` is an enumerated field, seven diagnostic actions | Any control action in the verb slot. There is no free text for a verb to hide in. |
+| `target` must be this condition's own point path or equipment tag | Invented equipment and points from other units. |
+| Thermal-domain guard on both the reason and the action | Describing a cooling condition as a heating system, or the reverse. |
+
+**Two of the three errors this section used to list can no longer
+happen.** Earlier live runs produced "Inspect the CH-61's heating system"
+on a chiller and a reference to a boiler's "cooling system". Both are now
+rejected by the domain guard, which reads the heating and cooling markers
+out of the point path and equipment tag the export already carries and
+refuses prose asserting the opposite. Both cases are pinned as tests in
+`tests/test_schema.py`. If you are asked, they are worth showing as an
+example of a defect being closed rather than a defect being present.
+
+**One error survives, and you should know its shape.** The guard fires
+only where a condition is unambiguously one domain or the other. It says
+nothing about *what a point measures* inside the right domain. The live
+case is escalation 5 in `holdout_ahu_dual_duct`:
+
+```
+  5. SYN1/AHU-21/CLG_SP
+     reason .......... The cooling supply air temperature setpoint has
+                       exceeded its high limit for 11.5 hours.
+```
+
+`CLG_SP` is a duct static **pressure** setpoint, limit 1.50 inH2O. It is
+not a temperature. "Cooling" is correct, so nothing contradicts, and the
+sentence passes every check. This is the documented limit of the design,
+not an oversight -- it is pinned in `tests/test_schema.py` as a case that
+is *expected* to validate, so nobody later reads the schema as broader
+than it is.
+
+Coverage on the holdout, so the number is not a guess: 14 of the 15
+escalated conditions sit in exactly one thermal domain and are guarded.
+The one that is not is `SYN1/AHU-21/MIXED_AIR_TEMP`, which is genuinely
+neither heating nor cooling.
+
+**If it comes up on camera**, the honest answer is the useful one. N8 is
+the only non-deterministic step in the graph. It writes prose and takes
+no part in clustering, scoring, or ranking, so the escalation itself, its
+rank, its band, and its evidence are unaffected by anything it gets
+wrong. The schema narrows what the prose can be wrong about; it does not
+close it, and a 4-bit 8B model running locally on 6 GB is what that
+trades away.
 
 ## Starting and stopping the model server
 
@@ -237,6 +271,7 @@ sentence, not a stack trace.
 | The run sits silent for 10-15 s before the first escalation | The model is loading into VRAM. | Normal. Say "that is the model loading; it stays loaded for the rest of the run." Warm it beforehand to avoid this. |
 | Escalations show `0` and everything lands in unresolved with "the explain step failed" | N8 could not reach the model, on the plain CLI which has no fallback. | Use `python -m tools.demo` instead of `python -m bms_alarm_triage.cli`. The demo checks the model up front; the CLI does not. |
 | `no such split` / `no window named ...` | Typo in the arguments. | Re-type. The valid splits are `fixture`, `dev`, `holdout`. |
+| An escalation is missing and the unresolved list says "the explain step failed 2 time(s)" | The model wrote something the schema rejected, twice. The condition is set aside rather than printed wrong. Escalated drops by one and recall moves off 100%. | This is the safety behaviour working, so say that: it declined rather than guessed. The unresolved line names the exact reason. Do not re-run to get a better roll on camera; finish, then look at it afterwards. |
 | A number differs from the table above | The corpus or the config moved. | Run `python -m pytest -q` -- a corpus that has drifted fails the manifest test immediately. |
 | Anything else | Unhandled. | Fall back to `python -m tools.evaluate.benchmark --split holdout`, which is the same numbers without the per-condition narration, and finish the story there. |
 
