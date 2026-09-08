@@ -42,6 +42,14 @@ pip install -e ".[dev]"
 python -m bms_alarm_triage.cli ALARM_EXPORT.csv TREND_EXPORT.csv -o out/
 ```
 
+To watch the whole pipeline run on the labeled corpus, with the ranked
+output and the verification numbers on screen in one command, see
+[DEMO.md](DEMO.md):
+
+```
+python -m tools.demo --split holdout
+```
+
 The model is served locally by Ollama over localhost. There is no hosted
 API and no outbound network call at run time. The agent also runs on CPU
 alone.
@@ -51,7 +59,7 @@ a person. The agent never tunes itself.
 
 ## Status
 
-Built to the build guide, Phase 0 through Phase 5. 329 tests pass.
+Built to the build guide, Phase 0 through Phase 5. 340 tests pass.
 
 Against the held-out labeled corpus, which was set aside before any tuning
 and opened once: top-five capture 15 of 15, volume reduction 30.4x, false
@@ -87,6 +95,7 @@ distributions against a real anonymized export.
   accident
 - `tools/evaluate/` the evaluation harness. Outside the agent too, because
   the agent never scores its own output
+- `tools/demo.py` the one-command walkthrough described in `DEMO.md`
 - `data/` the frozen corpus, with a SHA-256 manifest per window
 - `tests/` node tests against that corpus
 
