@@ -42,12 +42,25 @@ class ExplodingClient:
         raise ModelUnavailableError("could not reach the local model")
 
 
-GOOD = json.dumps(
-    {
-        "reason": "The trend stays past its limit for most of the window.",
-        "recommended_step": "Inspect the sensor and compare it against a handheld reading.",
-    }
-)
+def good_response(condition, verb="inspect", detail=None):
+    """A schema-valid reply for one condition.
+
+    The target has to be this condition's own point path, so a fixed
+    constant cannot serve every case any more. That is the schema doing
+    its job, and the tests build the reply the same way the model must.
+    """
+    return json.dumps(
+        {
+            "reason": "The trend stays past its limit for most of the window.",
+            "verb": verb,
+            "target": condition.point_path,
+            "detail": detail or "the sensor, and compare it against a handheld reading.",
+        }
+    )
+
+
+def first_condition(state):
+    return state["final_escalated_conditions"][0].condition
 
 
 def test_every_escalated_condition_is_written_up(state_n8):
@@ -112,7 +125,9 @@ def test_the_prompt_never_carries_the_whole_alarm_log(state_n8, audit):
 # ----------------------------------------------------------- retries
 
 def test_a_bad_response_is_retried_once_and_then_succeeds(state_n7, config):
-    client = ScriptedClient(["not json at all", GOOD])
+    client = ScriptedClient(
+        ["not json at all", good_response(first_condition(state_n7))]
+    )
     state = dict(state_n7)
     state["final_escalated_conditions"] = state_n7["final_escalated_conditions"][:1]
     state["model_client"] = client
@@ -178,11 +193,12 @@ def test_a_failed_condition_is_removed_from_the_escalated_list(state_n7):
 def test_a_control_verb_in_the_recommendation_counts_as_a_failed_attempt(
     state_n7,
 ):
-    bad = json.dumps(
-        {
-            "reason": "The supply temperature is above its limit.",
-            "recommended_step": "Raise the cooling setpoint by two degrees.",
-        }
+    # The verb slot is an allowlist now, so a control action can only
+    # reach the output by hiding in the free-text sentence. That is what
+    # the retained denylist behind the schema is for.
+    bad = good_response(
+        first_condition(state_n7),
+        detail="the coil, then raise the cooling setpoint by two degrees.",
     )
     client = ScriptedClient([bad])
     state = dict(state_n7)
@@ -196,7 +212,7 @@ def test_a_control_verb_in_the_recommendation_counts_as_a_failed_attempt(
 
 
 def test_every_attempt_including_the_failures_is_logged(state_n7, audit):
-    client = ScriptedClient(["nonsense", GOOD])
+    client = ScriptedClient(["nonsense", good_response(first_condition(state_n7))])
     state = dict(state_n7)
     state["final_escalated_conditions"] = state_n7["final_escalated_conditions"][:1]
     state["model_client"] = client
@@ -299,8 +315,8 @@ def test_the_recorded_fixture_responses_all_pass_the_filter(
     check = ForbiddenVerbCheck(config.safety.forbidden_verbs)
     entries = [payload["default"]] + list(payload["by_case_id"].values())
     for entry in entries:
-        found = check.find(entry["recommended_step"])
+        found = check.find(entry["detail"])
         assert not found, "recorded response uses %s: %r" % (
             found,
-            entry["recommended_step"],
+            entry["detail"],
         )

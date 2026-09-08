@@ -23,9 +23,10 @@ Depends entirely on whether the local model is serving N8.
 
 | Run | Wall time | What dominates |
 |---|---:|---|
-| Model server up, model already loaded | **~43 s** | ~2.8 s per escalation, 15 escalations |
+| Model server up, model already loaded | **~46 s** | ~2.9 s per escalation, 15 escalations |
 | Model server up, model cold | **~56 s** | the above plus ~14 s loading the model into VRAM |
 | Model server down (recorded response) | **~3 s** | interpreter startup |
+| Orphaned `llama-server` holding VRAM | ~73 s | model forced to 71% CPU -- see the stop command below |
 
 Warm the model before recording and you save the ~14 s load. The other
 ~41 s is generation and cannot be avoided with the model live.
@@ -187,11 +188,19 @@ Start-Process ollama -ArgumentList 'serve' -WindowStyle Hidden
 (Invoke-WebRequest http://127.0.0.1:11434/api/tags -UseBasicParsing).StatusCode
 
 # stop
-Get-Process ollama* | Stop-Process -Force
+Get-Process ollama*, llama-server -ErrorAction SilentlyContinue | Stop-Process -Force
 ```
 
 The confirm command prints `200` when the server is answering and throws
 "Unable to connect to the remote server" when it is not.
+
+**`llama-server` in the stop command is not optional.** Ollama runs the
+model in child `llama-server.exe` processes whose names do not match
+`ollama*`. Killing only `ollama*` orphans them, and they keep holding
+VRAM. The next run then finds the card full, loads at 71%/29% CPU/GPU
+instead of 25%/75%, and takes about 73 s instead of 45 s. It compounds
+every cycle. Check with `nvidia-smi --query-gpu=memory.free --format=csv`
+-- a clean stop leaves about 5900 MiB free.
 
 Optional but worth doing before recording -- load the model into VRAM so
 the first escalation does not stall for ~14 seconds:

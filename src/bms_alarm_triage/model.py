@@ -24,16 +24,24 @@ from .errors import ModelUnavailableError
 
 PROMPT_TEMPLATE = """You are helping a controls engineer triage building automation alarms.
 
-Given one alarm condition and its trend evidence, write two things:
+Given one alarm condition and its trend evidence, return four fields:
   reason: one sentence on why this condition matters, stated only from the
           evidence below. Do not claim anything the evidence does not show.
-  recommended_step: one sentence naming a diagnostic step. Say what to
-          inspect, verify, check, compare, or review. You must NOT
-          recommend any change to the building system: no setpoint change,
-          no override, no schedule change, and no starting or stopping of
-          equipment.
+  verb:   the diagnostic action, chosen from exactly this list and written
+          in lower case: {allowed_verbs}. Nothing else is accepted. You
+          must NOT recommend any change to the building system: no
+          setpoint change, no override, no schedule change, and no
+          starting or stopping of equipment.
+  target: what to look at. Must be copied exactly from this list and
+          nothing else: {allowed_targets}
+  detail: one sentence on what to look for, from the evidence below.
 
-Answer with JSON only, exactly: {{"reason": "...", "recommended_step": "..."}}
+Do not describe this equipment as a kind of system it is not. The point
+path and equipment tag above tell you whether this is a heating or a
+cooling condition; do not call one the other.
+
+Answer with JSON only, exactly:
+{{"reason": "...", "verb": "...", "target": "...", "detail": "..."}}
 
 Condition
   point: {point_path}
@@ -60,6 +68,69 @@ Reassessment
 def build_prompt(explain_input: dict) -> str:
     """Render the prompt. Kept separate so it can be tested without a model."""
     return PROMPT_TEMPLATE.format(**explain_input)
+
+
+# Build Guide: P4-C1
+# Decision: a failed structural check is a failed attempt, and the retry
+#           has to be told what was wrong or it repeats itself
+RETRY_SUFFIX = """
+Your previous answer was rejected. Do not repeat it.
+
+  rejected because: {error}
+
+Answer again as JSON only, with the same four fields, correcting that
+problem. Choose the verb from the allowed list and copy the target
+exactly from the allowed targets.
+"""
+
+
+def build_retry_prompt(prompt: str, error: str) -> str:
+    """Append the validation failure so a second attempt can differ.
+
+    The model is served at temperature zero, so re-sending an identical
+    prompt is greedy decoding over the same input and returns the same
+    tokens. Without the failure text a retry is arithmetic, not a retry,
+    and max_attempts of 2 means one attempt. Feeding the error back is
+    what makes the second attempt an actual second attempt.
+    """
+    return prompt + RETRY_SUFFIX.format(error=error)
+
+
+def parse_explanation(raw: str, allowed_targets, domains) -> "Explanation":
+    """Validate a response against the P4-C1 schema.
+
+    Raises ModelUnavailableError on anything unusable, so a schema failure
+    and a transport failure are handled identically by the caller: both are
+    a failed attempt, and two of them move the condition to unresolved.
+    """
+    from pydantic import ValidationError
+
+    from .schema import Explanation
+
+    text = raw.strip()
+    start = text.find("{")
+    end = text.rfind("}")
+    if start == -1 or end == -1 or end < start:
+        raise ModelUnavailableError("response contained no JSON object")
+    try:
+        payload = json.loads(text[start : end + 1])
+    except json.JSONDecodeError as exc:
+        raise ModelUnavailableError("response was not valid JSON: %s" % exc) from exc
+
+    try:
+        return Explanation.model_validate(
+            payload,
+            context={
+                "allowed_targets": tuple(allowed_targets),
+                "domains": set(domains),
+            },
+        )
+    except ValidationError as exc:
+        problems = "; ".join(
+            "%s: %s" % (".".join(str(p) for p in err["loc"]) or "response", err["msg"])
+            for err in exc.errors()
+        )
+        raise ModelUnavailableError("response failed the schema: %s" % problems) from exc
 
 
 def _verb_pattern(verb: str) -> re.Pattern[str]:
@@ -202,9 +273,31 @@ class RecordedModelClient:
         payload = json.loads(Path(path).read_text(encoding="ascii"))
         return cls(payload, name=name, aliases=aliases)
 
-    def response_for(self, case_key: str) -> str:
+    _TARGET_LINE = re.compile(r"nothing else:\s*(?P<targets>.+)$", re.MULTILINE)
+
+    @staticmethod
+    def target_from(prompt: str) -> str:
+        """The first allowed target the prompt offers.
+
+        The recorded file stores prose, not targets. A target is not a
+        judgment the model makes, it is the point path the condition
+        already carries, so replaying a recording only has to copy it back
+        out of the prompt rather than record it once per case.
+        """
+        match = RecordedModelClient._TARGET_LINE.search(prompt)
+        if not match:
+            return ""
+        return match.group("targets").split(",")[0].strip()
+
+    def _render(self, entry: dict, prompt: str) -> str:
+        payload = dict(entry)
+        payload.setdefault("verb", "inspect")
+        payload["target"] = self.target_from(prompt)
+        return json.dumps(payload)
+
+    def response_for(self, case_key: str, prompt: str = "") -> str:
         entry = self._by_case.get(case_key, self._default)
-        return json.dumps(entry)
+        return self._render(entry, prompt)
 
     def generate(self, prompt: str) -> str:
         """Choose a recorded reply from what the prompt identifies.
@@ -217,8 +310,8 @@ class RecordedModelClient:
             if needle in prompt:
                 case_key = self._aliases[needle]
                 if case_key in self._by_case:
-                    return json.dumps(self._by_case[case_key])
+                    return self._render(self._by_case[case_key], prompt)
         for case_key in sorted(self._by_case, key=len, reverse=True):
             if case_key in prompt:
-                return json.dumps(self._by_case[case_key])
-        return json.dumps(self._default)
+                return self._render(self._by_case[case_key], prompt)
+        return self._render(self._default, prompt)

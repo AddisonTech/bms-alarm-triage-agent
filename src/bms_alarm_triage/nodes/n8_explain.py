@@ -27,13 +27,24 @@ import time
 
 from .. import rules
 from ..errors import ModelUnavailableError
-from ..model import ForbiddenVerbCheck, build_prompt, parse_reply
+from ..model import (
+    ForbiddenVerbCheck,
+    build_prompt,
+    build_retry_prompt,
+    parse_explanation,
+)
+from ..schema import DiagnosticVerb, domains_of
 from ..state import (
     ExplainedCondition,
     ReassessedCondition,
     TriageState,
     UnresolvedCondition,
 )
+
+
+def allowed_targets_for(condition) -> tuple[str, ...]:
+    """The only things a recommendation for this condition may name."""
+    return (condition.point_path, condition.equipment)
 
 
 def explain_input(item: ReassessedCondition, cfg) -> dict:
@@ -77,9 +88,28 @@ def explain_input(item: ReassessedCondition, cfg) -> dict:
         "band": item.band,
         "band_set_by": item.band_set_by or "no rule fired",
         "band_detail": banding.detail if banding else "no rule fired",
+        "allowed_verbs": ", ".join(v.value for v in DiagnosticVerb),
+        "allowed_targets": ", ".join(allowed_targets_for(condition)),
     }
 
 
+# Build Guide: P0-C2, P2-C3, P4-C1
+# Decision: the only node that calls a language model; it turns one
+#           reassessed condition into a short reason and a diagnostic step
+# Reads:    final_escalated_conditions, evidence_unresolved_conditions
+# Writes:   explained_escalated_conditions
+# Why:      the whole non-deterministic surface of the project sits in one
+#           testable place, and it neither classifies nor ranks
+# May change: a feedback node recording which escalations were accepted
+# Wraps:    original
+#
+# Known departure, recorded rather than hidden: this node also writes
+# final_escalated_conditions and evidence_unresolved_conditions, which
+# P0-C2 assigns to N7 and N6. A condition the model could not write up is
+# no longer an escalation, and leaving it in both lists would let the
+# report claim an escalation it has no text for. The behaviour is right
+# and the single-writer rule is broken to get it. See
+# docs/BUILD_STANDARDS_GAP.md item 3.
 def n8_explain(state: TriageState) -> dict:
     audit = state["audit"]
     config = state["config"]
@@ -99,17 +129,31 @@ def n8_explain(state: TriageState) -> dict:
 
     for item in escalated:
         condition = item.condition
-        prompt = build_prompt(explain_input(item, config))
+        base_prompt = build_prompt(explain_input(item, config))
+        targets = allowed_targets_for(condition)
+        domains = domains_of(condition.point_path, condition.equipment)
         last_detail = "no attempt was made"
         reply = None
 
         for attempt in range(1, max_attempts + 1):
+            # A retry re-sends the same prompt at temperature zero unless
+            # it is told what was wrong, so the failure is fed back in.
+            prompt = (
+                base_prompt
+                if attempt == 1
+                else build_retry_prompt(base_prompt, last_detail)
+            )
             started = time.perf_counter()
             raw = ""
             try:
                 raw = client.generate(prompt)
-                candidate = parse_reply(raw)
-                found = verb_check.find(candidate.recommended_step)
+                candidate = parse_explanation(raw, targets, domains)
+                # The denylist is kept behind the schema rather than in
+                # front of it. The verb slot is already an allowlist, so
+                # this only sees the free-text sentence, where it is the
+                # last guard against a control action being phrased as
+                # part of the explanation.
+                found = verb_check.find(candidate.detail)
                 if found:
                     raise ModelUnavailableError(
                         "recommendation contains the control action verb(s) %s"
@@ -152,7 +196,7 @@ def n8_explain(state: TriageState) -> dict:
             ExplainedCondition(
                 reassessed=item,
                 reason=reply.reason,
-                recommended_step=reply.recommended_step,
+                recommended_step=reply.recommended_step(),
                 model_name=getattr(client, "name", config.model.name),
                 attempts=len(
                     [c for c in audit.model_calls if c["condition_id"] == condition.condition_id]

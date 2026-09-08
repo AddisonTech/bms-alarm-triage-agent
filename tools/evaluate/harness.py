@@ -29,9 +29,10 @@ STUB_RESPONSE = {
             "Scored from the alarm side and reassessed against the trend "
             "segment for this point."
         ),
-        "recommended_step": (
-            "Inspect the point at the device and compare the trended value "
-            "against a handheld reading."
+        "verb": "inspect",
+        "detail": (
+            "the point at the device, and compare the trended value against "
+            "a handheld reading."
         ),
     }
 }

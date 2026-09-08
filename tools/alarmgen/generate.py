@@ -272,8 +272,11 @@ RECORDED_MODEL_RESPONSE: dict[str, object] = {
     "note": (
         "Recorded N8 responses so the explain node can be tested without "
         "calling a model. Keyed by case_id, with a default for any case not "
-        "listed. No recommendation contains a control action verb, per the "
-        "forbidden-verb rule in P4-C1."
+        "listed. Each entry carries the three fields a model has to compose: "
+        "reason, verb, and detail. The fourth schema field, target, is not "
+        "recorded because it is mechanically the condition's own point path "
+        "and the client fills it from the prompt. Every verb here is from "
+        "the allowed diagnostic list in schema.py, per P4-C1."
     ),
     "default": {
         "reason": (
@@ -281,9 +284,10 @@ RECORDED_MODEL_RESPONSE: dict[str, object] = {
             "well beyond the configured deadband, so the alarm reflects a "
             "real excursion rather than boundary noise."
         ),
-        "recommended_step": (
-            "Inspect the sensor and its wiring at the device, then compare "
-            "the trended value against a handheld reading at the same point."
+        "verb": "inspect",
+        "detail": (
+            "the sensor and its wiring at the device, then compare the "
+            "trended value against a handheld reading at the same point."
         ),
     },
     "by_case_id": {
@@ -293,9 +297,10 @@ RECORDED_MODEL_RESPONSE: dict[str, object] = {
                 "the window and never returned to normal, which matches a "
                 "standing condition rather than a transient one."
             ),
-            "recommended_step": (
-                "Verify refrigerant charge and check the discharge sensor "
-                "reading against a handheld measurement at the unit."
+            "verb": "verify",
+            "detail": (
+                "refrigerant charge, and the discharge sensor reading "
+                "against a handheld measurement at the unit."
             ),
         },
         "phase0-C04": {
@@ -304,9 +309,10 @@ RECORDED_MODEL_RESPONSE: dict[str, object] = {
                 "several times the deadband and is still in excursion at the "
                 "end of the window."
             ),
-            "recommended_step": (
-                "Inspect the cooling coil valve for leak-through and review "
-                "the valve position feedback against the measured coil "
+            "verb": "inspect",
+            "detail": (
+                "the cooling coil valve for leak-through, and review the "
+                "valve position feedback against the measured coil "
                 "temperature."
             ),
         },
@@ -316,9 +322,10 @@ RECORDED_MODEL_RESPONSE: dict[str, object] = {
                 "without reversing, so the single late alarm understates a "
                 "condition that has been degrading all day."
             ),
-            "recommended_step": (
-                "Inspect the terminal damper position feedback and confirm "
-                "the measured airflow against the design value for the box."
+            "verb": "inspect",
+            "detail": (
+                "the terminal damper position feedback, and confirm the "
+                "measured airflow against the design value for the box."
             ),
         },
         "phase0-C08": {
@@ -327,9 +334,10 @@ RECORDED_MODEL_RESPONSE: dict[str, object] = {
                 "that are too long to be transient, though the peak "
                 "deviation stays modest."
             ),
-            "recommended_step": (
-                "Inspect the fan belt and drive coupling, and review the "
-                "static pressure trend for the same interval."
+            "verb": "inspect",
+            "detail": (
+                "the fan belt and drive coupling, and review the static "
+                "pressure trend for the same interval."
             ),
         },
     },

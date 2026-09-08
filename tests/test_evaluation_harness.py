@@ -339,9 +339,11 @@ def test_the_harness_needs_no_model_server(tmp_path, config):
     """
     client = harness.stub_client()
     reply = json.loads(client.generate("anything"))
-    assert reply["reason"] and reply["recommended_step"]
+    assert reply["reason"] and reply["detail"]
 
     from bms_alarm_triage.model import ForbiddenVerbCheck
+    from bms_alarm_triage.schema import DiagnosticVerb
 
+    assert reply["verb"] in {v.value for v in DiagnosticVerb}
     check = ForbiddenVerbCheck(config.safety.forbidden_verbs)
-    assert check.find(reply["recommended_step"]) == []
+    assert check.find(reply["detail"]) == []

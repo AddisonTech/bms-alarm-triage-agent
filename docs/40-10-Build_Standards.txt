@@ -1,0 +1,257 @@
+40-10c-Build-Standards
+
+Build Standards
+AGENT PRO BUILD STANDARDS
+FOR USE BY THE CODING LLM
+ASCII ONLY
+AUTHOR PAUL NUSSBAUM, PHD
+
+PURPOSE OF THIS DOCUMENT
+------------------------
+This document is fed to the coding LLM together with ONE PHASE of filled-in
+rows from the Build Guide (from build-guide-template). It tells the coding
+LLM how to turn those decisions into code that thickens the existing walking
+skeleton. This document does not change between phases. Only the Build
+Guide rows attached to it change.
+
+If the Build Guide and this document ever disagree on wording of a Purpose
+or an item number, the Build Guide wins. This document only governs HOW to
+build, never WHAT was decided.
+
+When the Build Guide explains why a decision changed during design,
+preserve that reasoning. Do not 'correct' earlier decisions; build from
+the latest approved decision while treating the evolution as valuable
+engineering evidence.
+
+You are a chat model. You have no repository and cannot run anything. You
+can only read what the student pasted, and emit text for them to save.
+Never state that you ran, verified, or confirmed something.
+
+PROJECT STANDARD STACK
+----------------------
+The following are pre-approved and do not require a CHANGELOG
+dependency note under Rule 10:
+  - Python 3.x as the implementation language
+  - LangGraph for agent graph construction and state management
+  - pytest for unit tests and fixtures
+  - Mermaid (in ASCII form) for flowchart artifacts
+  - Pydantic (or TypedDict from the standard library) for the graph
+    state schema and node-boundary types
+Anything not on this list is a new dependency: name it plainly in
+the CHANGELOG entry per Rule 10 so the student can approve it.
+
+
+RULE 1 - ONE PHASE AT A TIME
+-----------------------------
+Only implement items from the phase indicated in this session. Do not read
+ahead into other phases and do not implement anything from a later phase
+"while you're in there," even if it seems related or convenient.
+
+
+RULE 2 - SKIP BLANK ITEMS COMPLETELY
+--------------------------------------
+If the Build Guide item's Student Decision field is blank or says
+"not applicable" / "N/A" / "skipped," do the following and nothing more:
+  - Do not write any code for it.
+  - Do not write a stub, placeholder function, or commented-out example.
+  - Add a single line to the phase's CHANGELOG (see Rule 7) noting the
+    item number was skipped as not applicable.
+A blank field is a decision, not an oversight. Do not guess what the
+student "probably meant."
+
+
+RULE 3 - BUILD THE SMALLEST TESTABLE VERSION
+-----------------------------------------------
+Several items describe capabilities that can scale to production
+infrastructure.
+Unless the Student Decision or Reasoning field explicitly specifies scale,
+hardware, or infrastructure requirements, build the smallest version that:
+  - runs on an edge device such as a laptop or personal computer
+  - can be exercised by a single automated test or eval, and
+  - demonstrates the mechanism the item describes.
+Do not install, configure, or write manifests for infrastructure the
+Reasoning field does not explicitly call for. If an item's literal scope
+looks like it requires infrastructure beyond an edge device (e.g. Kubernetes,
+GPU inference servers), implement a local stand-in and say so in
+the CHANGELOG, rather than attempting the real thing.
+
+Target the operating system named in the Build Guide. Do not assume Linux.
+If no platform is named, ask before writing platform-specific code.
+
+
+RULE 4 - FUTURE EXPANSION IS A COMMENT, NOT CODE
+---------------------------------------------------
+If a Future Expansion field is filled in, add a single-line code comment
+at the relevant location describing it, tagged with the Build Guide number.
+Do not build toward it, do not add configuration options for it, and do
+not write abstractions whose only purpose is to make that future work
+easier. Build for the Student Decision as it stands today.
+
+
+RULE 5 - CHECK FOR EXISTING IMPLEMENTATIONS BEFORE ADDING NEW ONES
+----------------------------------------------------------------------
+Build Guide items may overlap in subject matter.
+Before writing new code for an item:
+  1. Search the pasted code for prior code tagged with a Build Guide
+     number covering the same capability (see Rule 6 for tags). You can
+     only see what the student pasted. If prior phases' code was not
+     pasted, say so and ask for it. Do not assume nothing was built.
+  2. If found, EXTEND that existing implementation rather than creating a
+     parallel one. Add the new Build Guide number to the existing tag
+     comment rather than duplicating the function or module.
+  3. If the new Student Decision conflicts with the earlier implementation
+     rather than extending it, stop and flag the conflict in the
+     CHANGELOG instead of silently overwriting or picking one.
+Do not implement the same capability twice under two different item
+numbers.
+
+
+RULE 6 - CODE COMMENT TAGGING FORMAT
+----------------------------------------
+Every function, class, or module written or modified for a Build Guide
+item must carry a comment immediately above it in this exact format:
+
+  # Build Guide: <Phase and Cluster number>
+  # Decision: <one-line paraphrase of the Student Decision>
+
+Example:
+
+  # Build Guide: P1-C3
+  # Decision: LLM error handling with max retries and backoff timing
+
+If a function is later extended under Rule 5, add the new item number to
+the existing tag rather than writing a second tag block.
+
+For LangGraph node functions specifically, the tag block is extended
+to a node wrapper comment, filled from the Build Guide's fields for
+the governing cluster:
+
+  # Build Guide: <Phase and Cluster number>
+  # Decision: <one-line paraphrase of the Student Decision>
+  # Reads:    <state fields this node consumes>
+  # Writes:   <state fields this node produces -- must be unique,
+  #            owned only by this node>
+  # Why:      <one line from the Reasoning field: why this approach>
+  # May change: <one line from the Future Expansion field, or "none">
+  # Wraps:    <reference library entry names, comma-separated if more
+  #            than one, or "original">
+
+The Reads/Writes lines let the coding LLM verify field ownership
+without tracing code. Why and May change are comments only -- per
+Rule 4, do not build toward the May change line.
+
+One node may wrap several reference entries; Wraps takes a list.
+
+
+RULE 7 - PHASE CHANGELOG
+----------------------------
+Each phase produces exactly one changelog entry. Emit it as text for the
+student to append to CHANGELOG.md at the repo root, under a heading for
+that phase. Each entry is a flat list, one line per Build Guide item, in
+one of these forms:
+
+  P1-C3 - implemented, UNVERIFIED: <summary>; student runs: <command>
+  P1-C3 - implemented, VERIFIED: <summary>
+  P2-C1 - skipped: not applicable per Build Guide
+  P3-C1 - extended existing P1-C2 implementation: <one-line summary>
+  P3-C2 - scoped down: <what was built instead of full infra, and why>
+  P3-C3 - conflict flagged: <what conflicted, needs student decision>
+
+Write VERIFIED only after the student reports that the test passed.
+
+This changelog is the single place a student or instructor can check to
+see what actually got built versus what the Build Guide says was decided.
+
+
+RULE 8 - EVERY IMPLEMENTED ITEM NEEDS A PASSING TEST OR EVAL
+-----------------------------------------------------------------
+No item is complete until there is at least one automated check for it:
+  - Deterministic logic (parsing, tool calls, error handling, retries,
+    data pipelines) gets a unit test.
+  - Non-deterministic agent behavior (reasoning quality, prompt
+    effectiveness, output safety) gets an eval case, added to the
+    project's existing eval harness.
+If no existing eval harness covers the item's category, add the minimal
+harness needed rather than skipping the check.
+
+You cannot run tests. Write the test, state the command the student runs
+and what a pass looks like, and mark the item UNVERIFIED in the CHANGELOG.
+The student runs it and reports back; only then does it become VERIFIED.
+
+
+RULE 9 - DO NOT BREAK THE WALKING SKELETON
+-----------------------------------------------
+Emit a short checklist for the student to run before the phase is done:
+  - The project still runs end to end (the thin path from the original
+    skeleton still executes without error).
+  - All previously passing tests and evals still pass.
+Do not claim you checked these; you cannot.
+If you can see from the pasted code that an item's implementation would
+break either of the above, stop and flag it in the changelog rather than
+emitting code you expect to be broken.
+
+
+
+
+RULE 9A - PRESERVE ENGINEERING RATIONALE
+----------------------------------------
+When the Build Guide includes notes about assumptions that changed,
+treat them as documentation, not implementation instructions.
+Do not rewrite history or remove earlier reasoning from comments or
+artifacts. If a design changed because of new evidence, briefly reflect
+that in the CHANGELOG so the student can later explain the evolution of
+the project during a technical defense or interview.
+
+RULE 10 - ASCII ONLY, MATCH EXISTING STYLE
+-----------------------------------------------
+Emit ASCII only: no smart quotes, no typographic apostrophes, no en or em
+dashes. This text is pasted between chat windows, where non-ASCII
+characters get silently mangled.
+
+Match the formatting, naming conventions, and linter settings if already
+present in the repo. Do not introduce a new style, a new dependency
+manager, or a new testing framework mid-project. If a genuinely new
+dependency is required for an item, name it plainly in the CHANGELOG entry
+so the student notices and can approve it.
+Dependencies listed in PROJECT STANDARD STACK are pre-approved;
+all others must be named in the CHANGELOG.
+
+
+RULE 11 - PHASE 0 BUILDS THE WALKING SKELETON
+-------------------------------------------------
+Phase 0 is the only phase that creates the skeleton Rule 9 protects.
+When implementing Phase 0 items:
+  - Build exactly the nodes named in the P0-C1 flowchart, wired in a
+    linear LangGraph graph. No conditional edges, retries, or error
+    paths, even if trivial to add.
+  - Define the graph state as a single typed schema (TypedDict or
+    Pydantic model). Every state field must trace to a P0-C2 node
+    contract; do not add speculative fields.
+  - Every state field name is globally unique across the whole graph
+    and descriptive of its content. Generic names (data, rows, query,
+    result, output) are forbidden. Each field has exactly ONE writing
+    node; all other nodes may only read it. If two contracts appear
+    to produce the same field, stop and flag it in the CHANGELOG --
+    that is a contract conflict, not a naming coincidence.
+  - Data crossing a node boundary must be named and typed. Positional
+    tuples and untyped dicts may exist inside a node's internals but
+    never as a state field; convert them to a typed structure at the
+    boundary. If the node wraps a reference entry, use that entry's
+    Boundary line as the typed structure.
+  - Each node is the simplest implementation that satisfies its
+    contract. LLM-calling nodes must accept an injected client so
+    tests can substitute a fake with canned responses.
+  - Every node function carries the node wrapper comment block
+    defined in Rule 6, filled from the Build Guide fields.
+  - Write one pytest case per node using realistic fixture data
+    stored in tests/fixtures/, plus one end-to-end test that runs the
+    full skeleton.
+  - The phase gate is structural, not qualitative: all node tests
+    pass when the student runs them, the end-to-end run completes, and
+    every node carries its wrapper comment. Do not block the gate on
+    output quality.
+  - When you have coded the phase 0 Python, it will likely fit in a short script (<1000 lines) consisting of a LangGraph happy path flowchart, and each node that is testable by pytest, and also has a print statement, so a user simply executing the Python script will see each step in the flowchart. Also produce the file for pytest, and finally a README.txt file explaining how to install and run the script and tests.
+
+Phase 1 and later phases thicken these nodes; they do not reshape the
+graph. If a later item appears to require changing the Phase 0 graph
+shape, stop and flag it in the CHANGELOG per Rule 5.
