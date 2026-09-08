@@ -19,9 +19,19 @@ report files to still be there afterwards.
 
 ## Timing
 
-About **3 seconds**, end to end, on this machine. Roughly 1.5 s of that is
-the up-front check for a local model server and the rest is interpreter
-startup; the nine nodes themselves take about 0.1 s per window.
+Depends entirely on whether the local model is serving N8.
+
+| Run | Wall time | What dominates |
+|---|---:|---|
+| Model server up, model already loaded | **~43 s** | ~2.8 s per escalation, 15 escalations |
+| Model server up, model cold | **~56 s** | the above plus ~14 s loading the model into VRAM |
+| Model server down (recorded response) | **~3 s** | interpreter startup |
+
+Warm the model before recording and you save the ~14 s load. The other
+~41 s is generation and cannot be avoided with the model live.
+
+The nine nodes themselves take about 0.1 s per window. Everything above
+0.1 s is N8 waiting on the model.
 
 There is no time pressure, so there is no need for a smaller slice to fit
 a clock. The only reason to take a smaller slice is screen space: the full
@@ -136,18 +146,71 @@ To force one or the other: `--model ollama` (fails fast with a clear
 message if the server is down, rather than quietly substituting) or
 `--model recorded`.
 
-**On this machine right now, Ollama is not installed, so a live run will
-say `recorded response`.** If the live model text matters for the
-recording, install Ollama and pull the model named in
-`config/triage.json` before recording:
+The model is `llama3.1:8b-instruct-q4_K_M`, the one already named in
+`config/triage.json`. It was kept after testing smaller models against
+the real N8 prompts: it is the only candidate that produced usable output
+for all 15 holdout escalations. See "Known weak spots in the live text"
+below before you decide to run live on camera.
 
-```
-ollama pull llama3.1:8b-instruct-q4_K_M
+### Known weak spots in the live text
+
+Across the 15 holdout escalations the model gets the direction, the
+numbers, and the timing right every time -- it quotes the real deadband
+counts and window fractions out of the evidence. Three of the fifteen
+recommended actions contain a wrong statement about the equipment:
+
+- `SYN1/CH-61/CHW_SUP_TEMP` -- "Inspect the CH-61's **heating system**".
+  CH-61 is a chiller. This one is escalation 3 in `holdout_chiller` and
+  is the most visible of the three.
+- `SYN1/BLR-71/STACK_TEMP` -- refers to the boiler's "cooling system".
+- `SYN1/AHU-21/CLG_SP` -- calls a duct static pressure setpoint
+  "chilled water supply pressure".
+
+If one comes up, the honest answer is the useful one: N8 is the only
+non-deterministic step in the graph, it writes prose and takes no part in
+clustering, scoring, or ranking, and the safety gate it passes through
+blocks control-action verbs but cannot catch a wrong noun. A 4-bit 8B
+model running locally is what this trades away. The escalation itself,
+its rank, and its evidence are unaffected.
+
+## Starting and stopping the model server
+
+Ollama is installed but **does not run at startup and does not sit in the
+background**. Start it before a demo, stop it after. Three commands, all
+PowerShell:
+
+```powershell
+# start
+Start-Process ollama -ArgumentList 'serve' -WindowStyle Hidden
+
+# confirm it is up
+(Invoke-WebRequest http://127.0.0.1:11434/api/tags -UseBasicParsing).StatusCode
+
+# stop
+Get-Process ollama* | Stop-Process -Force
 ```
 
-With a real model, N8 adds roughly 5 to 15 seconds per escalated
-condition on CPU, so budget a couple of minutes for the full holdout run
-and consider `--window holdout_chiller` instead.
+The confirm command prints `200` when the server is answering and throws
+"Unable to connect to the remote server" when it is not.
+
+Optional but worth doing before recording -- load the model into VRAM so
+the first escalation does not stall for ~14 seconds:
+
+```powershell
+ollama run llama3.1:8b-instruct-q4_K_M "ok" ; ollama ps
+```
+
+`ollama ps` shows what is loaded and where. Expect `25%/75% CPU/GPU` --
+the model does not fit entirely in 6 GB and Ollama splits it. That is
+known and accounted for in the timings above. The model unloads itself
+after 5 minutes idle, so warm it shortly before you record, not an hour
+before.
+
+Autostart was removed by deleting
+`%APPDATA%\Microsoft\Windows\Start Menu\Programs\Startup\Ollama.lnk`.
+There is no Ollama service and no `Run` registry entry. To put autostart
+back, re-run the installer or drop a shortcut to
+`%LOCALAPPDATA%\Programs\Ollama\ollama app.exe` in that Startup folder.
 
 ## If it fails mid-run
 
@@ -160,7 +223,9 @@ sentence, not a stack trace.
 | What you see | What it means | What to do on camera |
 |---|---|---|
 | `run stopped: ... line N: row has 4 fields, expected 11` | N2 rejected a malformed export. | This is the designed behaviour. It is one of the benchmark's always-run cases. Move on. |
-| `the local model at http://127.0.0.1:11434/... is not answering` | You used `--model ollama` and the server is down. | Re-run without `--model ollama`. It falls back to the recorded response and says so in the header. |
+| Header says `N8 model: recorded response` when you wanted live text | You forgot to start the server, or it idled out and was stopped. | Do not restart the run mid-recording. Let it finish -- every number is still correct. Then start the server with the command above and run it again. |
+| `the local model at http://127.0.0.1:11434/... is not answering` | You used `--model ollama` and the server is down. | Re-run without `--model ollama`. It falls back to the recorded response and says so in the header, and the numbers are unchanged. |
+| The run sits silent for 10-15 s before the first escalation | The model is loading into VRAM. | Normal. Say "that is the model loading; it stays loaded for the rest of the run." Warm it beforehand to avoid this. |
 | Escalations show `0` and everything lands in unresolved with "the explain step failed" | N8 could not reach the model, on the plain CLI which has no fallback. | Use `python -m tools.demo` instead of `python -m bms_alarm_triage.cli`. The demo checks the model up front; the CLI does not. |
 | `no such split` / `no window named ...` | Typo in the arguments. | Re-type. The valid splits are `fixture`, `dev`, `holdout`. |
 | A number differs from the table above | The corpus or the config moved. | Run `python -m pytest -q` -- a corpus that has drifted fails the manifest test immediately. |
