@@ -10,10 +10,14 @@ This replaces the forbidden-verb regex that previously stood alone. That
 check was a denylist of 25 words, which means anything not on the list
 passed. Measured against the real gate, it permitted "force the discharge
 air sensor to 55 degrees", "bypass the low limit safety", and "jumper out
-the freezestat", and rejected "inspect the setpoint" because the noun
-appeared. A denylist cannot enumerate every way to phrase a control
-action, so the verb slot is an allowlist here and the model has no free
-text in which to put a verb at all.
+the freezestat", while rejecting "inspect the setpoint" because a noun
+had been added to a list of verbs. A denylist cannot enumerate every way
+to phrase a control action, so the verb slot is an allowlist here and the
+model has no free text in which to put a verb at all.
+
+The denylist survives behind this schema, applied to the free-text
+sentence only, and "setpoint" was removed from it on 2026-09-08 once the
+verb slot made the noun redundant. See the CHANGELOG entry for that date.
 
 What this catches and what it does not, stated plainly so the limits are
 not oversold:

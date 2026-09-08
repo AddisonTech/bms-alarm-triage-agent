@@ -305,6 +305,64 @@ def test_diagnostic_language_is_not_flagged(config, text):
     assert check.find(text) == []
 
 
+# ------------------------------------------- the setpoint noun, removed 2026-09-08
+
+def test_the_list_holds_actions_only(config):
+    """Every entry has to be something a person does, not a thing.
+
+    "setpoint" was on this list and was the only noun on it. It made the
+    one point in the corpus that is a setpoint, SYN1/AHU-21/CLG_SP,
+    impossible to describe correctly, and it cost that condition an
+    escalation once during development. Nouns do not belong here; the
+    rule is about actions.
+    """
+    assert "setpoint" not in config.safety.forbidden_verbs
+
+
+@pytest.mark.parametrize(
+    "text",
+    [
+        "the cooling setpoint has drifted from its limit.",
+        "the static pressure setpoint against the design value.",
+        "the supply temperature setpoint against the design documents.",
+        "the difference between the measured value and the setpoint.",
+    ],
+)
+def test_describing_a_setpoint_is_not_a_control_action(config, text):
+    """Naming a setpoint is not changing one.
+
+    This is the behaviour the removal bought. Every string here is a
+    technician describing what to look at, and every one of them was
+    rejected before.
+    """
+    check = ForbiddenVerbCheck(config.safety.forbidden_verbs)
+    assert check.find(text) == []
+
+
+@pytest.mark.parametrize(
+    "text,verb",
+    [
+        ("Raise the cooling setpoint by two degrees.", "raise"),
+        ("Set the setpoint to 55.", "set"),
+        ("Adjust the setpoint upward.", "adjust"),
+        ("Change the discharge setpoint.", "change"),
+        ("Lower the static pressure setpoint.", "lower"),
+        ("Increase the setpoint at the controller.", "increase"),
+        ("Override the setpoint.", "override"),
+        ("Modify the setpoint schedule.", "modify"),
+    ],
+)
+def test_changing_a_setpoint_is_still_caught_by_its_verb(config, text, verb):
+    """The reason removing the noun costs no safety.
+
+    There is no way to actually change a setpoint without an action word,
+    and every action word here is still on the list. The noun was doing
+    no work that these entries were not already doing.
+    """
+    check = ForbiddenVerbCheck(config.safety.forbidden_verbs)
+    assert verb in check.find(text)
+
+
 def test_the_recorded_fixture_responses_all_pass_the_filter(
     phase0_dir, config
 ):

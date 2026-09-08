@@ -63,11 +63,11 @@
   },
 
   "safety": {
-    "_note": "Recommendations describe diagnostic steps. A control action verb in an N8 recommendation is a failed attempt, per P4-C1 and P2-C3.",
+    "_note": "Recommendations describe diagnostic steps. A control action verb in an N8 recommendation is a failed attempt, per P4-C1 and P2-C3. Every entry is an action. The noun 'setpoint' was removed on 2026-09-08: it blocked correct descriptive text about a setpoint point, and every way to actually change one is already caught by a verb here.",
     "forbidden_verbs": [
       "adjust", "change", "command", "close", "cycle", "disable", "enable",
       "increase", "decrease", "lower", "raise", "modify", "open", "override",
-      "reset", "restart", "schedule", "set", "setpoint", "shut", "start",
+      "reset", "restart", "schedule", "set", "shut", "start",
       "stop", "switch", "turn", "write"
     ]
   },

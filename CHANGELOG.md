@@ -73,18 +73,51 @@ dev 764 / 31.8x, holdout 548 events / 18 items / 30.4x / 100.0% recall /
 `llama3.1:8b-instruct-q4_K_M` as well as against the recorded response:
 all 15 holdout escalations validated on the first attempt.
 
-### Open item, not yet decided
+### Two decisions taken, 2026-09-08
 
-The retained denylist rejects the bare noun "setpoint", which makes the
-one point in the corpus that *is* a setpoint (`SYN1/AHU-21/CLG_SP`)
-impossible to describe correctly. It is currently latent: the live model
-happened to phrase around it. Removing "trend" from the allowed verbs
-changed the phrasing enough to trigger it, and that condition dropped to
-unresolved -- pooled recall moved from 100.0% to 93.3%. The change was
-reverted rather than absorbed. Every genuine way to change a setpoint is
-already caught by a verb on the list ("raise", "set", "adjust", "change"),
-so the noun appears to carry no safety weight of its own. Awaiting a
-decision before `config/triage.json` is touched.
+**1. "setpoint" removed from `safety.forbidden_verbs`.** The list is now
+24 entries and every one of them is an action.
+
+The noun was the only entry on the list that named a thing rather than
+something a person does, and it made the one point in the corpus that
+*is* a setpoint (`SYN1/AHU-21/CLG_SP`) impossible to describe correctly.
+The failure was latent rather than theoretical: with "trend" temporarily
+out of the allowed verb list, the model wrote
+
+    Check the setpoint value and ensure it is correct, and review the
+    system's operation to determine why it exceeded the limit.
+
+which the old list rejected on the single word "setpoint" and nothing
+else. Two attempts failed, the condition dropped to unresolved, and
+pooled holdout recall moved from 100.0 percent to 93.3 percent. That
+same sentence is now accepted. Reproduced deliberately before the change
+and re-checked after it, rather than inferred.
+
+The noun carried no safety weight of its own. There is no way to change
+a setpoint without an action word, and every one of them is still on the
+list: "raise", "set", "adjust", "change", "lower", "increase",
+"modify", "override", "schedule". All nine are pinned as still-blocked
+in `tests/test_n8_explain.py`, alongside four descriptive phrasings that
+are now correctly allowed, and an assertion that no noun returns to the
+list.
+
+Scope note: the denylist has only ever been applied to the recommended
+action, not to the reason field, because P4-C1 forbids recommending a
+control action rather than describing one. That is unchanged. The
+thermal-domain guard in the schema still reads both fields.
+
+**2. "trend" kept in the allowed verb list.** Removing it produced
+better-reading recommendations -- "Inspect the cooling coil" rather than
+"Trend the point" -- but it is what surfaced the setpoint failure above,
+and the reported numbers take priority over the prose for now. Left as
+built. Worth revisiting once the setpoint fix has been exercised on more
+than one corpus, since the two changes are independent and only the
+combination was ever measured as failing.
+
+Verification after both decisions: 391 tests pass. All three splits
+score identically, recorded and live -- fixture 182 events / 5 items /
+36.4x, dev 764 / 24 / 31.8x, holdout 548 / 18 / 30.4x, every split at
+100.0 percent recall and 0.0 percent false escalation.
 
 ---
 
