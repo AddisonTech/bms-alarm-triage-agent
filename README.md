@@ -50,6 +50,25 @@ output and the verification numbers on screen in one command, see
 python -m tools.demo --split holdout
 ```
 
+Every run writes `triage_report.html` next to the markdown report. It is
+one self-contained file: double-click it to open the ranked list with the
+trend chart behind every escalation, the rule that moved it, and buttons
+to mark each one correct, false escalation, or missed. It loads nothing
+from the network, so it is safe to open on a report built from real
+building data.
+
+To build one shareable page for a whole labeled split, scored against
+ground truth and both baselines:
+
+```
+python -m tools.showcase --split holdout
+```
+
+That writes `out/showcase.html`. Anyone can open it, with nothing
+installed. Run it with Ollama up so each card gets its own written
+explanation; without the model the page uses the recorded response and
+says so on the page.
+
 The model is served locally by Ollama over localhost. There is no hosted
 API and no outbound network call at run time. The agent also runs on CPU
 alone.
@@ -96,6 +115,7 @@ distributions against a real anonymized export.
 - `tools/evaluate/` the evaluation harness. Outside the agent too, because
   the agent never scores its own output
 - `tools/demo.py` the one-command walkthrough described in `DEMO.md`
+- `tools/showcase.py` the one shareable web page for a whole split
 - `data/` the frozen corpus, with a SHA-256 manifest per window
 - `tests/` node tests against that corpus
 
