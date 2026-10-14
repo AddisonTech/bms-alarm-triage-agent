@@ -175,6 +175,55 @@ run would not have distinguished a fix from luck.
 
 ---
 
+## 2026-10-14 - The report as a web page
+
+P1-C5 - extended existing P1-C5 implementation: the Future Expansion
+entry, "A web dashboard with trend plots rendered inline," taken up on
+the student's decision. Built as one self-contained HTML file rather than
+a server, so it opens with a double click on Windows and can be sent to
+someone with nothing installed. The command line is unchanged and stays
+the way a run is started.
+
+N9 now writes `triage_report.html` beside `triage_report.md`. Same P4-C5
+content, plus the evidence segment for every escalation drawn as a chart:
+the alarm limit, the deadband, the stretches in alarm, and each alarm and
+return-to-normal transition. Each card shows the alarm-side rank next to
+the final rank and names the rule that moved it. Nuisance conditions get
+a small trend line each.
+
+- No new state field. The page is a second view of the triage report, so
+  `triage_report_file` still names the markdown file and N9's contract in
+  P0-C2 is unchanged. N9 reads nothing it did not already read; the
+  segment N6 attaches is the point's whole series for the window.
+- No network. Charts are inline SVG computed in Python, style and script
+  are inline, and the default fonts are system fonts, so opening a report
+  built from customer data makes no request (P2-C2). Pinned by a test.
+- P4-C4 - extended existing P4-C4 implementation: each escalation carries
+  correct / false escalation / missed buttons. Marks are kept in the
+  browser and copied out as CSV for the feedback directory. Collection
+  only, as before. Nothing consumes them.
+
+Dependency note per Rule 10: none. Standard library only. `pyproject.toml`
+is unchanged.
+
+`tools/showcase.py` - see Out-of-guide tooling below.
+
+Verification, run in the build session:
+
+    python -m pytest -q
+    python -m tools.showcase --split holdout --model recorded
+
+P1-C5 - implemented, VERIFIED: 405 tests pass, 15 of them new in
+`tests/test_html_report.py`. The showcase reproduces the holdout numbers
+exactly: 548 events, 18 items, 30.4x, 15 of 15 in the top five, 0.0
+percent false escalation. Checked in Chromium at desktop and phone width,
+light and dark, with no horizontal scroll at either width. Not run
+against the live model in that session, because the session could not
+reach a model server; the explanations on that copy are the recorded
+response and the page says so.
+
+---
+
 ## Out-of-guide tooling
 
 Recorded because Rules 1 and 2 expect work to trace to a Student
@@ -183,3 +232,12 @@ Decision, and this does not.
 `tools/demo.py` - added for a seminar recording. It runs the existing
 graph and reuses the existing scoring; it computes nothing of its own and
 is outside the packaged wheel. No Build Guide cluster authorises it.
+
+`tools/showcase.py` - added to present the project. It runs the existing
+graph over a labeled split, scores it with the existing harness code
+against ground truth and both baselines, and writes one shareable page
+built from the agent's own report renderer. Scoring stays in `tools/`
+because the agent never rates its own output. Outside the packaged wheel.
+Its only network use is optional: `--fonts` loads web fonts, for synthetic
+data only. The nearest cluster is P1-C5's Future Expansion; the
+shareable, scored form of it is not in the Build Guide.

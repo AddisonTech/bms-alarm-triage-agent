@@ -4,8 +4,9 @@ IN:  explained_escalated_conditions, final_nuisance_conditions,
      evidence_unresolved_conditions
 OUT: triage_report_file, run_log_file
 
-Writes the triage report and the run log, and updates the cross-session
-run history from P1-C1. Also creates the feedback directory P4-C4 asks
+Writes the triage report, as markdown and as a self-contained web page
+with the trend evidence drawn inline (P1-C5 Future Expansion), writes the
+run log, and updates the cross-session run history from P1-C1. Also creates the feedback directory P4-C4 asks
 for, so marked reports have somewhere to go from the first run rather than
 from whenever someone gets round to making the folder.
 
@@ -17,7 +18,7 @@ from __future__ import annotations
 
 from pathlib import Path
 
-from .. import report
+from .. import html_report, report
 from ..audit import checksum
 from ..history import RunHistory
 from ..state import (
@@ -28,6 +29,7 @@ from ..state import (
 )
 
 REPORT_FILENAME = "triage_report.md"
+HTML_REPORT_FILENAME = "triage_report.html"
 RUN_LOG_FILENAME = "run_log.json"
 
 
@@ -120,6 +122,22 @@ def n9_report(state: TriageState) -> dict:
     report_path = output_dir / REPORT_FILENAME
     with report_path.open("w", encoding="utf-8", newline="\n") as handle:
         handle.write(text)
+
+    # The web page carries the same content as the markdown report, so it is
+    # an extra view of the triage report rather than a new state field.
+    page = html_report.render(
+        alarm_export=str(alarm_export),
+        trend_export=str(trend_export),
+        config_path=str(config.source_path),
+        explained=explained,
+        nuisance=nuisance,
+        unresolved=unresolved,
+        summary=summary,
+        outcome_options=config.report.outcome_options,
+        repeats=repeats,
+    )
+    with (output_dir / HTML_REPORT_FILENAME).open("w", encoding="utf-8", newline="\n") as handle:
+        handle.write(page)
 
     records = [
         {
