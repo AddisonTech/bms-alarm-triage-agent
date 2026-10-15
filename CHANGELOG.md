@@ -224,6 +224,69 @@ response and the page says so.
 
 ---
 
+## 2026-10-15 - Showcase fixes: written text, real data, the before picture
+
+Three gaps in the showcase, found by reviewing it as a reader would.
+
+**1. Every card repeated the same two sentences** when the page was built
+without the local model, because the recorded test response was the
+fallback. `tools/template_writer.py` now stands in for the model instead.
+It reads the same prompt N8 sends the model and composes the reason and
+the next step from that condition's own measurements and the rule that set
+its band, worded for the point type: a thermometer for a temperature, a
+test gauge for a pressure, actuator travel for a valve or damper.
+
+It plugs into N8 through the same `generate(prompt)` interface as the
+Ollama and recorded clients, so nothing in the agent changed, and its
+output goes through every check a model's output does: the enumerated
+verb, the target copied from the condition, the forbidden-verb list, and
+the thermal-domain guard. Across all three splits every reply validated on
+the first attempt and every count matched the recorded run. The showcase's
+`--model auto` now means the local model if it answers and the template
+otherwise; the recorded response is still available by name. A page built
+with the template says so at the top and on every card.
+
+**2. No path from a real export to the showcase.** `tools/anonymize.py`
+scrubs an export pair in the agent's input schema: site, area, and
+equipment names are replaced consistently across both files, point names
+keep only generic words (SA_TEMP stays, RM_214_TEMP becomes RM_TEMP),
+non-generic alarm class names are replaced, row ids are renumbered, and
+dates can be shifted by whole days. Values, limits, deadbands, units,
+priorities, and time of day are kept. The reversing key is written to its
+own `PRIVATE_key.json`, and the default output is under `private/`, which
+git already ignores per P4-C2. On every labeled window the scrubbed copy
+gives exactly the same escalations, nuisance list, and unresolved list as
+the original, mapped through the key. `tools/showcase.py --alarms
+--trends` then builds a page from any export pair; with no labels there
+is no scorecard, and the page says the outcome marks are how one gets
+built.
+
+**3. No before picture.** The page showed the clean result and never the
+mess. A new before-and-after figure draws every alarm event as a tick, one
+row per point: all of them, all one colour, beside the items the agent
+hands back in reading order. In the showcase it sits above the nine steps;
+in `triage_report.html` it heads each window.
+
+What the before picture shows about the corpus, recorded because it is
+true: the three holdout windows have nearly the same alarm timing, so the
+rows line up in columns. That is the generator showing through, and it is
+another reason the next real test is a real export.
+
+Dependency note per Rule 10: none. Standard library only.
+
+Verification, run in the build session:
+
+    python -m pytest -q
+    python -m tools.showcase --split holdout
+
+P1-C5, P4-C2 - extended existing implementation, VERIFIED: 417 tests
+pass, 12 of them new in `tests/test_showcase_tools.py`. Holdout still
+548 events, 18 items, 30.4x, 15 of 15 in the top five, 0.0 percent false
+escalation. Checked in Chromium at desktop and phone width, light and
+dark, with no horizontal scroll.
+
+---
+
 ## Out-of-guide tooling
 
 Recorded because Rules 1 and 2 expect work to trace to a Student
@@ -241,3 +304,12 @@ because the agent never rates its own output. Outside the packaged wheel.
 Its only network use is optional: `--fonts` loads web fonts, for synthetic
 data only. The nearest cluster is P1-C5's Future Expansion; the
 shareable, scored form of it is not in the Build Guide.
+
+`tools/template_writer.py` - the no-model N8 writer described in the
+2026-10-15 entry. Presentation only. It is outside the package, so the
+operator CLI still requires the local model, and a run without it still
+moves escalations to unresolved exactly as P2-C3 says.
+
+`tools/anonymize.py` - the export scrubber described in the same entry.
+It supports P4-C2 rather than replacing it: scrubbed exports still belong
+under `private/`, never in `data/`.
