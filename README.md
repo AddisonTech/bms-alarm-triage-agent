@@ -50,6 +50,39 @@ output and the verification numbers on screen in one command, see
 python -m tools.demo --split holdout
 ```
 
+Every run writes `triage_report.html` next to the markdown report. It is
+one self-contained file: double-click it to open the ranked list with the
+trend chart behind every escalation, the rule that moved it, and buttons
+to mark each one correct, false escalation, or missed. It loads nothing
+from the network, so it is safe to open on a report built from real
+building data.
+
+To build one shareable page for a whole labeled split, scored against
+ground truth and both baselines:
+
+```
+python -m tools.showcase --split holdout
+```
+
+That writes `out/showcase.html`. Anyone can open it, with nothing
+installed. With Ollama up, each card's two sentences come from the local
+model. Without it, a fixed template writes them from that condition's own
+measurements and rule, through the same checks the model's text must
+pass, and the page says which one wrote them.
+
+To show it on a real building without showing the building, scrub the
+export first, then build the page from the scrubbed copy:
+
+```
+python -m tools.anonymize ALARMS.csv TRENDS.csv
+python -m tools.showcase --alarms private\anon\alarm_export.csv --trends private\anon\trend_export.csv
+```
+
+Site, area, and equipment names are replaced in both files, and the key
+that reverses it is written to `private\anon\PRIVATE_key.json`, which is
+the one file never to send. Real data has no labels, so that page has no
+scorecard; the outcome buttons on each card are how one gets built.
+
 The model is served locally by Ollama over localhost. There is no hosted
 API and no outbound network call at run time. The agent also runs on CPU
 alone.
@@ -96,6 +129,9 @@ distributions against a real anonymized export.
 - `tools/evaluate/` the evaluation harness. Outside the agent too, because
   the agent never scores its own output
 - `tools/demo.py` the one-command walkthrough described in `DEMO.md`
+- `tools/showcase.py` the one shareable web page for a whole split
+- `tools/template_writer.py` writes each card without a model, for the showcase
+- `tools/anonymize.py` scrubs a real export before it is run or shown
 - `data/` the frozen corpus, with a SHA-256 manifest per window
 - `tests/` node tests against that corpus
 
