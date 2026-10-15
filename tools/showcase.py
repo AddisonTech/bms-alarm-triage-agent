@@ -31,8 +31,9 @@ from bms_alarm_triage.config import load as load_config
 from bms_alarm_triage.graph import run
 from bms_alarm_triage.html_report import WindowView, esc
 
-from .demo import choose_client, windows_for
+from .demo import choose_client, model_reachable, windows_for
 from .evaluate import baselines, ground_truth, metrics
+from .template_writer import TemplateClient
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
 
@@ -113,41 +114,86 @@ def window_label(name: str, split: str) -> str:
     return WINDOW_LABELS.get(short, short.replace("_", " "))
 
 
-def run_split(split: str, only: str | None, model: str, config_path: Path | None):
-    """Run every window and score it. Returns what the page needs."""
+ARM_MODEL = "local model"
+ARM_TEMPLATE = "template"
+
+
+def pick_client(mode: str, config):
+    """The N8 writer. auto prefers the local model, then the template.
+
+    The recorded response stays available for parity with the demo and the
+    tests, but it is never the automatic choice here: it repeats one pair
+    of sentences on every card, which is the wrong thing to send anyone.
+    """
+    if mode == "auto":
+        mode = "ollama" if model_reachable(config.model.endpoint) else "template"
+    if mode == "template":
+        return TemplateClient(), ARM_TEMPLATE
+    client, arm, _note = choose_client(mode, config)
+    return client, arm
+
+
+def _subtitle(name: str, final) -> str:
+    events = final["canonical_alarm_events"]
+    if not events:
+        return name
+    first, last = events[0].timestamp, events[-1].timestamp
+    hours = max(1, round((last - first).total_seconds() / 3600.0))
+    return "%s, about %d hours from %s" % (name, hours, first.strftime("%d %b %Y"))
+
+
+def run_split(
+    split: str,
+    only: str | None,
+    model: str,
+    config_path: Path | None,
+    custom: tuple[Path, Path, str] | None = None,
+):
+    """Run every window and score the labeled ones. Returns what the page needs.
+
+    custom is an alarm export, a trend export, and a label, for data that
+    is not part of the corpus. It has no ground truth, so it gets no
+    scorecard, and pooled comes back as None.
+    """
     config = load_config(config_path)
-    windows = windows_for(split, only)
-    client, arm, note = choose_client(model, config)
+    if custom is not None:
+        alarm, trend, label = custom
+        jobs = [("export", label, Path(alarm), Path(trend), None)]
+    else:
+        jobs = [
+            (d.name, window_label(d.name, split), d / "alarm_export.csv", d / "trend_export.csv", d)
+            for d in windows_for(split, only)
+        ]
+    client, arm = pick_client(model, config)
     views: list[WindowView] = []
     agent_results: list[metrics.Result] = []
     baseline_results: dict[str, list[metrics.Result]] = {baselines.RAW: [], baselines.DEDUP: []}
 
     with tempfile.TemporaryDirectory() as holder:
-        for window_dir in windows:
+        for key, label, alarm_path, trend_path, window_dir in jobs:
             started = time.perf_counter()
             final = run(
-                alarm_export_path=window_dir / "alarm_export.csv",
-                trend_export_path=window_dir / "trend_export.csv",
-                output_dir=Path(holder) / window_dir.name,
+                alarm_export_path=alarm_path,
+                trend_export_path=trend_path,
+                output_dir=Path(holder) / key,
                 config=config,
                 model_client=client,
             )
             elapsed = time.perf_counter() - started
-            summary = dict(final["audit"].summary)
-            first = final["canonical_alarm_events"][0].timestamp if final["canonical_alarm_events"] else None
             views.append(
                 WindowView(
-                    key=window_dir.name,
-                    label=window_label(window_dir.name, split),
+                    key=key,
+                    label=label,
                     explained=final["explained_escalated_conditions"],
                     nuisance=final["final_nuisance_conditions"],
                     unresolved=final["evidence_unresolved_conditions"],
-                    summary=summary,
+                    summary=dict(final["audit"].summary),
                     outcome_options=config.report.outcome_options,
-                    subtitle="%s, 24 hours from %s"
-                    % (window_dir.name, first.strftime("%d %b %Y") if first else "n/a"),
+                    subtitle=_subtitle(key if window_dir else alarm_path.name, final),
                 )
             )
+            if window_dir is None:
+                continue
 
             conditions = final["distinct_conditions"]
             events = final["canonical_alarm_events"]
@@ -193,6 +239,8 @@ def run_split(split: str, only: str | None, model: str, config_path: Path | None
                     )
                 )
 
+    if not agent_results:
+        return config, views, None, arm
     pooled = {
         "agent": metrics.aggregate("agent", agent_results),
         baselines.RAW: metrics.aggregate(baselines.RAW, baseline_results[baselines.RAW]),
@@ -297,22 +345,51 @@ def pipeline() -> str:
     ) % "".join(items)
 
 
-def build_page(split, config, views, pooled, arm, fonts, standalone) -> str:
-    agent = pooled["agent"]
+WRITERS = {
+    ARM_MODEL: None,
+    ARM_TEMPLATE: (
+        '<p class="notice"><b>About the written explanations.</b> This copy was built without '
+        "the local model, so each card's two sentences were composed by a fixed template from "
+        "that condition's own measurements and the rule that moved it. They passed the same "
+        "checks the model's text must pass: allowed verbs only, the point itself as the target, "
+        "no control actions. Built with the model running, the same cards get written prose. "
+        "Every number, rank, chart and rule is the same either way.</p>"
+    ),
+}
+RECORDED_NOTICE = (
+    '<p class="notice"><b>About the written explanations.</b> This copy replays the recorded '
+    "test response, so each card's two sentences are a placeholder and repeat from card to "
+    "card. Every number, rank, chart and rule on the page is the real output.</p>"
+)
+
+
+def _writer_label(arm: str, config) -> str:
+    if arm == ARM_MODEL:
+        return config.model.name
+    if arm == ARM_TEMPLATE:
+        return "template, no model"
+    return "recorded placeholder"
+
+
+def no_scorecard() -> str:
+    return (
+        '<section class="block" aria-labelledby="scorecard">'
+        '<div class="section-head"><p class="eyebrow">No labels for this data</p>'
+        '<h2 id="scorecard">No scorecard yet</h2>'
+        '<p class="muted">This export has no labeled faults, so there is nothing to score the '
+        "ranking against. Mark each escalation below as correct, false escalation, or missed. "
+        "Those marks are the labels a scorecard is built from.</p></div></section>"
+    )
+
+
+def build_page(split, config, views, pooled, arm, fonts, standalone, data_note=None) -> str:
+    events_in = sum(int(v.summary.get("alarm_events_in", 0)) for v in views)
     total_conditions = sum(int(v.summary.get("distinct_conditions", 0)) for v in views)
-    notice = ""
-    if arm != "local model":
-        notice = (
-            '<p class="notice"><b>About the written explanations.</b> This copy was built without '
-            "the local model running, so each card's two sentences are a recorded placeholder "
-            "and repeat from card to card. Every number, rank, chart and rule on the page is the "
-            "real output. Build the page with the model running and each card gets its own "
-            "explanation.</p>"
-        )
+    items = sum(len(v.explained) + len(v.unresolved) for v in views)
+    notice = WRITERS.get(arm, RECORDED_NOTICE) or ""
     meta = (
-        ("split", "%s, %d windows" % (split, len(views))),
-        ("data", "synthetic, LBNL FDD shape"),
-        ("explanations", config.model.name if arm == "local model" else "recorded placeholder"),
+        ("data", data_note or "%s split, %d windows, synthetic" % (split, len(views))),
+        ("explanations", _writer_label(arm, config)),
         ("built", datetime.now().strftime("%Y-%m-%d %H:%M")),
     )
     header = (
@@ -327,12 +404,12 @@ def build_page(split, config, views, pooled, arm, fonts, standalone) -> str:
         "%s</div>"
         '<dl class="tb-meta">%s</dl></header>'
     ) % (
-        agent.alarm_events_in,
-        agent.items_for_review,
+        events_in,
+        items,
         html_report.funnel(
-            agent.alarm_events_in,
+            events_in,
             total_conditions,
-            agent.items_for_review,
+            items,
             ("alarm events", "distinct conditions", "items to review"),
         ),
         "".join("<div><dt>%s</dt><dd>%s</dd></div>" % (esc(k), esc(v)) for k, v in meta),
@@ -347,8 +424,16 @@ def build_page(split, config, views, pooled, arm, fonts, standalone) -> str:
         "%s%s</section>"
     ) % (
         html_report.tabs(views),
-        "".join(html_report.window_section(v, hidden=i > 0) for i, v in enumerate(views)),
+        "".join(html_report.window_section(v, hidden=i > 0, queue=False) for i, v in enumerate(views)),
     )
+    before_after = (
+        '<section class="block" aria-labelledby="queue">'
+        '<div class="section-head"><p class="eyebrow">The same alarms, before and after</p>'
+        '<h2 id="queue">From a wall of alarms to a reading list</h2>'
+        '<p class="muted">Left is every alarm event the agent was handed, one row per point, '
+        "the way a queue presents them. Right is what it hands back.</p></div>"
+        "%s</section>"
+    ) % html_report.queue_compare(views)
     foot = (
         '<p class="foot">The corpus is synthetic, generated in the shape of the LBNL Fault Detection '
         "and Diagnostics datasets. These results show the pipeline and the scoring work end to end. "
@@ -356,12 +441,22 @@ def build_page(split, config, views, pooled, arm, fonts, standalone) -> str:
         "Every threshold and weight lives in a config file changed by a person. The agent never "
         "tunes itself.</p>"
     )
-    body = "<style>%s</style>%s%s%s%s%s%s" % (
+    if pooled is None:
+        score = no_scorecard()
+        foot = (
+            '<p class="foot">Built from an operator&#39;s own export. Every threshold and weight '
+            "lives in a config file changed by a person. The agent never tunes itself, and it "
+            "has no write path to any building system.</p>"
+        )
+    else:
+        score = scorecard(pooled, config.evaluation.false_escalation_ceiling, split)
+    body = "<style>%s</style>%s%s%s%s%s%s%s" % (
         SHOWCASE_STYLE,
         header,
         notice,
+        before_after,
         pipeline(),
-        scorecard(pooled, config.evaluation.false_escalation_ceiling, split),
+        score,
         windows_html,
         foot,
     )
@@ -380,9 +475,15 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument(
         "--model",
         default="auto",
-        choices=["auto", "ollama", "recorded"],
-        help="N8 model client, as in the demo (default: auto)",
+        choices=["auto", "ollama", "template", "recorded"],
+        help=(
+            "who writes each card's two sentences. auto uses the local model if it "
+            "answers and the template writer otherwise (default: auto)"
+        ),
     )
+    parser.add_argument("--alarms", type=Path, default=None, help="an alarm export of your own")
+    parser.add_argument("--trends", type=Path, default=None, help="the matching trend export")
+    parser.add_argument("--label", default="Your export", help="tab name for --alarms/--trends")
     parser.add_argument("--config", type=Path, default=None)
     parser.add_argument(
         "--out", type=Path, default=REPO_ROOT / "out" / "showcase.html", help="where to write the page"
@@ -399,15 +500,25 @@ def main(argv: list[str] | None = None) -> int:
     )
     args = parser.parse_args(argv)
 
-    config, views, pooled, arm = run_split(args.split, args.window, args.model, args.config)
-    page = build_page(args.split, config, views, pooled, arm, args.fonts, not args.fragment)
+    if (args.alarms is None) != (args.trends is None):
+        parser.error("--alarms and --trends go together")
+    custom = (args.alarms, args.trends, args.label) if args.alarms else None
+    config, views, pooled, arm = run_split(args.split, args.window, args.model, args.config, custom)
+    page = build_page(
+        args.split, config, views, pooled, arm, args.fonts, not args.fragment,
+        data_note="%s, not labeled" % args.alarms.name if custom else None,
+    )
     args.out.parent.mkdir(parents=True, exist_ok=True)
     with args.out.open("w", encoding="utf-8", newline="\n") as handle:
         handle.write(page)
-    agent = pooled["agent"]
     print(
         "%d alarm events -> %d items to review across %d window(s); explanations: %s"
-        % (agent.alarm_events_in, agent.items_for_review, len(views), arm)
+        % (
+            sum(int(v.summary.get("alarm_events_in", 0)) for v in views),
+            sum(len(v.explained) + len(v.unresolved) for v in views),
+            len(views),
+            arm,
+        )
     )
     print("showcase: %s" % args.out)
     return 0

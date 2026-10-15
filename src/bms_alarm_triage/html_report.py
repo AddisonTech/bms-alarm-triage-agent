@@ -581,7 +581,7 @@ def funnel(events_in: int, conditions: int, review: int, labels: tuple[str, str,
     return '<div class="funnel">%s</div>' % '<span class="farrow" aria-hidden="true">&rarr;</span>'.join(cells)
 
 
-def window_section(view: WindowView, hidden: bool = False) -> str:
+def window_section(view: WindowView, hidden: bool = False, queue: bool = True) -> str:
     s = view.summary
     events_in = int(s.get("alarm_events_in", 0))
     conditions = int(s.get("distinct_conditions", 0))
@@ -600,6 +600,7 @@ def window_section(view: WindowView, hidden: bool = False) -> str:
         '<span class="count c-nui"><b>%(nui)d</b> set aside as nuisance</span>'
         '<span class="count c-unr"><b>%(unr)d</b> it could not judge</span>'
         '</div>'
+        '%(queue)s'
         '<h3 class="part">Look at these first</h3>'
         '<div class="esc-list">%(cards)s</div>'
         '<h3 class="part">Set aside as nuisance</h3>'
@@ -626,9 +627,176 @@ def window_section(view: WindowView, hidden: bool = False) -> str:
         "nui": len(view.nuisance),
         "unr": len(view.unresolved),
         "cards": cards,
+        "queue": queue_compare([view]) if queue else "",
         "nuisance": nuisance_rows(view),
         "unresolved": unresolved_rows(view),
     }
+
+
+# ------------------------------------------------------- queue, before/after
+
+ROW_ESCALATED = "escalated"
+ROW_UNRESOLVED = "unresolved"
+ROW_NUISANCE = "nuisance"
+
+
+@dataclass(frozen=True)
+class QueueRow:
+    """One point's alarm events, placed on its own window's clock."""
+
+    label: str
+    times: tuple[float, ...]
+    start: float
+    span: float
+    zone: Any
+    status: str
+    rank: int = 0
+    first: float = 0.0
+
+
+def _window_bounds(view: WindowView) -> tuple[float, float, Any]:
+    for item in [e.reassessed for e in view.explained] + list(view.nuisance):
+        segment = item.evidence.trend_segment
+        if len(segment) >= 2:
+            return (
+                _epoch(segment.timestamps[0]),
+                _epoch(segment.timestamps[-1]),
+                segment.timestamps[0].tzinfo,
+            )
+    events = [
+        ev.timestamp
+        for entry in view.unresolved
+        for ev in entry.scored.condition.member_events
+    ]
+    if not events:
+        return 0.0, 1.0, None
+    return _epoch(min(events)), _epoch(max(events)), min(events).tzinfo
+
+
+def queue_rows(view: WindowView) -> list[QueueRow]:
+    start, end, zone = _window_bounds(view)
+    span = max(end - start, 1.0)
+
+    def row(condition: DistinctCondition, status: str, rank: int = 0) -> QueueRow:
+        times = tuple(sorted(_epoch(ev.timestamp) for ev in condition.member_events))
+        short = "/".join(condition.point_path.split("/")[-2:])
+        return QueueRow(
+            label=short,
+            times=times,
+            start=start,
+            span=span,
+            zone=zone,
+            status=status,
+            rank=rank,
+            first=times[0] if times else start,
+        )
+
+    rows = [row(e.reassessed.condition, ROW_ESCALATED, e.reassessed.final_rank) for e in view.explained]
+    rows += [row(e.scored.condition, ROW_UNRESOLVED) for e in view.unresolved]
+    rows += [row(i.condition, ROW_NUISANCE) for i in view.nuisance]
+    return rows
+
+
+def _queue_axis(rows: list[QueueRow], left: float, right: float, y: float) -> str:
+    first = rows[0]
+    parts = []
+    for t in _time_ticks(first.start, first.start + first.span, first.zone):
+        x = left + (t - first.start) / first.span * (right - left)
+        anchor = "start" if x < left + 20 else ("end" if x > right - 20 else "middle")
+        parts.append(
+            '<text class="axis" x="%.1f" y="%.1f" text-anchor="%s">%s</text>'
+            % (x, y, anchor, esc(_time_label(datetime.fromtimestamp(t, first.zone), first.span)))
+        )
+    return "".join(parts)
+
+
+def queue_before(groups: list[list[QueueRow]]) -> str:
+    """Every alarm event, one row per point, all one colour.
+
+    Rows from every window go into one list ordered by when each point first
+    alarmed, which is how a queue presents them, and nothing distinguishes
+    one row from another. That sameness is the picture.
+    """
+    rows = sorted((r for g in groups for r in g), key=lambda q: (q.first - q.start) / q.span)
+    if not rows:
+        return ""
+    width, left, right, row_h = 520.0, 4.0, 516.0, 9.0
+    height = len(rows) * row_h + 24.0
+    parts = []
+    y = 2.0
+    for r in rows:
+        for t in r.times:
+            x = left + (t - r.start) / r.span * (right - left)
+            parts.append('<line class="q-ev" x1="%.1f" x2="%.1f" y1="%.1f" y2="%.1f"/>'
+                         % (x, x, y + 0.5, y + row_h - 0.5))
+        y += row_h
+    parts.append(_queue_axis(rows, left, right, y + 16))
+    return (
+        '<svg class="queue" viewBox="0 0 %d %d" role="img" aria-label="Every alarm event in the queue, '
+        'one row per point">%s</svg>' % (int(width), int(height), "".join(parts))
+    )
+
+
+def queue_after(groups: list[list[QueueRow]]) -> str:
+    """Only what the agent hands over, in reading order, labelled.
+
+    One group per window, divided by a rule, since reading order restarts
+    in each window.
+    """
+    kept = [[r for r in g if r.status != ROW_NUISANCE] for g in groups]
+    kept = [g for g in kept if g]
+    shown = [r for g in kept for r in g]
+    if not shown:
+        return ""
+    width, left, right, row_h, gap = 520.0, 196.0, 516.0, 17.0, 8.0
+    height = len(shown) * row_h + (len(kept) - 1) * gap + 22.0
+    parts = []
+    y = 2.0
+    boundaries = set()
+    count = 0
+    for g in kept[:-1]:
+        count += len(g)
+        boundaries.add(count)
+    for index, r in enumerate(shown):
+        if index in boundaries:
+            parts.append('<line class="q-sep" x1="4" x2="%.1f" y1="%.1f" y2="%.1f"/>'
+                         % (right, y + gap / 2, y + gap / 2))
+            y += gap
+        cls = "q-esc" if r.status == ROW_ESCALATED else "q-unr"
+        mark = str(r.rank) if r.status == ROW_ESCALATED else "?"
+        parts.append('<rect class="q-band %s" x="%.1f" y="%.1f" width="%.1f" height="%.1f"/>'
+                     % (cls, left, y + 2, right - left, row_h - 4))
+        parts.append('<text class="q-rank %s" x="4" y="%.1f">%s</text>' % (cls, y + 12.5, esc(mark)))
+        parts.append('<text class="q-label" x="20" y="%.1f">%s</text>' % (y + 12.5, esc(r.label[:30])))
+        for t in r.times:
+            x = left + (t - r.start) / r.span * (right - left)
+            parts.append('<line class="q-tick %s" x1="%.1f" x2="%.1f" y1="%.1f" y2="%.1f"/>'
+                         % (cls, x, x, y + 3.0, y + row_h - 3.0))
+        y += row_h
+    parts.append(_queue_axis(shown, left, right, y + 14))
+    return (
+        '<svg class="queue" viewBox="0 0 %d %d" role="img" aria-label="The items to review, in reading '
+        'order">%s</svg>' % (int(width), int(height), "".join(parts))
+    )
+
+
+def queue_compare(views: list[WindowView]) -> str:
+    groups = [queue_rows(v) for v in views]
+    events = sum(len(r.times) for g in groups for r in g)
+    points = sum(len(g) for g in groups)
+    review = sum(1 for g in groups for r in g if r.status != ROW_NUISANCE)
+    nuisance = points - review
+    return (
+        '<div class="qc">'
+        '<figure class="qpanel"><figcaption><span class="eyebrow">Before</span>'
+        '<b>%d alarm events on %d points</b><span class="muted small">What the queue shows. '
+        'Every tick is one alarm, return, or repeat. Nothing says which ones matter.</span></figcaption>%s</figure>'
+        '<figure class="qpanel"><figcaption><span class="eyebrow">After</span>'
+        '<b>%d items, in reading order</b><span class="muted small">Ranked escalations, plus the ones '
+        'it could not judge (?). %d set aside as nuisance, each with the rule that decided it.</span>'
+        '</figcaption>%s</figure>'
+        '</div>'
+    ) % (events, points, queue_before(groups), review, nuisance, queue_after(groups))
 
 
 def tabs(views: list[WindowView]) -> str:
@@ -876,12 +1044,32 @@ button:focus-visible, summary:focus-visible, textarea:focus-visible { outline: 2
   background: var(--sheet); color: var(--ink); border: 1px solid var(--rule); border-radius: 4px; padding: 8px 10px; }
 .marks-actions { grid-column: 2; display: flex; gap: 8px; align-items: center; }
 .copy-note { font-size: 13px; color: var(--muted); }
+/* Queue, before and after */
+.qc { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 16px; }
+.qpanel { margin: 0; background: var(--sheet); border: 1px solid var(--rule); border-radius: 4px;
+  padding: 14px 16px 12px; display: flex; flex-direction: column; gap: 10px; min-width: 0; }
+.qpanel figcaption { display: flex; flex-direction: column; gap: 2px; }
+.qpanel figcaption b { font-family: var(--font-display); font-weight: 600; font-size: 19px; }
+.queue { display: block; width: 100%; height: auto; }
+.queue text { font-family: var(--font-data); font-size: 10.5px; }
+.queue .axis { fill: var(--muted); }
+.queue .q-ev { stroke: var(--ink); stroke-width: 1.5; opacity: 0.5; }
+.queue .q-sep { stroke: var(--rule); stroke-width: 1; }
+.queue .q-band { opacity: 1; }
+.queue .q-band.q-esc { fill: var(--accent-wash); }
+.queue .q-band.q-unr { fill: var(--void-wash); }
+.queue .q-tick.q-esc { stroke: var(--accent); stroke-width: 1.6; }
+.queue .q-tick.q-unr { stroke: var(--void); stroke-width: 1.6; }
+.queue .q-rank { font-family: var(--font-display); font-weight: 700; font-size: 12px; }
+.queue .q-rank.q-esc { fill: var(--accent); }
+.queue .q-rank.q-unr { fill: var(--void); }
+.queue .q-label { fill: var(--ink); }
 .foot { font-size: 13px; color: var(--muted); border-top: 1px solid var(--rule); padding-top: 16px; max-width: 80ch; }
 
 @media (max-width: 760px) {
   .titleblock { grid-template-columns: 1fr; }
   .tb-meta { border-left: 0; border-top: 1px solid var(--rule); min-width: 0; }
-  .window-head, .esc-body, .how-grid, .marks { grid-template-columns: minmax(0, 1fr); }
+  .window-head, .esc-body, .how-grid, .marks, .qc { grid-template-columns: minmax(0, 1fr); }
   .marks-out, .marks-actions { grid-column: 1; }
   .esc-head { grid-template-columns: auto minmax(0, 1fr); }
   .movement { grid-column: 1 / span 2; }
