@@ -62,6 +62,75 @@
     "r_p3_min_peak_deadbands": 4.0
   },
 
+  "electrical": {
+    "_note": [
+      "The electrical rule set, applied in N7 to conditions whose alarm class",
+      "is one of the signals below and to nothing else, so HVAC conditions keep",
+      "the six trend rules above. A cause confirmed by its trend ranks as the",
+      "item; a consequence that starts inside a confirmed cause's window, in",
+      "the scope the relation names, collapses under it. Relations are tried",
+      "in this order and the first match wins. Scope is any (anywhere in the",
+      "export), same_equipment, or upstream (equipment that feeds the cause,",
+      "from the journal's fed_from topology). Times are seconds before the",
+      "cause starts and after it ends. Trend evidence is read from the",
+      "condition's own span widened by evidence_margin_s on each side, since a",
+      "standby generator reads 0 Hz all day and that is not a frequency alarm."
+    ],
+    "min_samples_past_limit": 1,
+    "evidence_margin_s": 10,
+    "signals": {
+      "utility_failure": "utility power failure",
+      "voltage_sag": "utility voltage sag",
+      "pdu_overload": "PDU overload",
+      "power_factor_low": "low power factor",
+      "ups_on_battery": "UPS on battery",
+      "generator_start": "generator start",
+      "ats_transfer": "ATS transfer to the emergency source",
+      "frequency_low": "generator frequency dip",
+      "ups_load_high": "UPS load above its limit"
+    },
+    "relations": [
+      {
+        "name": "UTILITY_FAILURE",
+        "cause": "utility_failure",
+        "explains": [
+          {"signal": "ups_on_battery", "scope": "any"},
+          {"signal": "generator_start", "scope": "any"},
+          {"signal": "ats_transfer", "scope": "any"},
+          {"signal": "frequency_low", "scope": "any"}
+        ],
+        "before_s": 30,
+        "after_s": 120
+      },
+      {
+        "name": "VOLTAGE_SAG",
+        "cause": "voltage_sag",
+        "explains": [
+          {"signal": "ups_on_battery", "scope": "any"}
+        ],
+        "before_s": 10,
+        "after_s": 30
+      },
+      {
+        "name": "PDU_OVERLOAD",
+        "cause": "pdu_overload",
+        "explains": [
+          {"signal": "pdu_overload", "scope": "same_equipment"},
+          {"signal": "ups_load_high", "scope": "upstream"}
+        ],
+        "before_s": 60,
+        "after_s": 60
+      },
+      {
+        "name": "LOW_POWER_FACTOR",
+        "cause": "power_factor_low",
+        "explains": [],
+        "before_s": 0,
+        "after_s": 0
+      }
+    ]
+  },
+
   "safety": {
     "_note": "Recommendations describe diagnostic steps. A control action verb in an N8 recommendation is a failed attempt, per P4-C1 and P2-C3. Every entry is an action. The noun 'setpoint' was removed on 2026-09-08: it blocked correct descriptive text about a setpoint point, and every way to actually change one is already caught by a verb here.",
     "forbidden_verbs": [

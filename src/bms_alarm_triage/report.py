@@ -18,7 +18,6 @@ from __future__ import annotations
 from datetime import datetime
 from typing import Any
 
-from .rules import RULE_NAMES, RULE_ORDER
 from .state import ExplainedCondition, ReassessedCondition, UnresolvedCondition
 
 
@@ -66,19 +65,17 @@ def _score_breakdown(components: dict[str, float]) -> str:
 
 
 def _rule_lines(item: ReassessedCondition) -> list[str]:
+    # Outcomes are recorded in evaluation order, which for the HVAC set is
+    # RULE_ORDER, so reading them directly also serves the electrical set.
     lines = []
-    outcomes = {o.rule_id: o for o in item.rule_outcomes}
-    for rule_id in RULE_ORDER:
-        outcome = outcomes.get(rule_id)
-        if outcome is None:
-            continue
+    for outcome in item.rule_outcomes:
         marker = "FIRED" if outcome.fired else "     "
         note = ""
-        if outcome.fired and rule_id == item.band_set_by:
+        if outcome.fired and outcome.rule_id == item.band_set_by:
             note = "  <- set the band"
         lines.append(
             "    %s %s %s: %s%s"
-            % (marker, rule_id, RULE_NAMES[rule_id], outcome.detail, note)
+            % (marker, outcome.rule_id, outcome.rule_name, outcome.detail, note)
         )
     return lines
 
@@ -190,6 +187,22 @@ def render(
             % (item.band, item.band_set_by or "no rule; the band was unchanged")
         )
         add("- **Rules fired**: %s" % (", ".join(item.rules_fired) or "none"))
+        if item.consequences:
+            add(
+                "- **Explains**: %d condition(s), collapsed under this one"
+                % len(item.consequences)
+            )
+            for consequence in item.consequences:
+                add(
+                    "    - `%s` (%s, priority %d), from %s, %d events"
+                    % (
+                        consequence.condition.point_path,
+                        consequence.condition.alarm_class.replace("_", " "),
+                        consequence.condition.reported_priority,
+                        _fmt_time(consequence.condition.start_time),
+                        len(consequence.condition.member_events),
+                    )
+                )
         add("- **Trend evidence used**: %s to %s, %d samples" % (
             _fmt_time(item.evidence.segment_start),
             _fmt_time(item.evidence.segment_end),

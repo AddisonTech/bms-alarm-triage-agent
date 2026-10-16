@@ -14,6 +14,13 @@ from pathlib import Path
 
 REPO_DEFAULT_CONFIG = Path(__file__).resolve().parents[2] / "config" / "triage.json"
 
+# An installed wheel has no repository around it, so the same file ships
+# inside the package. A test holds the two copies byte for byte identical,
+# and the repository copy wins whenever it exists.
+PACKAGED_CONFIG = Path(__file__).resolve().parent / "triage.json"
+
+ELECTRICAL_SCOPES = ("any", "same_equipment", "upstream")
+
 
 class ConfigError(Exception):
     """The configuration file is missing a value or holds an unusable one."""
@@ -76,6 +83,45 @@ class ReassessmentConfig:
 
 
 @dataclass(frozen=True)
+class Explains:
+    """One consequence a cause accounts for, and where it may be."""
+
+    signal: str
+    scope: str
+
+
+@dataclass(frozen=True)
+class Relation:
+    """A cause and the consequences that collapse under it."""
+
+    name: str
+    cause: str
+    explains: tuple[Explains, ...]
+    before_s: float
+    after_s: float
+
+
+@dataclass(frozen=True)
+class ElectricalConfig:
+    """The electrical rule set. Empty when the section is absent."""
+
+    min_samples_past_limit: int = 1
+    evidence_margin_s: float = 10.0
+    signals: dict = field(default_factory=dict)
+    relations: tuple[Relation, ...] = ()
+
+    def is_electrical(self, alarm_class: str) -> bool:
+        return alarm_class in self.signals
+
+    def label(self, signal: str) -> str:
+        return str(self.signals.get(signal, signal.replace("_", " ")))
+
+    @property
+    def cause_signals(self) -> tuple[str, ...]:
+        return tuple(relation.cause for relation in self.relations)
+
+
+@dataclass(frozen=True)
 class SafetyConfig:
     forbidden_verbs: tuple[str, ...]
 
@@ -106,6 +152,7 @@ class Config:
     evaluation: EvaluationConfig
     source_path: Path
     raw: dict = field(repr=False, default_factory=dict)
+    electrical: ElectricalConfig = field(default_factory=ElectricalConfig)
 
     def as_log_dict(self) -> dict:
         """The effective configuration, for the run log required by P4-C3."""
@@ -145,6 +192,88 @@ def _build(cls, payload: dict, name: str):
     return cls(**{key: section[key] for key in expected})
 
 
+def _electrical(payload: dict) -> ElectricalConfig:
+    """The electrical section, checked as strictly as the rest.
+
+    The section is optional so a configuration written before it existed
+    still loads, with no electrical rules. When it is present, every signal
+    a relation names has to be declared and every scope has to be known, so
+    a typo cannot quietly switch a relation off.
+    """
+    if "electrical" not in payload:
+        return ElectricalConfig()
+    section = _section(payload, "electrical")
+    expected = {"min_samples_past_limit", "evidence_margin_s", "signals", "relations"}
+    missing = sorted(expected - set(section))
+    if missing:
+        raise ConfigError(
+            "configuration section 'electrical' is missing %s" % ", ".join(missing)
+        )
+    unexpected = sorted(set(section) - expected)
+    if unexpected:
+        raise ConfigError(
+            "configuration section 'electrical' has unknown keys %s"
+            % ", ".join(unexpected)
+        )
+    signals = section["signals"]
+    if not isinstance(signals, dict) or not signals:
+        raise ConfigError("electrical.signals must be a non-empty object")
+    min_samples = int(section["min_samples_past_limit"])
+    if min_samples < 1:
+        raise ConfigError("electrical.min_samples_past_limit must be at least 1")
+    margin = float(section["evidence_margin_s"])
+    if margin < 0:
+        raise ConfigError("electrical.evidence_margin_s must not be negative")
+
+    relations = []
+    seen = set()
+    for index, entry in enumerate(section["relations"]):
+        where = "electrical.relations[%d]" % index
+        if not isinstance(entry, dict):
+            raise ConfigError("%s is not an object" % where)
+        keys = {"name", "cause", "explains", "before_s", "after_s"}
+        if set(entry) != keys:
+            raise ConfigError("%s must have exactly %s" % (where, ", ".join(sorted(keys))))
+        if entry["cause"] not in signals:
+            raise ConfigError("%s names the undeclared signal %r" % (where, entry["cause"]))
+        if entry["cause"] in seen:
+            raise ConfigError("%s repeats the cause %r" % (where, entry["cause"]))
+        seen.add(entry["cause"])
+        explains = []
+        for item in entry["explains"]:
+            if item.get("signal") not in signals:
+                raise ConfigError("%s explains the undeclared signal %r" % (where, item.get("signal")))
+            if item.get("scope") not in ELECTRICAL_SCOPES:
+                raise ConfigError(
+                    "%s has scope %r; use one of %s"
+                    % (where, item.get("scope"), ", ".join(ELECTRICAL_SCOPES))
+                )
+            explains.append(Explains(signal=item["signal"], scope=item["scope"]))
+        before, after = float(entry["before_s"]), float(entry["after_s"])
+        if before < 0 or after < 0:
+            raise ConfigError("%s before_s and after_s must not be negative" % where)
+        relations.append(
+            Relation(
+                name=str(entry["name"]),
+                cause=str(entry["cause"]),
+                explains=tuple(explains),
+                before_s=before,
+                after_s=after,
+            )
+        )
+    return ElectricalConfig(
+        min_samples_past_limit=min_samples,
+        evidence_margin_s=margin,
+        signals={str(k): str(v) for k, v in signals.items()},
+        relations=tuple(relations),
+    )
+
+
+def default_path() -> Path:
+    """The repository copy when running from a checkout, else the packaged one."""
+    return REPO_DEFAULT_CONFIG if REPO_DEFAULT_CONFIG.is_file() else PACKAGED_CONFIG
+
+
 def load(path: Path | None = None) -> Config:
     """Read the configuration file.
 
@@ -152,7 +281,7 @@ def load(path: Path | None = None) -> Config:
     a threshold name cannot silently leave the default in force while the
     operator believes they changed it.
     """
-    config_path = Path(path) if path is not None else REPO_DEFAULT_CONFIG
+    config_path = Path(path) if path is not None else default_path()
     if not config_path.is_file():
         raise ConfigError("no configuration file at %s" % config_path)
     try:
@@ -184,6 +313,7 @@ def load(path: Path | None = None) -> Config:
         evaluation=_build(EvaluationConfig, payload, "evaluation"),
         source_path=config_path,
         raw=payload,
+        electrical=_electrical(payload),
     )
 
     ceiling = config.evaluation.false_escalation_ceiling

@@ -21,6 +21,15 @@ descending, then condition start time, then point path. The last two keys
 exist so the ordering is a total order and two runs over the same corpus
 produce byte-identical output.
 
+Electrical conditions, the ones whose alarm class is a configured
+electrical signal, are banded by the electrical rule set instead
+(electrical.py). A cause it confirms is escalated with the conditions it
+explains carried under it, and those consequences are on neither list:
+they are reached through their cause. Within the escalated list a cause
+sorts on the highest preliminary score in its group, so a utility failure
+is read before anything its own UPS alarms would have outranked. An HVAC
+condition has no consequences, so its sort key is exactly what it was.
+
 The assertion on entry is where the P4-C1 rule that nothing is escalated
 without trend evidence is enforced. N6 has already routed evidence-less
 conditions to the unresolved list, so anything arriving here without a
@@ -29,11 +38,15 @@ run rather than quietly produce an escalation with no evidence behind it.
 """
 from __future__ import annotations
 
-from .. import rules
+from dataclasses import replace
+
+from .. import electrical, rules
 from ..state import (
     BAND_DEMOTED,
+    BAND_EXPLAINED,
     BAND_PROMOTED,
     BAND_UNCHANGED,
+    DISPOSITION_CONSEQUENCE,
     DISPOSITION_ESCALATE,
     DISPOSITION_NUISANCE,
     NUISANCE_CATEGORIES,
@@ -63,6 +76,16 @@ def n7_reassess(state: TriageState) -> dict:
 
     audit.enter_node("N7", {"evidence_augmented_conditions": len(augmented)})
 
+    electrical_cfg = state["config"].electrical
+    electrical_items = [
+        e for e in augmented if electrical_cfg.is_electrical(e.scored.condition.alarm_class)
+    ]
+    assessments = (
+        electrical.assess(electrical_items, electrical_cfg, state.get("equipment_feeds"))
+        if electrical_items
+        else {}
+    )
+
     reassessed: list[ReassessedCondition] = []
     for evidence in augmented:
         if evidence.trend_segment is None or len(evidence.trend_segment) == 0:
@@ -72,9 +95,19 @@ def n7_reassess(state: TriageState) -> dict:
                 % evidence.scored.condition.condition_id
             )
 
-        outcomes, band, band_set_by = rules.evaluate(evidence, cfg)
         condition = evidence.scored.condition
-        disposition = disposition_for(band, condition.nuisance_classification)
+        assessed = assessments.get(condition.condition_id)
+        if assessed is None:
+            outcomes, band, band_set_by = rules.evaluate(evidence, cfg)
+            disposition = disposition_for(band, condition.nuisance_classification)
+            explained_by = ""
+        else:
+            outcomes, band, band_set_by = assessed.outcomes, assessed.band, assessed.band_set_by
+            if band == BAND_EXPLAINED:
+                disposition = DISPOSITION_CONSEQUENCE
+            else:
+                disposition = disposition_for(band, condition.nuisance_classification)
+            explained_by = assessed.explained_by
         fired = tuple(o.rule_id for o in outcomes if o.fired)
 
         reassessed.append(
@@ -85,6 +118,7 @@ def n7_reassess(state: TriageState) -> dict:
                 band_set_by=band_set_by,
                 rules_fired=fired,
                 rule_outcomes=outcomes,
+                explained_by=explained_by,
             )
         )
 
@@ -108,11 +142,33 @@ def n7_reassess(state: TriageState) -> dict:
             preliminary_score=evidence.scored.preliminary_score,
         )
 
+    # Attach every consequence to the cause it collapsed under.
+    under: dict[str, list[ReassessedCondition]] = {}
+    for item in reassessed:
+        if item.explained_by:
+            under.setdefault(item.explained_by, []).append(item)
+    if under:
+        reassessed = [
+            replace(
+                item,
+                consequences=tuple(
+                    sorted(
+                        under.get(item.condition.condition_id, []),
+                        key=lambda c: (c.condition.start_time, c.condition.point_path),
+                    )
+                ),
+            )
+            for item in reassessed
+        ]
+
     def order_key(item: ReassessedCondition):
         condition = item.condition
+        group_score = max(
+            [item.preliminary_score] + [c.preliminary_score for c in item.consequences]
+        )
         return (
             BAND_ORDER[item.band],
-            -item.preliminary_score,
+            -group_score,
             condition.start_time,
             condition.point_path,
         )
@@ -130,25 +186,17 @@ def n7_reassess(state: TriageState) -> dict:
     # tests can compare where a condition ended up against where the
     # alarm side alone had put it.
     escalated = [
-        ReassessedCondition(
-            evidence=item.evidence,
-            band=item.band,
-            disposition=item.disposition,
-            band_set_by=item.band_set_by,
-            rules_fired=item.rules_fired,
-            rule_outcomes=item.rule_outcomes,
-            final_rank=position,
-        )
+        replace(item, final_rank=position)
         for position, item in enumerate(escalated, start=1)
     ]
 
-    audit.exit_node(
-        "N7",
-        {
-            "final_escalated_conditions": len(escalated),
-            "final_nuisance_conditions": len(nuisance),
-        },
-    )
+    counts = {
+        "final_escalated_conditions": len(escalated),
+        "final_nuisance_conditions": len(nuisance),
+    }
+    if electrical_items:
+        counts["explained_consequences"] = sum(len(item.consequences) for item in escalated)
+    audit.exit_node("N7", counts)
     return {
         "final_escalated_conditions": escalated,
         "final_nuisance_conditions": nuisance,
