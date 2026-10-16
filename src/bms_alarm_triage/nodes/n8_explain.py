@@ -61,7 +61,7 @@ def electrical_input(item: ReassessedCondition, cfg, time_zone: str | None = Non
     tz = display.zone(time_zone)
     condition = item.condition
     labels = cfg.electrical
-    evidence = electrical.measure_condition(item.evidence, labels)
+    evidence = item.electrical_evidence or electrical.measure_condition(item.evidence, labels)
     banding = next((o for o in item.rule_outcomes if o.rule_id == item.band_set_by), None)
     units = (" " + condition.units) if condition.units else ""
     if condition.limit == 0.5 and condition.deadband == 0.5 and not condition.units:

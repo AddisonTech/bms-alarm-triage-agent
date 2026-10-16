@@ -59,7 +59,9 @@ def _evidence(state: dict, item: ReassessedCondition, points: int) -> dict:
     condition = item.condition
     segment = item.evidence.trend_segment
     config = state["config"]
-    if config.electrical.is_electrical(condition.alarm_class):
+    if item.electrical_evidence is not None:
+        measured = item.electrical_evidence
+    elif config.electrical.is_electrical(condition.alarm_class):
         measured = electrical.measure_condition(item.evidence, config.electrical)
     else:
         measured = electrical.measure(segment, condition.limit, condition.deadband, condition.direction)
@@ -77,6 +79,32 @@ def _evidence(state: dict, item: ReassessedCondition, points: int) -> dict:
         "seconds_past_limit": round(measured.seconds_past_limit, 1),
         "worst_value": round(measured.peak_value, 4),
         "trend": thin(segment, condition.limit, condition.direction, points),
+        "dip": _dip(measured.dip),
+    }
+
+
+def _iso(moment):
+    return moment.isoformat() if moment is not None else None
+
+
+def _dip(dip) -> dict | None:
+    """A generator frequency dip as data. None for every other condition."""
+    if dip is None:
+        return None
+    return {
+        "measured": dip.measured,
+        "reason": dip.reason or None,
+        "basis": dip.basis or None,
+        "step_at": _iso(dip.step_at),
+        "rated_at": _iso(dip.rated_at),
+        "worst_hz": round(dip.worst_hz, 3) if dip.worst_hz is not None else None,
+        "worst_at": _iso(dip.worst_at),
+        "nominal_hz": dip.nominal_hz,
+        "below_nominal_hz": round(dip.below_nominal_hz, 3) if dip.below_nominal_hz is not None else None,
+        "tolerance_hz": dip.tolerance_hz,
+        "recovered_at": _iso(dip.recovered_at),
+        "recovery_s": round(dip.recovery_s, 1) if dip.recovery_s is not None else None,
+        "window_end": _iso(dip.window_end),
     }
 
 
