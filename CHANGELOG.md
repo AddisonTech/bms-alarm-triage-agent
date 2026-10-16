@@ -338,6 +338,87 @@ input and 3,239 output tokens, $0.0016 at the batch rate.
 
 ---
 
+## 2026-10-16 - 0.2.0: electrical rule set and the alarm journal adapter
+
+The agent now reads electrical power alarms, so a power monitoring
+dashboard can hand it the alarm flood from an outage and get a short ranked
+list back. Nothing about an HVAC run changes: the six trend rules, the HVAC
+prompt, the scores, and the holdout numbers are as they were.
+
+**1. An electrical rule set beside the HVAC rules.** `electrical.py` bands
+any condition whose alarm class is one of the signals in the new
+`electrical` section of `config/triage.json`. Four deterministic rules,
+exactly one of which fires per condition: E-C1 EXPLAINED_BY_CAUSE collapses
+a consequence under a confirmed cause, E-P1 CAUSE_CONFIRMED_BY_TREND ranks
+the cause, E-P2 UNEXPLAINED_BY_ANY_CAUSE escalates a consequence nothing
+explains, and E-D1 NOT_SEEN_IN_TREND demotes an alarm the trend never shows.
+The relations are in config: a utility failure explains UPS on battery, the
+generator start, the ATS transfer, and the frequency dip; a voltage sag
+explains UPS ride-through on battery; a PDU overload explains its own lower
+stage and the load alarm on the UPS that feeds it; a low power factor
+stands on its own. A cause sorts on the highest preliminary score in its
+group, so a utility failure (priority 2) reads before its own UPS alarms
+(priority 1) would have outranked it. Evidence is read from the
+condition's own span plus `evidence_margin_s`, using real sample times.
+
+Why not the HVAC rules: R-D2 demotes anything under 600 s past its limit,
+and every power event here is seconds to two minutes. Every outage alarm
+would have been nuisance.
+
+`ReassessedCondition` gains `consequences` and `explained_by`, both empty on
+every HVAC condition. Consequences are on neither the escalated nor the
+nuisance list; they are reached through their cause, written into the
+report and the web page under it, and recorded in the run history. If a
+cause cannot be written up at N8, its consequences go to unresolved with it
+rather than vanish.
+
+**2. A vendor-neutral alarm journal format.** `journal.py` reads one JSON
+document (journal entries, alarm points, equipment topology, trend series),
+documented in `docs/JOURNAL_FORMAT.md`, checks it as strictly as N2 checks
+the CSVs, and writes the CSV pair the pipeline reads, so N1 to N9 run
+unchanged and the run log still checksums real files. `graph.run_journal`
+does both. Operator records (ACK, SHELVE, SUPPRESS and their reverses) are
+counted, not turned into alarm rows.
+
+**3. bms_triage_service.** A second package beside the agent, for a program
+that installs it: `triage(journal)` returns the ranked list as data
+(`result.py` builds it from the final state). The template writer moved
+here from `tools/` so an installed copy has it; `tools.template_writer`
+still imports it. Claude Haiku writes only when `TRIAGE_ANTHROPIC_KEY` is
+set, one request per card, and every reply passes N8's checks before N8
+checks it again; any failure gets the template for that card. The agent
+package still imports no network library.
+
+**4. Installable from a tag.** `config/triage.json` also ships inside the
+package, held byte for byte equal by a test, so a wheel finds its
+configuration. Version 0.2.0.
+
+Fixtures: `tests/fixtures/electrical/` holds one synthetic journal per
+scenario (utility outage, voltage sag, PDU overload, low power factor, and
+a UPS on battery with nothing upstream), built by
+`tools/electrical_fixtures.py` and frozen by a test. They are under
+`tests/` rather than `data/` because the HVAC freeze test holds `data/` to
+exactly what the HVAC generator writes.
+
+Dependency note per Rule 10: none. `anthropic` was already the optional
+`showcase` extra and is imported lazily, only by the Haiku writer.
+
+Verification, run in the build session:
+
+    python -m pytest -q
+    python -m tools.evaluate.benchmark --split holdout
+    python -m tools.showcase --split holdout --model haiku-replay
+    python -m bms_triage_service tests/fixtures/electrical/utility_outage.json
+
+532 tests pass, 84 of them new, up from 448. Holdout still 548 events, 18
+items, 30.4x, 15 of 15 in the top five, 0.0 percent false escalation, and
+the showcase replay still has 14 Haiku cards and the same one fallback. The
+utility outage fixture: 24 journal entries, 12 alarm transitions, 6
+conditions, 1 ranked item with 5 consequences under it, in 42 ms from an
+installed wheel.
+
+---
+
 ## Out-of-guide tooling
 
 Recorded because Rules 1 and 2 expect work to trace to a Student
@@ -368,3 +449,12 @@ under `private/`, never in `data/`.
 `tools/haiku_writer.py` - the build-time Claude Haiku writer described in
 the 2026-10-16 entry. Presentation only, outside the package, and used only
 by the showcase build. The operator CLI and the demo never call it.
+
+`tools/electrical_fixtures.py` - builds the synthetic electrical journals
+described in the 2026-10-16 0.2.0 entry. A fixture, never product: it
+imports nothing from the agent, and a test holds the committed files to
+what it builds.
+
+`src/bms_triage_service/` - packaged, but outside the agent package. It runs
+the agent on a journal for another program and is the only packaged code
+that may use a hosted writer, and only when its key is set.
