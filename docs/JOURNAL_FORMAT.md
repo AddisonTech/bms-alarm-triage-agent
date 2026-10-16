@@ -42,7 +42,10 @@ as every other input (P2-C3).
 
 Every time is ISO 8601 with a timezone offset, for example
 `2026-07-14T10:08:00+00:00`. A time without an offset is refused, because
-two exports from different time zones would otherwise line up wrongly.
+two exports from different time zones would otherwise line up wrongly. Any
+offset is accepted and the adapter holds every time in UTC from then on;
+the zone a person reads times in is chosen when the agent runs
+(`time_zone`), not here.
 
 ## equipment
 

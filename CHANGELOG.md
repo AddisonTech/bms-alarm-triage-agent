@@ -419,6 +419,55 @@ installed wheel.
 
 ---
 
+## 2026-10-16 - 0.2.1: one time zone for everything a person reads
+
+The fault, found on the dashboard's live Triage tab: the header showed an
+event at 15:28:45, the viewer's local time, while the card under it said
+19:28:45 to 19:28:51, which was UTC. Neither was labeled. The template
+writer lifted the clock straight out of the UTC ISO stamps in the N8
+prompt, and the electrical rules wrote their findings in whatever offset
+the data carried.
+
+- **Times kept in UTC.** The journal adapter now holds every time in UTC
+  after reading it, whatever offset the producer wrote. The instant is
+  unchanged; on the fixtures, which are already UTC, nothing moves.
+- **One display zone, labeled.** `display.py` formats a time for reading:
+  `06:08:00 EDT`, `2026-07-14 06:08:00 EDT`, or `10:08:00 UTC`. The zone is
+  an IANA name passed to `bms_triage_service.triage(time_zone=...)`,
+  `--time-zone` on the command line, or `display_zone` on `graph.run`. The
+  default is UTC, labeled UTC. An unknown name stops the run before it
+  starts.
+- **Where it applies.** The electrical rule findings, the electrical N8
+  prompt (which now states its zone and tells the writer to copy times
+  with their labels), and so the template's sentences. The structured
+  result keeps ISO 8601 timestamps in UTC with offsets, and adds
+  `time_zone` (name and label) so a reader formats them the same way.
+- **Haiku held to it.** The live Haiku writer rejects a reply containing a
+  time the prompt did not state, or one without the prompt's label, and the
+  template writes that card instead.
+- **HVAC untouched.** With no display zone, which is how the CLI, the
+  benchmark, the demo, and the showcase run, the HVAC prompt is byte for
+  byte what it was.
+
+Dependency note per Rule 10: `tzdata`, the IANA zone database as a Python
+package, is added to the agent's dependencies. Linux has the database
+already; Windows, the stated target, ships none for Python's `zoneinfo`.
+
+Verification, run in the build session:
+
+    python -m pytest -q
+    python -m tools.evaluate.benchmark --split holdout
+    python -m tools.showcase --split holdout --model haiku-replay
+
+556 tests pass, 24 of them new in `tests/test_time_zone.py`, including a
+New York run and a UTC run that check the time a header formats from the
+ISO stamp is the time the card's sentence states, with the same label.
+Holdout still 548 events to 18 items. The showcase page is identical to
+the previous build except its own build time, and the replay still has 14
+Haiku cards and the same one fallback.
+
+---
+
 ## Out-of-guide tooling
 
 Recorded because Rules 1 and 2 expect work to trace to a Student

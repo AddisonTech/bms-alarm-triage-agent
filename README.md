@@ -98,7 +98,19 @@ is removed before it returns.
 Install it from a release tag:
 
 ```
-pip install "bms-alarm-triage-agent @ git+https://github.com/AddisonTech/bms-alarm-triage-agent@v0.2.0"
+pip install "bms-alarm-triage-agent @ git+https://github.com/AddisonTech/bms-alarm-triage-agent@v0.2.1"
+```
+
+**Time zones.** Every time the agent keeps is UTC with an explicit offset,
+and the structured result's timestamps stay that way. Every time a person
+reads, in the reason, the next step, and each rule's finding, is written in
+one zone with its label: `triage(journal, time_zone="America/New_York")`
+gives `06:08:00 EDT`, and the default is UTC, labeled `UTC`. The Haiku
+writer is held to the same thing: a reply with a time the evidence did not
+state, in that zone and with that label, gets the template instead.
+
+```
+python -m bms_triage_service tests/fixtures/electrical/utility_outage.json --time-zone America/New_York
 ```
 
 ## Running it
@@ -178,7 +190,8 @@ a person. The agent never tunes itself.
 ## Status
 
 Built to the build guide, Phase 0 through Phase 5, plus the electrical rule
-set and the alarm journal adapter in 0.2.0. 532 tests pass.
+set and the alarm journal adapter in 0.2.0, and display time zones in
+0.2.1. 556 tests pass.
 
 Against the held-out labeled corpus, which was set aside before any tuning
 and opened once: top-five capture 15 of 15, volume reduction 30.4x, false
