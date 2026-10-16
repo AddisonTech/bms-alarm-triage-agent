@@ -1,10 +1,10 @@
-# Tests every change, and publishes the showcase page to GitHub Pages
-# whenever main moves. The page is built from the synthetic holdout split.
-# Its written explanations replay the Claude Haiku replies saved in
-# showcase/haiku_record_holdout.json by the last local build with the API;
-# no key is needed or used here, every reply is checked again by the same
-# guardrails, and any card that fails or has no saved reply gets the
-# template. Nothing is published if a test fails.
+# Checks every commit's author, tests every change, and publishes the
+# showcase page to GitHub Pages whenever main moves. The page is built from
+# the synthetic holdout split. Its written explanations replay the Claude
+# Haiku replies saved in showcase/haiku_record_holdout.json by the last local
+# build with the API; no key is needed or used here, every reply is checked
+# again by the same guardrails, and any card that fails or has no saved reply
+# gets the template. Nothing is published if the author check or a test fails.
 name: Test and publish showcase
 
 on:
@@ -27,10 +27,23 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
       - uses: actions/setup-python@v5
         with:
           python-version: "3.12"
+
+      - name: Check commit authors
+        run: |
+          if [ "${{ github.event_name }}" = "pull_request" ]; then
+            range="${{ github.event.pull_request.base.sha }}..${{ github.event.pull_request.head.sha }}"
+          elif [ "${{ github.event_name }}" = "push" ] && [ "${{ github.event.before }}" != "0000000000000000000000000000000000000000" ]; then
+            range="${{ github.event.before }}..${{ github.sha }}"
+          else
+            range="${{ github.sha }}"
+          fi
+          python -m tools.check_authors "$range"
 
       - name: Install
         run: python -m pip install -e ".[dev]"
