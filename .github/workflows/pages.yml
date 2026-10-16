@@ -1,7 +1,10 @@
 # Checks every commit's author, tests every change, and publishes the
-# showcase page to GitHub Pages whenever main moves. The page is built from the synthetic holdout split
-# with the template writer, since no model runs on GitHub's servers.
-# Nothing is published if a test fails.
+# showcase page to GitHub Pages whenever main moves. The page is built from
+# the synthetic holdout split. Its written explanations replay the Claude
+# Haiku replies saved in showcase/haiku_record_holdout.json by the last local
+# build with the API; no key is needed or used here, every reply is checked
+# again by the same guardrails, and any card that fails or has no saved reply
+# gets the template. Nothing is published if the author check or a test fails.
 name: Test and publish showcase
 
 on:
@@ -50,7 +53,7 @@ jobs:
 
       - name: Build the showcase
         run: >
-          python -m tools.showcase --split holdout --model template --fonts
+          python -m tools.showcase --split holdout --model haiku-replay --fonts
           --repo-url "${{ github.server_url }}/${{ github.repository }}"
           --out site/index.html
 

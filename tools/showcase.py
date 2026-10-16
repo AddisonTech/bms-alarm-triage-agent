@@ -21,6 +21,7 @@ Run from the repository root:
 from __future__ import annotations
 
 import argparse
+import os
 import tempfile
 import time
 from datetime import datetime
@@ -30,7 +31,11 @@ from bms_alarm_triage import html_report
 from bms_alarm_triage.config import load as load_config
 from bms_alarm_triage.graph import run
 from bms_alarm_triage.html_report import WindowView, esc
+from bms_alarm_triage.model import build_prompt
+from bms_alarm_triage.nodes.n8_explain import allowed_targets_for, explain_input
+from bms_alarm_triage.schema import domains_of
 
+from . import haiku_writer
 from .demo import choose_client, model_reachable, windows_for
 from .evaluate import baselines, ground_truth, metrics
 from .template_writer import TemplateClient
@@ -116,6 +121,9 @@ def window_label(name: str, split: str) -> str:
 
 ARM_MODEL = "local model"
 ARM_TEMPLATE = "template"
+ARM_HAIKU = "Claude Haiku"
+
+HAIKU_RECORD = REPO_ROOT / "showcase" / "haiku_record_{split}.json"
 
 
 def pick_client(mode: str, config):
@@ -142,18 +150,56 @@ def _subtitle(name: str, final) -> str:
     return "%s, about %d hours from %s" % (name, hours, first.strftime("%d %b %Y"))
 
 
+def collect_cards(jobs, config) -> list[haiku_writer.Card]:
+    """Every escalation's N8 prompt, from a run with the template writer.
+
+    The prompt is rebuilt with N8's own explain_input and build_prompt, so
+    it is the text the local model would be sent, and the allowed targets
+    and thermal domains come from the same functions N8 checks against.
+    """
+    cards: list[haiku_writer.Card] = []
+    with tempfile.TemporaryDirectory() as holder:
+        for key, label, alarm_path, trend_path, _window_dir in jobs:
+            final = run(
+                alarm_export_path=alarm_path,
+                trend_export_path=trend_path,
+                output_dir=Path(holder) / key,
+                config=config,
+                model_client=TemplateClient(),
+            )
+            for entry in final["explained_escalated_conditions"]:
+                condition = entry.reassessed.condition
+                cards.append(
+                    haiku_writer.Card(
+                        window=label,
+                        point=condition.point_path,
+                        prompt=build_prompt(explain_input(entry.reassessed, config)),
+                        targets=allowed_targets_for(condition),
+                        domains=frozenset(domains_of(condition.point_path, condition.equipment)),
+                    )
+                )
+    return cards
+
+
 def run_split(
     split: str,
     only: str | None,
     model: str,
     config_path: Path | None,
     custom: tuple[Path, Path, str] | None = None,
+    haiku_record: Path | None = None,
+    haiku_poll_s: float = 10.0,
 ):
     """Run every window and score the labeled ones. Returns what the page needs.
 
     custom is an alarm export, a trend export, and a label, for data that
     is not part of the corpus. It has no ground truth, so it gets no
     scorecard, and pooled comes back as None.
+
+    model haiku sends every card to Claude Haiku in one batch and saves the
+    replies to haiku_record; haiku-replay reads that record instead. Either
+    way the last value returned is the haiku_writer.Outcome, or None when
+    no batch ran. If no reply passed, the arm is the template's.
     """
     config = load_config(config_path)
     if custom is not None:
@@ -164,7 +210,25 @@ def run_split(
             (d.name, window_label(d.name, split), d / "alarm_export.csv", d / "trend_export.csv", d)
             for d in windows_for(split, only)
         ]
-    client, arm = pick_client(model, config)
+    outcome = None
+    if model in ("haiku", "haiku-replay"):
+        replay = haiku_record if model == "haiku-replay" else None
+        if replay is None and not os.environ.get(haiku_writer.KEY_VARIABLE, "").strip():
+            print("haiku: %s is not set; the template writes every card" % haiku_writer.KEY_VARIABLE)
+        else:
+            outcome = haiku_writer.prepare(
+                collect_cards(jobs, config),
+                config,
+                replay=replay,
+                record_path=haiku_record,
+                poll_s=haiku_poll_s,
+            )
+        if outcome is not None and outcome.written:
+            client, arm = outcome.client, ARM_HAIKU
+        else:
+            client, arm = TemplateClient(), ARM_TEMPLATE
+    else:
+        client, arm = pick_client(model, config)
     views: list[WindowView] = []
     agent_results: list[metrics.Result] = []
     baseline_results: dict[str, list[metrics.Result]] = {baselines.RAW: [], baselines.DEDUP: []}
@@ -240,13 +304,13 @@ def run_split(
                 )
 
     if not agent_results:
-        return config, views, None, arm
+        return config, views, None, arm, outcome
     pooled = {
         "agent": metrics.aggregate("agent", agent_results),
         baselines.RAW: metrics.aggregate(baselines.RAW, baseline_results[baselines.RAW]),
         baselines.DEDUP: metrics.aggregate(baselines.DEDUP, baseline_results[baselines.DEDUP]),
     }
-    return config, views, pooled, arm
+    return config, views, pooled, arm, outcome
 
 
 def _pct(value: float) -> str:
@@ -363,11 +427,51 @@ RECORDED_NOTICE = (
 )
 
 
-def _writer_label(arm: str, config) -> str:
+def haiku_notice(outcome: haiku_writer.Outcome) -> str:
+    """The banner for a page whose copy Claude Haiku wrote, in whole or part."""
+    if outcome.fallbacks:
+        rest = len(outcome.fallbacks)
+        tally = (
+            "%d of %d replies passed and are used here. %s failed a check or got no reply, so "
+            "%s written by the fixed template from the condition's own measurements instead, "
+            "and each card says which wrote it."
+            % (
+                outcome.written,
+                outcome.cards,
+                "The other one" if rest == 1 else "The other %d" % rest,
+                "that card was" if rest == 1 else "those cards were",
+            )
+        )
+    else:
+        tally = "All %d replies passed." % outcome.cards
+    replay = ""
+    if outcome.replayed:
+        replay = (
+            " The batch ran %s; this copy replays its saved replies, checked again when the "
+            "page was built." % outcome.record.get("created", "earlier")
+        )
+    return (
+        '<p class="notice"><b>About the written explanations.</b> This copy was written by '
+        "Claude Haiku (%s) at build time: one request per card, all sent as one batch, each "
+        "given the same structured evidence the local model is given. Every reply was then "
+        "checked by the same guardrails the local model's text must pass: allowed verbs only, "
+        "the point itself as the target, no control actions. %s%s Every number, rank, chart "
+        "and rule is the same whichever writer is used.</p>"
+        % (haiku_writer.MODEL, tally, replay)
+    )
+
+
+def _writer_label(arm: str, config, outcome=None) -> str:
     if arm == ARM_MODEL:
         return config.model.name
     if arm == ARM_TEMPLATE:
         return "template, no model"
+    if arm == ARM_HAIKU:
+        if outcome is not None and outcome.fallbacks:
+            return "Claude Haiku, %d of %d; template, %d" % (
+                outcome.written, outcome.cards, len(outcome.fallbacks)
+            )
+        return "Claude Haiku, build time"
     return "recorded placeholder"
 
 
@@ -383,15 +487,19 @@ def no_scorecard() -> str:
 
 
 def build_page(
-    split, config, views, pooled, arm, fonts, standalone, data_note=None, repo_url=None
+    split, config, views, pooled, arm, fonts, standalone, data_note=None, repo_url=None,
+    haiku=None,
 ) -> str:
     events_in = sum(int(v.summary.get("alarm_events_in", 0)) for v in views)
     total_conditions = sum(int(v.summary.get("distinct_conditions", 0)) for v in views)
     items = sum(len(v.explained) + len(v.unresolved) for v in views)
-    notice = WRITERS.get(arm, RECORDED_NOTICE) or ""
+    if arm == ARM_HAIKU and haiku is not None:
+        notice = haiku_notice(haiku)
+    else:
+        notice = WRITERS.get(arm, RECORDED_NOTICE) or ""
     meta = (
         ("data", data_note or "%s split, %d windows, synthetic" % (split, len(views))),
-        ("explanations", _writer_label(arm, config)),
+        ("explanations", _writer_label(arm, config, haiku)),
         ("built", datetime.now().strftime("%Y-%m-%d %H:%M")),
     )
     header = (
@@ -482,11 +590,20 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument(
         "--model",
         default="auto",
-        choices=["auto", "ollama", "template", "recorded"],
+        choices=["auto", "ollama", "template", "recorded", "haiku", "haiku-replay"],
         help=(
             "who writes each card's two sentences. auto uses the local model if it "
-            "answers and the template writer otherwise (default: auto)"
+            "answers and the template writer otherwise (default: auto). haiku has "
+            "Claude Haiku write every card in one batch, with the key read from "
+            "%s, and saves the replies to --haiku-record; haiku-replay rebuilds "
+            "from that record without the API" % haiku_writer.KEY_VARIABLE
         ),
+    )
+    parser.add_argument(
+        "--haiku-record",
+        type=Path,
+        default=None,
+        help="the saved Haiku replies (default: showcase/haiku_record_SPLIT.json)",
     )
     parser.add_argument("--alarms", type=Path, default=None, help="an alarm export of your own")
     parser.add_argument("--trends", type=Path, default=None, help="the matching trend export")
@@ -510,12 +627,20 @@ def main(argv: list[str] | None = None) -> int:
 
     if (args.alarms is None) != (args.trends is None):
         parser.error("--alarms and --trends go together")
+    if args.model.startswith("haiku") and args.alarms:
+        # A real export never leaves the machine (P2-C2, P4-C2). The hosted
+        # writer is for the synthetic corpus only.
+        parser.error("--model %s is for the synthetic splits, not --alarms" % args.model)
     custom = (args.alarms, args.trends, args.label) if args.alarms else None
-    config, views, pooled, arm = run_split(args.split, args.window, args.model, args.config, custom)
+    record = args.haiku_record or Path(str(HAIKU_RECORD).format(split=args.split))
+    config, views, pooled, arm, haiku = run_split(
+        args.split, args.window, args.model, args.config, custom, haiku_record=record
+    )
     page = build_page(
         args.split, config, views, pooled, arm, args.fonts, not args.fragment,
         data_note="%s, not labeled" % args.alarms.name if custom else None,
         repo_url=args.repo_url,
+        haiku=haiku,
     )
     args.out.parent.mkdir(parents=True, exist_ok=True)
     with args.out.open("w", encoding="utf-8", newline="\n") as handle:
@@ -529,6 +654,25 @@ def main(argv: list[str] | None = None) -> int:
             arm,
         )
     )
+    if haiku is not None:
+        cards = [e for v in views for e in v.explained]
+        by_haiku = sum(1 for e in cards if e.model_name == haiku_writer.NAME)
+        usage = haiku.record.get("usage", {})
+        print(
+            "haiku: %d card(s) written by Claude Haiku, %d fell back to the template"
+            % (by_haiku, len(cards) - by_haiku)
+        )
+        if "cost_usd" in haiku.record:
+            print(
+                "haiku: batch %s%s cost $%.6f (%d input, %d output tokens, batch rate)"
+                % (
+                    haiku.record.get("batch_id", "?"),
+                    " (replayed)" if haiku.replayed else "",
+                    haiku.record["cost_usd"],
+                    usage.get("input_tokens", 0),
+                    usage.get("output_tokens", 0),
+                )
+            )
     print("showcase: %s" % args.out)
     return 0
 
