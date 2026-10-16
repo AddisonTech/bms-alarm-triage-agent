@@ -68,6 +68,31 @@ def _field(prompt: str, label: str) -> str:
     return match.group(1).strip() if match else ""
 
 
+_PROMPT_CLOCK = re.compile(r"\b(\d\d:\d\d:\d\d) ([A-Z][A-Za-z0-9+:-]*)")
+_REPLY_TIME = re.compile(r"\b(\d{1,2}:\d\d(?::\d\d)?)\b(?:\s+([A-Z][A-Za-z0-9+:-]*))?")
+
+
+def time_problem(text: str, prompt: str) -> str | None:
+    """A time in the reply has to be one the prompt wrote, with its label.
+
+    The prompt states every time in one zone, labeled. A reply that converts
+    a time, drops its label, or invents one would put a second clock on the
+    card, so it fails here and the template writes that card instead.
+    """
+    clocks = _PROMPT_CLOCK.findall(prompt)
+    if not clocks:
+        return None
+    labels = {label for _clock, label in clocks}
+    for match in _REPLY_TIME.finditer(text):
+        written, label = match.group(1), match.group(2)
+        padded = written.zfill(len(written) + 1) if len(written.split(":")[0]) == 1 else written
+        if not any(clock.startswith(padded) for clock, _label in clocks):
+            return "time %s in the reply is not a time the evidence states" % written
+        if label not in labels:
+            return "time %s in the reply is missing its %s label" % (written, "/".join(sorted(labels)))
+    return None
+
+
 def check(raw: str, prompt: str, verb_check: ForbiddenVerbCheck) -> str | None:
     """N8's acceptance test for one reply. None means it passed."""
     targets = targets_in(prompt)
@@ -80,7 +105,7 @@ def check(raw: str, prompt: str, verb_check: ForbiddenVerbCheck) -> str | None:
     found = verb_check.find(candidate.detail)
     if found:
         return "recommendation contains the control action verb(s) %s" % ", ".join(found)
-    return None
+    return time_problem("%s %s" % (candidate.reason, candidate.detail), prompt)
 
 
 def make_client(key: str, timeout_s: float = REQUEST_TIMEOUT_S):
