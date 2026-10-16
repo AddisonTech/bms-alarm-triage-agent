@@ -265,3 +265,6 @@ class TriageState(TypedDict, total=False):
     equipment_feeds: Any
     # The parsed alarm journal, when the run started from one.
     journal: Any
+    # IANA zone the person reads times in. Unset leaves the HVAC prompt
+    # exactly as it was; electrical text then reads in UTC, labeled.
+    display_zone: Any

@@ -14,7 +14,7 @@ from pathlib import Path
 
 from bms_alarm_triage.errors import TriageError
 
-from . import triage
+from . import UnknownTimeZone, triage
 
 
 def main(argv: list[str] | None = None) -> int:
@@ -24,10 +24,18 @@ def main(argv: list[str] | None = None) -> int:
     )
     parser.add_argument("journal", type=Path, help="alarm journal document (JSON)")
     parser.add_argument("--json", action="store_true", help="print the full result as JSON")
+    parser.add_argument(
+        "--time-zone",
+        default=None,
+        help="IANA zone for the times in the text, such as America/New_York (default UTC)",
+    )
     args = parser.parse_args(argv)
 
     try:
-        data = triage(args.journal)
+        data = triage(args.journal, time_zone=args.time_zone)
+    except UnknownTimeZone as exc:
+        print("run stopped: %s" % exc, file=sys.stderr)
+        return 2
     except TriageError as exc:
         print("run stopped: %s" % exc, file=sys.stderr)
         return 1

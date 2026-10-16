@@ -35,7 +35,7 @@ from __future__ import annotations
 import csv
 import json
 from dataclasses import dataclass, field
-from datetime import datetime
+from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
 
@@ -148,7 +148,9 @@ def _time(text: Any, where: str) -> datetime:
         raise JournalError("%s: time %r is not ISO 8601" % (where, text)) from None
     if moment.tzinfo is None:
         raise JournalError("%s: time %r has no timezone offset" % (where, text))
-    return moment
+    # Held in UTC from here on. The offset the producer wrote is honoured,
+    # so the instant is the same; only how it is written changes.
+    return moment.astimezone(timezone.utc)
 
 
 def _number(value: Any, where: str, name: str) -> float:

@@ -17,7 +17,7 @@ from __future__ import annotations
 
 from typing import Any
 
-from . import __version__, electrical
+from . import __version__, display, electrical
 from .state import HIGH, ReassessedCondition, TrendFrame
 
 TREND_POINTS = 120
@@ -158,8 +158,18 @@ def build(state: dict) -> dict:
         windows = audit.inputs.get("windows", {})
         window = {"start": windows.get("trend_start"), "end": windows.get("trend_end")}
 
+    tz = display.zone(state.get("display_zone"))
+    reference = journal.window_start if journal is not None and journal.window_start else None
+    if reference is None and explained:
+        reference = explained[0].reassessed.condition.start_time
     return {
         "agent_version": __version__,
+        # The zone the written text uses. Every timestamp below stays ISO
+        # 8601 in UTC with its offset; a reader formats them in this zone.
+        "time_zone": {
+            "name": display.name_of(tz),
+            "label": display.label(reference, tz) if reference else "UTC",
+        },
         "window": window,
         "counts": counts,
         "items": items,

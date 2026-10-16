@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "bms-alarm-triage-agent"
-version = "0.2.0"
+version = "0.2.1"
 description = "Turns a raw building automation alarm queue into a short ranked list of what to look at first."
 readme = "README.md"
 requires-python = ">=3.11"
@@ -13,8 +13,10 @@ authors = [{ name = "Addison Smith" }]
 
 # The model is served locally by Ollama over localhost and is reached with
 # urllib from the standard library, so there is no HTTP client dependency
-# and no cloud SDK anywhere in the runtime path (P2-C1, P2-C2).
-dependencies = ["langgraph>=0.2"]
+# and no cloud SDK anywhere in the runtime path (P2-C1, P2-C2). tzdata is the
+# IANA zone database, so a display time zone works on Windows, which ships
+# none for Python.
+dependencies = ["langgraph>=0.2", "tzdata>=2024.1"]
 
 # The showcase can have Claude Haiku write each card's two sentences when
 # the page is built (tools/haiku_writer.py), and bms_triage_service can use

@@ -238,15 +238,14 @@ _DEFAULT_STEP = (
 
 
 def _clock(stamp: str) -> str:
-    match = re.search(r"T(\d\d:\d\d:\d\d)", stamp)
+    """'2026-10-16 15:28:45 EDT' reads as '15:28:45 EDT'. The label is kept."""
+    match = re.search(r"(\d\d:\d\d:\d\d \S+)$", stamp)
     return match.group(1) if match else stamp
 
 
-def _duration(first: str, last: str) -> str:
-    from datetime import datetime
-
+def _duration(seconds_text: str) -> str:
     try:
-        seconds = (datetime.fromisoformat(last) - datetime.fromisoformat(first)).total_seconds()
+        seconds = float(seconds_text)
     except ValueError:
         return ""
     if seconds < 1:
@@ -281,7 +280,7 @@ def compose_electrical(prompt: str) -> dict:
     first = _field(prompt, "first past the limit")
     last = _field(prompt, "last past the limit")
     worst = _field(prompt, "worst value")
-    span = _duration(first, last)
+    span = _duration(_field(prompt, "seconds past the limit"))
     when = "from %s to %s" % (_clock(first), _clock(last)) if first != last else "at %s" % _clock(first)
     if span and first != last:
         when += " (%s)" % span
