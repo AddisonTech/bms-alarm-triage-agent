@@ -42,6 +42,7 @@ from __future__ import annotations
 from dataclasses import dataclass
 from datetime import datetime, timedelta
 
+from . import display
 from .config import ElectricalConfig, Relation
 from .state import (
     BAND_DEMOTED,
@@ -195,23 +196,21 @@ def explains(
     )
 
 
-def _clock(moment: datetime | None) -> str:
-    return moment.strftime("%H:%M:%S") if moment else "never"
 
 
 def _number(value: float) -> str:
     return ("%.3f" % value).rstrip("0").rstrip(".")
 
 
-def _seen(evidence: Evidence, condition: DistinctCondition) -> str:
+def _seen(evidence: Evidence, condition: DistinctCondition, tz) -> str:
     units = (" " + condition.units) if condition.units else ""
     return (
         "the trend shows it past its limit in %d of %d samples around the alarm, %s to %s, worst value %s%s"
         % (
             evidence.samples_past_limit,
             evidence.sample_count,
-            _clock(evidence.first_past),
-            _clock(evidence.last_past),
+            display.clock(evidence.first_past, tz),
+            display.clock(evidence.last_past, tz),
             _number(evidence.peak_value),
             units,
         )
@@ -237,10 +236,18 @@ def _order_key(item: EvidenceCondition, cfg: ElectricalConfig):
 
 
 def assess(
-    evidence: list[EvidenceCondition], cfg: ElectricalConfig, feeds: dict[str, str] | None = None
+    evidence: list[EvidenceCondition],
+    cfg: ElectricalConfig,
+    feeds: dict[str, str] | None = None,
+    time_zone: str | None = None,
 ) -> dict[str, Assessment]:
-    """Assess every electrical condition. Keyed by condition id."""
+    """Assess every electrical condition. Keyed by condition id.
+
+    time_zone only changes how the times in each finding read (labeled, in
+    that IANA zone, UTC by default); the rules compare aware datetimes.
+    """
     feeds = dict(feeds or {})
+    tz = display.zone(time_zone)
     relations = {relation.cause: relation for relation in cfg.relations}
     primaries: list[tuple[EvidenceCondition, Relation]] = []
     results: dict[str, Assessment] = {}
@@ -269,7 +276,7 @@ def assess(
             "peak_value": round(measured_evidence.peak_value, 4),
             "peak_deadbands": round(measured_evidence.peak_deadbands, 4),
         }
-        seen = _seen(measured_evidence, condition)
+        seen = _seen(measured_evidence, condition, tz)
 
         if cause is not None:
             primary, relation = cause
@@ -278,7 +285,7 @@ def assess(
                 True,
                 "starts at %s, inside the %s window on %s, so it is a consequence of "
                 "that cause and collapses under it"
-                % (_clock(condition.start_time), relation.name, primary.scored.condition.point_path),
+                % (display.clock(condition.start_time, tz), relation.name, primary.scored.condition.point_path),
                 measured,
             )
         else:

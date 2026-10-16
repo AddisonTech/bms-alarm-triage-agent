@@ -81,7 +81,12 @@ def n7_reassess(state: TriageState) -> dict:
         e for e in augmented if electrical_cfg.is_electrical(e.scored.condition.alarm_class)
     ]
     assessments = (
-        electrical.assess(electrical_items, electrical_cfg, state.get("equipment_feeds"))
+        electrical.assess(
+            electrical_items,
+            electrical_cfg,
+            state.get("equipment_feeds"),
+            time_zone=state.get("display_zone"),
+        )
         if electrical_items
         else {}
     )

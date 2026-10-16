@@ -87,6 +87,9 @@ Given one alarm condition and its trend evidence, return four fields:
 This is an electrical power condition. Do not describe it as a heating or
 cooling fault.
 
+Every time below is in {zone_name} and ends with its label ({zone_label}).
+Write any time exactly as it appears here, label included. Do not convert it.
+
 Answer with JSON only, exactly:
 {{"reason": "...", "verb": "...", "target": "...", "detail": "..."}}
 
@@ -105,6 +108,7 @@ Trend evidence
   samples past the limit: {samples_past}
   first past the limit: {first_past}
   last past the limit: {last_past}
+  seconds past the limit: {seconds_past}
   worst value: {peak_value}
 
 Reassessment

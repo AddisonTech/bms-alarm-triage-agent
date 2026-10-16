@@ -16,6 +16,7 @@ from pathlib import Path
 
 from langgraph.graph import END, START, StateGraph
 
+from . import display
 from .audit import AuditLog
 from .config import Config, load as load_config
 from .model import OllamaClient
@@ -67,6 +68,7 @@ def run(
     config_path: Path | None = None,
     model_client=None,
     equipment_feeds: dict[str, str] | None = None,
+    display_zone: str | None = None,
 ) -> TriageState:
     """Run the pipeline once.
 
@@ -94,6 +96,9 @@ def run(
         "model_client": client,
         "equipment_feeds": dict(equipment_feeds or {}),
     }
+    if display_zone:
+        display.zone(display_zone)  # an unknown name stops the run before it starts
+        initial["display_zone"] = display_zone
 
     graph = build_graph()
     # The node count is fixed and known, so the recursion allowance is set
@@ -110,6 +115,7 @@ def run_journal(
     config: Config | None = None,
     config_path: Path | None = None,
     model_client=None,
+    display_zone: str | None = None,
 ) -> TriageState:
     """Run the pipeline once on an alarm journal document.
 
@@ -132,6 +138,7 @@ def run_journal(
         config_path=config_path,
         model_client=model_client,
         equipment_feeds=parsed.feeds,
+        display_zone=display_zone,
     )
     final["journal"] = parsed
     return final

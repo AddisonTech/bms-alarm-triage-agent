@@ -26,7 +26,7 @@ from __future__ import annotations
 import time
 from dataclasses import replace
 
-from .. import electrical, rules
+from .. import display, electrical, rules
 from ..errors import ModelUnavailableError
 from ..model import (
     ForbiddenVerbCheck,
@@ -48,16 +48,17 @@ def allowed_targets_for(condition) -> tuple[str, ...]:
     return (condition.point_path, condition.equipment)
 
 
-def _stamp(moment) -> str:
-    return moment.isoformat() if moment is not None else "never"
-
-
 def _number(value: float) -> str:
     return ("%.3f" % value).rstrip("0").rstrip(".")
 
 
-def electrical_input(item: ReassessedCondition, cfg) -> dict:
-    """The record for an electrical condition, consequences included."""
+def electrical_input(item: ReassessedCondition, cfg, time_zone: str | None = None) -> dict:
+    """The record for an electrical condition, consequences included.
+
+    Every time in it is written in one zone with its label, so whichever
+    writer turns it into a sentence can only repeat labeled times.
+    """
+    tz = display.zone(time_zone)
     condition = item.condition
     labels = cfg.electrical
     evidence = electrical.measure_condition(item.evidence, labels)
@@ -78,21 +79,23 @@ def electrical_input(item: ReassessedCondition, cfg) -> dict:
             c.condition.point_path,
             c.condition.equipment,
             c.condition.reported_priority,
-            c.condition.start_time.isoformat(),
-            c.condition.end_time.isoformat(),
+            display.stamp(c.condition.start_time, tz),
+            display.stamp(c.condition.end_time, tz),
         )
         for c in item.consequences
     ]
     return {
         "domain": "electrical",
+        "zone_name": display.name_of(tz),
+        "zone_label": display.label(condition.start_time, tz),
         "point_path": condition.point_path,
         "equipment": condition.equipment,
         "alarm_class": condition.alarm_class,
         "priority": condition.reported_priority,
         "signal_label": labels.label(condition.alarm_class),
         "limit_text": limit_text,
-        "start_time": condition.start_time.isoformat(),
-        "end_time": condition.end_time.isoformat(),
+        "start_time": display.stamp(condition.start_time, tz),
+        "end_time": display.stamp(condition.end_time, tz),
         "alarm_count": condition.alarm_count,
         "repeat_count": condition.repeat_count,
         "return_count": condition.return_count,
@@ -100,8 +103,9 @@ def electrical_input(item: ReassessedCondition, cfg) -> dict:
         "preliminary_score": item.preliminary_score,
         "sample_count": evidence.sample_count,
         "samples_past": evidence.samples_past_limit,
-        "first_past": _stamp(evidence.first_past),
-        "last_past": _stamp(evidence.last_past),
+        "first_past": display.stamp(evidence.first_past, tz),
+        "last_past": display.stamp(evidence.last_past, tz),
+        "seconds_past": round(evidence.seconds_past_limit),
         "peak_value": peak,
         "band": item.band,
         "band_set_by": item.band_set_by or "no rule fired",
@@ -113,7 +117,7 @@ def electrical_input(item: ReassessedCondition, cfg) -> dict:
     }
 
 
-def explain_input(item: ReassessedCondition, cfg) -> dict:
+def explain_input(item: ReassessedCondition, cfg, time_zone: str | None = None) -> dict:
     """The structured record handed to the model.
 
     Only the one condition and its own measurements go in. The full alarm
@@ -123,7 +127,16 @@ def explain_input(item: ReassessedCondition, cfg) -> dict:
     """
     condition = item.condition
     if cfg.electrical.is_electrical(condition.alarm_class):
-        return electrical_input(item, cfg)
+        return electrical_input(item, cfg, time_zone)
+    # With no display zone the HVAC record is exactly what it always was, so
+    # its prompt, and every saved reply matched to that prompt, stay valid.
+    if time_zone:
+        tz = display.zone(time_zone)
+        start_text = display.stamp(condition.start_time, tz)
+        end_text = display.stamp(condition.end_time, tz)
+    else:
+        start_text = condition.start_time.isoformat()
+        end_text = condition.end_time.isoformat()
     measurements = rules.measure(
         item.evidence.trend_segment,
         condition.limit,
@@ -142,8 +155,8 @@ def explain_input(item: ReassessedCondition, cfg) -> dict:
         "deadband": condition.deadband,
         "direction": condition.direction,
         "units": condition.units,
-        "start_time": condition.start_time.isoformat(),
-        "end_time": condition.end_time.isoformat(),
+        "start_time": start_text,
+        "end_time": end_text,
         "alarm_count": condition.alarm_count,
         "repeat_count": condition.repeat_count,
         "return_count": condition.return_count,
@@ -198,7 +211,7 @@ def n8_explain(state: TriageState) -> dict:
 
     for item in escalated:
         condition = item.condition
-        base_prompt = build_prompt(explain_input(item, config))
+        base_prompt = build_prompt(explain_input(item, config, state.get("display_zone")))
         targets = allowed_targets_for(condition)
         domains = domains_of(condition.point_path, condition.equipment)
         last_detail = "no attempt was made"
