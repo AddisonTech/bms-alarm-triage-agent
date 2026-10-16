@@ -98,7 +98,7 @@ is removed before it returns.
 Install it from a release tag:
 
 ```
-pip install "bms-alarm-triage-agent @ git+https://github.com/AddisonTech/bms-alarm-triage-agent@v0.2.1"
+pip install "bms-alarm-triage-agent @ git+https://github.com/AddisonTech/bms-alarm-triage-agent@v0.2.2"
 ```
 
 **Time zones.** Every time the agent keeps is UTC with an explicit offset,
@@ -191,7 +191,7 @@ a person. The agent never tunes itself.
 
 Built to the build guide, Phase 0 through Phase 5, plus the electrical rule
 set and the alarm journal adapter in 0.2.0, and display time zones in
-0.2.1. 556 tests pass.
+0.2.1, and the frequency dip measured from its load step in 0.2.2. 575 tests pass.
 
 Against the held-out labeled corpus, which was set aside before any tuning
 and opened once: top-five capture 15 of 15, volume reduction 30.4x, false

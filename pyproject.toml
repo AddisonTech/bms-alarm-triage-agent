@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "bms-alarm-triage-agent"
-version = "0.2.1"
+version = "0.2.2"
 description = "Turns a raw building automation alarm queue into a short ranked list of what to look at first."
 readme = "README.md"
 requires-python = ">=3.11"

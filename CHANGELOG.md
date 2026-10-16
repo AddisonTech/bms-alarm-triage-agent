@@ -468,6 +468,55 @@ Haiku cards and the same one fallback.
 
 ---
 
+## 2026-10-16 - 0.2.2: the frequency dip measured from its load step
+
+The fault, found on the dashboard's live outage card: the generator
+frequency dip consequence said "worst 20.00 Hz". The electrical rules read
+every condition's evidence from its own span widened by
+`evidence_margin_s` (10 s) on each side. For the dip alarm, which fires
+at the transfer to the emergency source, that window reached back into the
+generator's run up from standstill: 0 Hz, 20 Hz, 40 Hz, all past the
+59.5 Hz limit. The minimum it reported was the crank, not the dip. In a
+simulated outage the real dip was 58.88 Hz at the transfer, back within
+0.5 Hz two seconds later.
+
+- **Measured from the load step.** `measure_dip` opens the window at the
+  transfer to the emergency source (the latest `ats_transfer` condition
+  within `load_step_lookback_s` of the dip), and only on samples after the
+  generator first reached rated frequency since it last stood still.
+  Without a transfer it opens at that first rated sample. With neither,
+  there is no measurement and no number is reported, only the reason.
+- **Reported as a dip.** Worst frequency and when, how far below nominal,
+  and when it came back within tolerance and how long after the step, or
+  that it never did. Every time is in the display zone with its label, in
+  the rule finding, and the result carries the same as data under
+  `evidence.dip`, ISO 8601 in UTC.
+- **In config.** `electrical.frequency_dip` names the dip and load step
+  signals, the nominal frequency, the tolerance that means both rated and
+  recovered, the standstill threshold, and the lookback. Checked as
+  strictly as the rest of the section.
+- **One measurement everywhere.** The evidence the electrical rules measure
+  is now carried on the reassessed condition, so the prompt and the result
+  report exactly what the rule read instead of measuring again.
+
+HVAC is untouched: no HVAC condition is a frequency dip.
+
+Verification, run in the build session:
+
+    python -m pytest -q
+    python -m tools.evaluate.benchmark --split holdout
+    python -m tools.showcase --split holdout --model haiku-replay
+
+575 tests pass, 19 of them new in `tests/test_frequency_dip.py`: a run up
+from 0 Hz is never the dip, a real load step dip is reported with its
+depth and recovery time, no transfer measures from the first rated sample,
+no transfer and no rated frequency gives no measurement, a transfer onto a
+generator never at rated gives none either, a dip that never recovers says
+so, and the times read in the display zone. Holdout still 548 events to 18
+items. The showcase page is byte-identical to one built from 0.2.1.
+
+---
+
 ## Out-of-guide tooling
 
 Recorded because Rules 1 and 2 expect work to trace to a Student
