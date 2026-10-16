@@ -106,6 +106,7 @@ def n7_reassess(state: TriageState) -> dict:
             outcomes, band, band_set_by = rules.evaluate(evidence, cfg)
             disposition = disposition_for(band, condition.nuisance_classification)
             explained_by = ""
+            measured = None
         else:
             outcomes, band, band_set_by = assessed.outcomes, assessed.band, assessed.band_set_by
             if band == BAND_EXPLAINED:
@@ -113,6 +114,7 @@ def n7_reassess(state: TriageState) -> dict:
             else:
                 disposition = disposition_for(band, condition.nuisance_classification)
             explained_by = assessed.explained_by
+            measured = assessed.evidence
         fired = tuple(o.rule_id for o in outcomes if o.fired)
 
         reassessed.append(
@@ -124,6 +126,7 @@ def n7_reassess(state: TriageState) -> dict:
                 rules_fired=fired,
                 rule_outcomes=outcomes,
                 explained_by=explained_by,
+                electrical_evidence=measured,
             )
         )
 

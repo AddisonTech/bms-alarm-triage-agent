@@ -102,6 +102,18 @@ class Relation:
 
 
 @dataclass(frozen=True)
+class FrequencyDipConfig:
+    """How a generator frequency dip is measured from its load step."""
+
+    signal: str
+    load_step_signal: str
+    nominal_hz: float
+    tolerance_hz: float
+    standstill_hz: float
+    load_step_lookback_s: float
+
+
+@dataclass(frozen=True)
 class ElectricalConfig:
     """The electrical rule set. Empty when the section is absent."""
 
@@ -109,6 +121,7 @@ class ElectricalConfig:
     evidence_margin_s: float = 10.0
     signals: dict = field(default_factory=dict)
     relations: tuple[Relation, ...] = ()
+    frequency_dip: FrequencyDipConfig | None = None
 
     def is_electrical(self, alarm_class: str) -> bool:
         return alarm_class in self.signals
@@ -204,12 +217,13 @@ def _electrical(payload: dict) -> ElectricalConfig:
         return ElectricalConfig()
     section = _section(payload, "electrical")
     expected = {"min_samples_past_limit", "evidence_margin_s", "signals", "relations"}
+    optional = {"frequency_dip"}
     missing = sorted(expected - set(section))
     if missing:
         raise ConfigError(
             "configuration section 'electrical' is missing %s" % ", ".join(missing)
         )
-    unexpected = sorted(set(section) - expected)
+    unexpected = sorted(set(section) - expected - optional)
     if unexpected:
         raise ConfigError(
             "configuration section 'electrical' has unknown keys %s"
@@ -261,7 +275,28 @@ def _electrical(payload: dict) -> ElectricalConfig:
                 after_s=after,
             )
         )
+    dip = None
+    if "frequency_dip" in section:
+        raw = {k: v for k, v in section["frequency_dip"].items() if not k.startswith("_")}
+        fields_ = {f for f in FrequencyDipConfig.__dataclass_fields__}
+        if set(raw) != fields_:
+            raise ConfigError(
+                "electrical.frequency_dip must have exactly %s" % ", ".join(sorted(fields_))
+            )
+        for name in ("signal", "load_step_signal"):
+            if raw[name] not in signals:
+                raise ConfigError(
+                    "electrical.frequency_dip.%s names the undeclared signal %r" % (name, raw[name])
+                )
+        numbers = {k: float(raw[k]) for k in fields_ - {"signal", "load_step_signal"}}
+        if numbers["nominal_hz"] <= 0 or numbers["tolerance_hz"] <= 0:
+            raise ConfigError("electrical.frequency_dip nominal_hz and tolerance_hz must be positive")
+        if numbers["standstill_hz"] < 0 or numbers["load_step_lookback_s"] < 0:
+            raise ConfigError("electrical.frequency_dip values must not be negative")
+        dip = FrequencyDipConfig(signal=raw["signal"], load_step_signal=raw["load_step_signal"], **numbers)
+
     return ElectricalConfig(
+        frequency_dip=dip,
         min_samples_past_limit=min_samples,
         evidence_margin_s=margin,
         signals={str(k): str(v) for k, v in signals.items()},

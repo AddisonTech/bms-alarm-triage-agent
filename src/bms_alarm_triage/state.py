@@ -190,6 +190,9 @@ class ReassessedCondition:
     # condition, so nothing about an HVAC run changes.
     consequences: tuple["ReassessedCondition", ...] = ()
     explained_by: str = ""
+    # Electrical only: the trend evidence the electrical rules measured, so
+    # the prompt and the result report exactly what the rule read.
+    electrical_evidence: Any = None
 
     @property
     def preliminary_score(self) -> float:

@@ -78,6 +78,24 @@
     ],
     "min_samples_past_limit": 1,
     "evidence_margin_s": 10,
+    "frequency_dip": {
+      "_note": [
+        "How a generator frequency dip is measured. The dip is the load step,",
+        "so it is read from the transfer to the emergency source (the",
+        "load_step_signal) and only once the generator has reached rated",
+        "frequency, never across its run up from standstill. Without a",
+        "transfer it is read from the first sample at rated frequency after",
+        "start; with neither there is no measurement. Rated and recovered both",
+        "mean within tolerance_hz of nominal_hz. A transfer counts as this",
+        "dip's load step when it is within load_step_lookback_s before the dip."
+      ],
+      "signal": "frequency_low",
+      "load_step_signal": "ats_transfer",
+      "nominal_hz": 60.0,
+      "tolerance_hz": 0.5,
+      "standstill_hz": 1.0,
+      "load_step_lookback_s": 120
+    },
     "signals": {
       "utility_failure": "utility power failure",
       "voltage_sag": "utility voltage sag",

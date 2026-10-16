@@ -39,7 +39,7 @@ higher priority stage is the cause and the other collapses under it.
 """
 from __future__ import annotations
 
-from dataclasses import dataclass
+from dataclasses import dataclass, replace
 from datetime import datetime, timedelta
 
 from . import display
@@ -93,12 +93,47 @@ class Evidence:
     last_past: datetime | None
     peak_value: float
     peak_deadbands: float
+    dip: "DipMeasurement | None" = None
 
     @property
     def seconds_past_limit(self) -> float:
         if self.first_past is None or self.last_past is None:
             return 0.0
         return (self.last_past - self.first_past).total_seconds()
+
+
+@dataclass(frozen=True)
+class DipMeasurement:
+    """A generator frequency dip, measured from the load step that caused it.
+
+    measured is False when there was nothing to measure from: no transfer
+    and no sample at rated frequency. reason then says why, and every
+    number is None, so no figure is ever reported for a dip that was not
+    measured.
+    """
+
+    measured: bool
+    reason: str
+    basis: str
+    step_at: datetime | None = None
+    rated_at: datetime | None = None
+    worst_hz: float | None = None
+    worst_at: datetime | None = None
+    nominal_hz: float | None = None
+    below_nominal_hz: float | None = None
+    tolerance_hz: float | None = None
+    recovered_at: datetime | None = None
+    recovery_s: float | None = None
+    window_end: datetime | None = None
+
+    @property
+    def left_tolerance(self) -> bool:
+        return bool(self.measured and self.below_nominal_hz is not None
+                    and self.below_nominal_hz > self.tolerance_hz)
+
+
+BASIS_TRANSFER = "ats_transfer"
+BASIS_RATED = "rated_frequency"
 
 
 @dataclass(frozen=True)
@@ -144,9 +179,141 @@ def measure(
     )
 
 
-def measure_condition(item: EvidenceCondition, cfg: ElectricalConfig) -> Evidence:
-    """The evidence for one condition, read around its own span."""
+def _empty(limit: float, dip: DipMeasurement) -> Evidence:
+    return Evidence(0, 0, None, None, limit, 0.0, dip)
+
+
+def measure_dip(
+    item: EvidenceCondition, cfg: ElectricalConfig, load_steps: list[datetime]
+) -> Evidence:
+    """A frequency dip read from its load step, never from the run up.
+
+    The window a plain condition uses reaches back evidence_margin_s before
+    the alarm, and for a generator that is the crank: 0 Hz, then 20, then
+    40, all past a 59.5 Hz limit, so the run up was reported as the dip.
+    Here the window opens at the load step (the transfer to the emergency
+    source), and only on samples after the generator first reached rated
+    frequency since it last stood still. Without a transfer it opens at that
+    first rated sample. With neither, nothing is measured.
+    """
     condition = item.scored.condition
+    dcfg = cfg.frequency_dip
+    segment = item.trend_segment
+    margin = timedelta(seconds=cfg.evidence_margin_s)
+    stamps, values = segment.timestamps, segment.values
+    nominal, tolerance = dcfg.nominal_hz, dcfg.tolerance_hz
+
+    def at_rated(value: float) -> bool:
+        return abs(value - nominal) <= tolerance
+
+    # The generator's latest start: after its last standstill before the dip.
+    standstill = [
+        i for i, t in enumerate(stamps)
+        if t <= condition.start_time and values[i] <= dcfg.standstill_hz
+    ]
+    run_from = standstill[-1] + 1 if standstill else 0
+    limit_time = condition.end_time + margin
+    rated_index = next(
+        (i for i in range(run_from, len(stamps)) if stamps[i] <= limit_time and at_rated(values[i])),
+        None,
+    )
+    rated_at = stamps[rated_index] if rated_index is not None else None
+
+    lookback = timedelta(seconds=dcfg.load_step_lookback_s)
+    candidates = [t for t in load_steps if condition.start_time - lookback <= t <= limit_time]
+    step = min(candidates, key=lambda t: (abs((t - condition.start_time).total_seconds()), t)) if candidates else None
+
+    if rated_at is None:
+        reason = (
+            "the generator never reached its rated %g Hz after its start in this export" % nominal
+            if step is not None
+            else "no transfer to the emergency source and the generator never reached its "
+            "rated %g Hz in this export" % nominal
+        )
+        return _empty(condition.limit, DipMeasurement(False, reason, ""))
+
+    if step is not None:
+        start, basis = max(step, rated_at), BASIS_TRANSFER
+    else:
+        start, basis = rated_at, BASIS_RATED
+    end = max(condition.end_time, start) + margin
+    window = [i for i, t in enumerate(stamps) if start <= t <= end]
+    if not window:
+        return _empty(
+            condition.limit,
+            DipMeasurement(False, "no frequency sample after the load step", basis, step_at=start),
+        )
+
+    worst_index = min(window, key=lambda i: (values[i], stamps[i]))
+    worst = values[worst_index]
+    recovered_index = next(
+        (i for i in window if i >= worst_index and at_rated(values[i])), None
+    )
+    recovered_at = stamps[recovered_index] if recovered_index is not None else None
+    dip = DipMeasurement(
+        measured=True,
+        reason="",
+        basis=basis,
+        step_at=start,
+        rated_at=rated_at,
+        worst_hz=worst,
+        worst_at=stamps[worst_index],
+        nominal_hz=nominal,
+        below_nominal_hz=round(nominal - worst, 4),
+        tolerance_hz=tolerance,
+        recovered_at=recovered_at,
+        recovery_s=(recovered_at - start).total_seconds() if recovered_at is not None else None,
+        window_end=stamps[window[-1]],
+    )
+    plain = measure(segment, condition.limit, condition.deadband, condition.direction, start=start, end=end)
+    return Evidence(
+        sample_count=plain.sample_count,
+        samples_past_limit=plain.samples_past_limit,
+        first_past=plain.first_past,
+        last_past=plain.last_past,
+        peak_value=plain.peak_value,
+        peak_deadbands=plain.peak_deadbands,
+        dip=dip,
+    )
+
+
+def dip_text(dip: DipMeasurement, tz) -> str:
+    """The dip in words, every time in the display zone with its label."""
+    if not dip.measured:
+        return "no dip measurement: %s" % dip.reason
+    basis = "the transfer to the emergency source" if dip.basis == BASIS_TRANSFER else (
+        "the generator first at rated frequency"
+    )
+    head = "load step at %s (%s)" % (display.clock(dip.step_at, tz), basis)
+    if not dip.left_tolerance:
+        return "%s: frequency stayed within %g Hz of the %g Hz nominal, lowest %.2f Hz" % (
+            head, dip.tolerance_hz, dip.nominal_hz, dip.worst_hz
+        )
+    text = "%s: worst %.2f Hz at %s, %.2f Hz below the %g Hz nominal" % (
+        head, dip.worst_hz, display.clock(dip.worst_at, tz), dip.below_nominal_hz, dip.nominal_hz
+    )
+    if dip.recovered_at is not None:
+        return "%s, back within %g Hz at %s, %.0f s after the step" % (
+            text, dip.tolerance_hz, display.clock(dip.recovered_at, tz), dip.recovery_s
+        )
+    return "%s, not back within %g Hz by %s" % (text, dip.tolerance_hz, display.clock(dip.window_end, tz))
+
+
+def is_dip(condition: DistinctCondition, cfg: ElectricalConfig) -> bool:
+    return cfg.frequency_dip is not None and condition.alarm_class == cfg.frequency_dip.signal
+
+
+def measure_condition(
+    item: EvidenceCondition, cfg: ElectricalConfig, load_steps: list[datetime] | None = None
+) -> Evidence:
+    """The evidence for one condition, read around its own span.
+
+    A generator frequency dip is the exception: it is read from its load
+    step (measure_dip), never across the run up.
+    """
+    condition = item.scored.condition
+    if is_dip(condition, cfg):
+        return measure_dip(item, cfg, list(load_steps or ()))
     margin = timedelta(seconds=cfg.evidence_margin_s)
     return measure(
         item.trend_segment,
@@ -251,10 +418,16 @@ def assess(
     relations = {relation.cause: relation for relation in cfg.relations}
     primaries: list[tuple[EvidenceCondition, Relation]] = []
     results: dict[str, Assessment] = {}
+    load_steps = sorted(
+        e.scored.condition.start_time
+        for e in evidence
+        if cfg.frequency_dip is not None
+        and e.scored.condition.alarm_class == cfg.frequency_dip.load_step_signal
+    )
 
     for item in sorted(evidence, key=lambda e: _order_key(e, cfg)):
         condition = item.scored.condition
-        measured_evidence = measure_condition(item, cfg)
+        measured_evidence = measure_condition(item, cfg, load_steps)
         confirmed = measured_evidence.samples_past_limit >= cfg.min_samples_past_limit
         is_cause = condition.alarm_class in relations
         label = cfg.label(condition.alarm_class)
@@ -323,6 +496,20 @@ def assess(
         d1 = _outcome(E_D1, d1_fired, d1_detail, measured)
 
         outcomes = (c1, p1, p2, d1)
+        if measured_evidence.dip is not None:
+            dip = measured_evidence.dip
+            measured.update(
+                {
+                    "dip_measured": float(dip.measured),
+                    "dip_worst_hz": round(dip.worst_hz, 4) if dip.measured else -1.0,
+                    "dip_below_nominal_hz": dip.below_nominal_hz if dip.measured else -1.0,
+                    "dip_recovery_s": dip.recovery_s if dip.recovery_s is not None else -1.0,
+                }
+            )
+            words = dip_text(dip, tz)
+            outcomes = tuple(
+                replace(o, detail="%s; %s" % (o.detail, words)) if o.fired else o for o in outcomes
+            )
         setter = next(o for o in outcomes if o.fired)
         results[condition.condition_id] = Assessment(
             outcomes=outcomes,
