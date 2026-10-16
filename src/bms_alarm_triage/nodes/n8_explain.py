@@ -24,8 +24,9 @@ building system as a recommendation.
 from __future__ import annotations
 
 import time
+from dataclasses import replace
 
-from .. import rules
+from .. import electrical, rules
 from ..errors import ModelUnavailableError
 from ..model import (
     ForbiddenVerbCheck,
@@ -47,14 +48,82 @@ def allowed_targets_for(condition) -> tuple[str, ...]:
     return (condition.point_path, condition.equipment)
 
 
+def _stamp(moment) -> str:
+    return moment.isoformat() if moment is not None else "never"
+
+
+def _number(value: float) -> str:
+    return ("%.3f" % value).rstrip("0").rstrip(".")
+
+
+def electrical_input(item: ReassessedCondition, cfg) -> dict:
+    """The record for an electrical condition, consequences included."""
+    condition = item.condition
+    labels = cfg.electrical
+    evidence = electrical.measure_condition(item.evidence, labels)
+    banding = next((o for o in item.rule_outcomes if o.rule_id == item.band_set_by), None)
+    units = (" " + condition.units) if condition.units else ""
+    if condition.limit == 0.5 and condition.deadband == 0.5 and not condition.units:
+        limit_text = "status point, 1 in the alarm state and 0 normal"
+        peak = "%s (1 is the alarm state)" % _number(evidence.peak_value)
+    else:
+        limit_text = "%s%s, deadband %s%s, direction %s" % (
+            _number(condition.limit), units, _number(condition.deadband), units, condition.direction
+        )
+        peak = "%s%s" % (_number(evidence.peak_value), units)
+    lines = [
+        "  - %s on %s (%s, priority %d), %s to %s"
+        % (
+            labels.label(c.condition.alarm_class),
+            c.condition.point_path,
+            c.condition.equipment,
+            c.condition.reported_priority,
+            c.condition.start_time.isoformat(),
+            c.condition.end_time.isoformat(),
+        )
+        for c in item.consequences
+    ]
+    return {
+        "domain": "electrical",
+        "point_path": condition.point_path,
+        "equipment": condition.equipment,
+        "alarm_class": condition.alarm_class,
+        "priority": condition.reported_priority,
+        "signal_label": labels.label(condition.alarm_class),
+        "limit_text": limit_text,
+        "start_time": condition.start_time.isoformat(),
+        "end_time": condition.end_time.isoformat(),
+        "alarm_count": condition.alarm_count,
+        "repeat_count": condition.repeat_count,
+        "return_count": condition.return_count,
+        "active_seconds": condition.active_seconds,
+        "preliminary_score": item.preliminary_score,
+        "sample_count": evidence.sample_count,
+        "samples_past": evidence.samples_past_limit,
+        "first_past": _stamp(evidence.first_past),
+        "last_past": _stamp(evidence.last_past),
+        "peak_value": peak,
+        "band": item.band,
+        "band_set_by": item.band_set_by or "no rule fired",
+        "band_detail": banding.detail if banding else "no rule fired",
+        "consequence_count": len(item.consequences),
+        "consequence_lines": "\n".join(lines) if lines else "  none",
+        "allowed_verbs": ", ".join(v.value for v in DiagnosticVerb),
+        "allowed_targets": ", ".join(allowed_targets_for(condition)),
+    }
+
+
 def explain_input(item: ReassessedCondition, cfg) -> dict:
     """The structured record handed to the model.
 
     Only the one condition and its own measurements go in. The full alarm
     log is never sent, which is what keeps the cost of a run bounded and
-    calculable in advance, per P5-C4.
+    calculable in advance, per P5-C4. An electrical condition also lists
+    the conditions it explains, by name and time only.
     """
     condition = item.condition
+    if cfg.electrical.is_electrical(condition.alarm_class):
+        return electrical_input(item, cfg)
     measurements = rules.measure(
         item.evidence.trend_segment,
         condition.limit,
@@ -189,6 +258,15 @@ def n8_explain(state: TriageState) -> dict:
             audit.record_unresolved(
                 condition.condition_id, condition.point_path, reason
             )
+            # Its consequences go with it rather than vanish.
+            for consequence in item.consequences:
+                note = "explained by %s, which could not be written up" % condition.point_path
+                unresolved.append(
+                    UnresolvedCondition(scored=consequence.evidence.scored, reason=note)
+                )
+                audit.record_unresolved(
+                    consequence.condition.condition_id, consequence.condition.point_path, note
+                )
             continue
 
         kept.append(item)
@@ -209,15 +287,7 @@ def n8_explain(state: TriageState) -> dict:
     # would let the report claim an escalation it has no text for.
     renumbered = [
         ExplainedCondition(
-            reassessed=ReassessedCondition(
-                evidence=entry.reassessed.evidence,
-                band=entry.reassessed.band,
-                disposition=entry.reassessed.disposition,
-                band_set_by=entry.reassessed.band_set_by,
-                rules_fired=entry.reassessed.rules_fired,
-                rule_outcomes=entry.reassessed.rule_outcomes,
-                final_rank=position,
-            ),
+            reassessed=replace(entry.reassessed, final_rank=position),
             reason=entry.reason,
             recommended_step=entry.recommended_step,
             model_name=entry.model_name,

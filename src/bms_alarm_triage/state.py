@@ -32,9 +32,13 @@ REPEAT = "REPEAT"
 BAND_PROMOTED = "PROMOTED"
 BAND_UNCHANGED = "UNCHANGED"
 BAND_DEMOTED = "DEMOTED"
+# Electrical only: a consequence another condition accounts for. It is
+# neither escalated nor nuisance; it is carried under its cause.
+BAND_EXPLAINED = "EXPLAINED"
 
 DISPOSITION_ESCALATE = "escalate"
 DISPOSITION_NUISANCE = "nuisance"
+DISPOSITION_CONSEQUENCE = "consequence"
 
 NUISANCE_NONE = "none"
 NUISANCE_CHATTERING = "chattering"
@@ -181,6 +185,11 @@ class ReassessedCondition:
     rules_fired: tuple[str, ...]
     rule_outcomes: tuple[RuleOutcome, ...]
     final_rank: int = 0
+    # Electrical only. A cause carries the conditions it explains, and each
+    # of those names the cause it collapsed under. Empty for every HVAC
+    # condition, so nothing about an HVAC run changes.
+    consequences: tuple["ReassessedCondition", ...] = ()
+    explained_by: str = ""
 
     @property
     def preliminary_score(self) -> float:
@@ -251,3 +260,8 @@ class TriageState(TypedDict, total=False):
     audit: Any
     model_client: Any
     run_history: Any
+    # Equipment topology (child to the equipment that feeds it), from an
+    # alarm journal. Read by the electrical rules' upstream scope only.
+    equipment_feeds: Any
+    # The parsed alarm journal, when the run started from one.
+    journal: Any

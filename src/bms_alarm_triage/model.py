@@ -65,8 +65,61 @@ Reassessment
 """
 
 
+# An electrical condition gets its own prompt. The checks on the reply are
+# the same; what changes is that the evidence is stated as times and values
+# rather than deadbands over hours, and the conditions a cause explains are
+# listed so the reason can name them. The HVAC prompt above is untouched, so
+# an HVAC prompt is byte for byte what it was.
+ELECTRICAL_PROMPT_TEMPLATE = """You are helping a controls engineer triage power system alarms.
+
+Given one alarm condition and its trend evidence, return four fields:
+  reason: one sentence on why this condition matters, stated only from the
+          evidence below. Do not claim anything the evidence does not show.
+  verb:   the diagnostic action, chosen from exactly this list and written
+          in lower case: {allowed_verbs}. Nothing else is accepted. You
+          must NOT recommend any change to the building system: no
+          setpoint change, no override, no schedule change, no breaker
+          operation, and no starting or stopping of equipment.
+  target: what to look at. Must be copied exactly from this list and
+          nothing else: {allowed_targets}
+  detail: one sentence on what to look for, from the evidence below.
+
+This is an electrical power condition. Do not describe it as a heating or
+cooling fault.
+
+Answer with JSON only, exactly:
+{{"reason": "...", "verb": "...", "target": "...", "detail": "..."}}
+
+Condition
+  point: {point_path}
+  equipment: {equipment} ({alarm_class}, reported priority {priority})
+  signal: {signal_label}
+  alarm limit: {limit_text}
+  window: {start_time} to {end_time}
+  alarm transitions: {alarm_count} alarms, {repeat_count} repeats, {return_count} returns to normal
+  time in alarm: {active_seconds:.0f} seconds
+  preliminary score: {preliminary_score:.3f}
+
+Trend evidence
+  samples: {sample_count}
+  samples past the limit: {samples_past}
+  first past the limit: {first_past}
+  last past the limit: {last_past}
+  worst value: {peak_value}
+
+Reassessment
+  band: {band}, set by {band_set_by}
+  finding: {band_detail}
+
+Conditions this one explains: {consequence_count}
+{consequence_lines}
+"""
+
+
 def build_prompt(explain_input: dict) -> str:
     """Render the prompt. Kept separate so it can be tested without a model."""
+    if explain_input.get("domain") == "electrical":
+        return ELECTRICAL_PROMPT_TEMPLATE.format(**explain_input)
     return PROMPT_TEMPLATE.format(**explain_input)
 
 

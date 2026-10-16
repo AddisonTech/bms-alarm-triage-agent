@@ -31,7 +31,8 @@ from datetime import datetime
 from pathlib import PureWindowsPath
 from typing import Any
 
-from .rules import RULE_NAMES, RULE_ORDER
+from .electrical import RULE_NAMES as ELECTRICAL_RULE_NAMES
+from .rules import RULE_NAMES
 from .state import (
     ALARM,
     BAND_DEMOTED,
@@ -312,7 +313,8 @@ def sparkline(segment: TrendFrame, condition: DistinctCondition) -> str:
 # ------------------------------------------------------------- fragments
 
 def _rule_title(rule_id: str) -> str:
-    return RULE_NAMES.get(rule_id, rule_id).replace("_", " ").capitalize()
+    name = RULE_NAMES.get(rule_id) or ELECTRICAL_RULE_NAMES.get(rule_id, rule_id)
+    return name.replace("_", " ").capitalize()
 
 
 def band_chip(item: ReassessedCondition) -> str:
@@ -353,12 +355,9 @@ def _score_rows(components: dict[str, float]) -> str:
 
 
 def _rule_rows(item: ReassessedCondition) -> str:
-    outcomes = {o.rule_id: o for o in item.rule_outcomes}
     rows = []
-    for rule_id in RULE_ORDER:
-        outcome = outcomes.get(rule_id)
-        if outcome is None:
-            continue
+    for outcome in item.rule_outcomes:
+        rule_id = outcome.rule_id
         setter = outcome.fired and rule_id == item.band_set_by
         state = "set the band" if setter else ("fired" if outcome.fired else "did not fire")
         cls = "rule"
@@ -366,7 +365,12 @@ def _rule_rows(item: ReassessedCondition) -> str:
             cls += " rule-fired"
         if setter:
             cls += " rule-setter"
-        kind = "demote" if rule_id.startswith("R-D") else "promote"
+        if rule_id.startswith(("R-D", "E-D")):
+            kind = "demote"
+        elif rule_id.startswith("E-C"):
+            kind = "collapse"
+        else:
+            kind = "promote"
         rows.append(
             '<li class="%s"><span class="rid">%s</span>'
             '<span class="rname">%s <em>%s</em></span>'
@@ -458,6 +462,7 @@ def escalation_card(entry: ExplainedCondition, view: WindowView) -> str:
         '<div class="say"><p class="label">Why it matters</p><p>%(reason)s</p></div>'
         '<div class="say say-step"><p class="label">Check next</p><p>%(step)s</p></div>'
         '</div>'
+        '%(consequences)s'
         '<dl class="facts">'
         '<div><dt>events collapsed</dt><dd>%(events)d</dd></div>'
         '<div><dt>alarms / repeats / returns</dt><dd>%(alarms)d / %(repeats)d / %(returns)d</dd></div>'
@@ -506,7 +511,30 @@ def escalation_card(entry: ExplainedCondition, view: WindowView) -> str:
         "rule_rows": _rule_rows(item),
         "options": options,
         "model": esc(_byline(entry.model_name)),
+        "consequences": consequence_list(item),
     }
+
+
+def consequence_list(item: ReassessedCondition) -> str:
+    """The conditions a cause explains, folded under it. Empty for HVAC."""
+    if not item.consequences:
+        return ""
+    rows = "".join(
+        '<li><span class="cq-point">%s</span><span class="muted small">%s, priority %d, from %s, %s</span></li>'
+        % (
+            esc(c.condition.point_path),
+            esc(c.condition.alarm_class.replace("_", " ")),
+            c.condition.reported_priority,
+            esc(c.condition.start_time.strftime("%H:%M:%S")),
+            esc(_events(len(c.condition.member_events))),
+        )
+        for c in item.consequences
+    )
+    return (
+        '<details class="how cq"><summary>Explains %d more alarm%s, collapsed under this cause</summary>'
+        '<ul class="cq-list">%s</ul></details>'
+        % (len(item.consequences), "" if len(item.consequences) == 1 else "s", rows)
+    )
 
 
 def nuisance_rows(view: WindowView) -> str:
@@ -637,6 +665,7 @@ def window_section(view: WindowView, hidden: bool = False, queue: bool = True) -
 
 ROW_ESCALATED = "escalated"
 ROW_UNRESOLVED = "unresolved"
+ROW_CONSEQUENCE = "consequence"
 ROW_NUISANCE = "nuisance"
 
 
@@ -694,6 +723,11 @@ def queue_rows(view: WindowView) -> list[QueueRow]:
     rows = [row(e.reassessed.condition, ROW_ESCALATED, e.reassessed.final_rank) for e in view.explained]
     rows += [row(e.scored.condition, ROW_UNRESOLVED) for e in view.unresolved]
     rows += [row(i.condition, ROW_NUISANCE) for i in view.nuisance]
+    rows += [
+        row(c.condition, ROW_CONSEQUENCE, e.reassessed.final_rank)
+        for e in view.explained
+        for c in e.reassessed.consequences
+    ]
     return rows
 
 
@@ -743,7 +777,7 @@ def queue_after(groups: list[list[QueueRow]]) -> str:
     One group per window, divided by a rule, since reading order restarts
     in each window.
     """
-    kept = [[r for r in g if r.status != ROW_NUISANCE] for g in groups]
+    kept = [[r for r in g if r.status not in (ROW_NUISANCE, ROW_CONSEQUENCE)] for g in groups]
     kept = [g for g in kept if g]
     shown = [r for g in kept for r in g]
     if not shown:
@@ -784,8 +818,12 @@ def queue_compare(views: list[WindowView]) -> str:
     groups = [queue_rows(v) for v in views]
     events = sum(len(r.times) for g in groups for r in g)
     points = sum(len(g) for g in groups)
-    review = sum(1 for g in groups for r in g if r.status != ROW_NUISANCE)
-    nuisance = points - review
+    review = sum(1 for g in groups for r in g if r.status in (ROW_ESCALATED, ROW_UNRESOLVED))
+    nuisance = sum(1 for g in groups for r in g if r.status == ROW_NUISANCE)
+    collapsed = points - review - nuisance
+    collapsed_note = (
+        " %d collapsed under the cause that explains them." % collapsed if collapsed else ""
+    )
     return (
         '<div class="qc">'
         '<figure class="qpanel"><figcaption><span class="eyebrow">Before</span>'
@@ -793,10 +831,10 @@ def queue_compare(views: list[WindowView]) -> str:
         'Every tick is one alarm, return, or repeat. Nothing says which ones matter.</span></figcaption>%s</figure>'
         '<figure class="qpanel"><figcaption><span class="eyebrow">After</span>'
         '<b>%d items, in reading order</b><span class="muted small">Ranked escalations, plus the ones '
-        'it could not judge (?). %d set aside as nuisance, each with the rule that decided it.</span>'
+        'it could not judge (?). %d set aside as nuisance, each with the rule that decided it.%s</span>'
         '</figcaption>%s</figure>'
         '</div>'
-    ) % (events, points, queue_before(groups), review, nuisance, queue_after(groups))
+    ) % (events, points, queue_before(groups), review, nuisance, esc(collapsed_note), queue_after(groups))
 
 
 def tabs(views: list[WindowView]) -> str:
@@ -982,6 +1020,9 @@ button:focus-visible, summary:focus-visible, textarea:focus-visible { outline: 2
 .lg-tick-rtn { width: 2px; height: 10px; background: var(--calm); }
 .esc-body { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 20px;
   padding: 14px 20px 6px; }
+.cq-list { list-style: none; margin: 0; padding: 0 0 8px; display: flex; flex-direction: column; gap: 6px; }
+.cq-list li { display: flex; flex-direction: column; gap: 1px; min-width: 0; }
+.cq-point { font-family: var(--font-data); font-size: 13px; overflow-wrap: anywhere; }
 .say { display: flex; flex-direction: column; gap: 4px; max-width: 62ch; }
 .label { font-family: var(--font-display); font-weight: 600; font-size: 13px; letter-spacing: 0.08em;
   text-transform: uppercase; color: var(--muted); }

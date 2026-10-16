@@ -148,7 +148,9 @@ def n9_report(state: TriageState) -> dict:
             "band": item.band,
             "band_set_by": item.band_set_by,
         }
-        for item in list(state["final_escalated_conditions"]) + list(nuisance)
+        for item in list(state["final_escalated_conditions"])
+        + [c for e in state["final_escalated_conditions"] for c in e.consequences]
+        + list(nuisance)
     ]
     history.append_run(alarm_export=str(alarm_export), records=records)
     history.write()

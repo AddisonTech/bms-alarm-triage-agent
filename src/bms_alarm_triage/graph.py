@@ -66,6 +66,7 @@ def run(
     config: Config | None = None,
     config_path: Path | None = None,
     model_client=None,
+    equipment_feeds: dict[str, str] | None = None,
 ) -> TriageState:
     """Run the pipeline once.
 
@@ -91,9 +92,46 @@ def run(
         "config": effective_config,
         "audit": AuditLog(),
         "model_client": client,
+        "equipment_feeds": dict(equipment_feeds or {}),
     }
 
     graph = build_graph()
     # The node count is fixed and known, so the recursion allowance is set
     # from it rather than left to a default that could mask a wiring error.
     return graph.invoke(initial, {"recursion_limit": len(NODE_SEQUENCE) + 2})
+
+
+JOURNAL_INPUTS_DIRNAME = "journal_inputs"
+
+
+def run_journal(
+    journal_source,
+    output_dir: Path | str,
+    config: Config | None = None,
+    config_path: Path | None = None,
+    model_client=None,
+) -> TriageState:
+    """Run the pipeline once on an alarm journal document.
+
+    The journal is converted to the CSV pair the pipeline reads, written
+    under the output directory so the run log can checksum it, and the
+    nine nodes then run exactly as they do on any export. The journal's
+    topology goes to N7 for the electrical rules.
+    """
+    from . import journal as journal_module
+
+    parsed = journal_module.load(journal_source)
+    alarm_path, trend_path = journal_module.write_exports(
+        parsed, Path(output_dir) / JOURNAL_INPUTS_DIRNAME
+    )
+    final = run(
+        alarm_export_path=alarm_path,
+        trend_export_path=trend_path,
+        output_dir=output_dir,
+        config=config,
+        config_path=config_path,
+        model_client=model_client,
+        equipment_feeds=parsed.feeds,
+    )
+    final["journal"] = parsed
+    return final
