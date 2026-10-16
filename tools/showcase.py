@@ -382,7 +382,9 @@ def no_scorecard() -> str:
     )
 
 
-def build_page(split, config, views, pooled, arm, fonts, standalone, data_note=None) -> str:
+def build_page(
+    split, config, views, pooled, arm, fonts, standalone, data_note=None, repo_url=None
+) -> str:
     events_in = sum(int(v.summary.get("alarm_events_in", 0)) for v in views)
     total_conditions = sum(int(v.summary.get("distinct_conditions", 0)) for v in views)
     items = sum(len(v.explained) + len(v.unresolved) for v in views)
@@ -450,6 +452,11 @@ def build_page(split, config, views, pooled, arm, fonts, standalone, data_note=N
         )
     else:
         score = scorecard(pooled, config.evaluation.false_escalation_ceiling, split)
+    if repo_url:
+        foot += (
+            '<p class="foot">Source code, tests, and the build guide: '
+            '<a href="%s">%s</a></p>' % (esc(repo_url), esc(repo_url.split("://", 1)[-1]))
+        )
     body = "<style>%s</style>%s%s%s%s%s%s%s" % (
         SHOWCASE_STYLE,
         header,
@@ -484,6 +491,7 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--alarms", type=Path, default=None, help="an alarm export of your own")
     parser.add_argument("--trends", type=Path, default=None, help="the matching trend export")
     parser.add_argument("--label", default="Your export", help="tab name for --alarms/--trends")
+    parser.add_argument("--repo-url", default=None, help="link the page footer to the source repository")
     parser.add_argument("--config", type=Path, default=None)
     parser.add_argument(
         "--out", type=Path, default=REPO_ROOT / "out" / "showcase.html", help="where to write the page"
@@ -507,6 +515,7 @@ def main(argv: list[str] | None = None) -> int:
     page = build_page(
         args.split, config, views, pooled, arm, args.fonts, not args.fragment,
         data_note="%s, not labeled" % args.alarms.name if custom else None,
+        repo_url=args.repo_url,
     )
     args.out.parent.mkdir(parents=True, exist_ok=True)
     with args.out.open("w", encoding="utf-8", newline="\n") as handle:

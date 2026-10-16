@@ -1064,6 +1064,7 @@ button:focus-visible, summary:focus-visible, textarea:focus-visible { outline: 2
 .queue .q-rank.q-esc { fill: var(--accent); }
 .queue .q-rank.q-unr { fill: var(--void); }
 .queue .q-label { fill: var(--ink); }
+.foot a { color: var(--accent); }
 .foot { font-size: 13px; color: var(--muted); border-top: 1px solid var(--rule); padding-top: 16px; max-width: 80ch; }
 
 @media (max-width: 760px) {
