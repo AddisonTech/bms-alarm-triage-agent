@@ -16,8 +16,13 @@ authors = [{ name = "Addison Smith" }]
 # and no cloud SDK anywhere in the runtime path (P2-C1, P2-C2).
 dependencies = ["langgraph>=0.2"]
 
+# The showcase can have Claude Haiku write each card's two sentences when
+# the page is built (tools/haiku_writer.py). That is a presentation tool
+# outside the package, so the SDK is an optional extra and never part of
+# the agent's runtime path.
 [project.optional-dependencies]
 dev = ["pytest>=8"]
+showcase = ["anthropic>=1.15"]
 
 [project.scripts]
 bms-triage = "bms_alarm_triage.cli:main"

@@ -287,6 +287,57 @@ dark, with no horizontal scroll.
 
 ---
 
+## 2026-10-16 - The showcase's written explanations from Claude Haiku
+
+The published showcase was built with the template writer, because no model
+runs on GitHub's servers. Its cards now carry prose written by Claude Haiku
+(`claude-haiku-5-5`) when the page is built. This is a showcase change only:
+the pipeline, rankings, numbers, charts, and rules are untouched, and the
+local Ollama model stays the default writer for every normal run.
+
+`tools/haiku_writer.py` plugs into N8 through the same `generate(prompt)`
+interface as the template writer. A build with `--model haiku` runs the
+pipeline once with the template to collect every card's exact N8 prompt,
+sends them all to Haiku in one Message Batches request, and checks every
+reply with N8's own `parse_explanation` and forbidden-verb list. The
+pipeline then runs again with Haiku's text in N8's place, so N8 checks each
+accepted reply a second time. A card whose reply fails, or that got none,
+is written by the template, and the build prints which card and why. The
+banner says which writer built the copy, and how many cards fell back.
+
+The key is read from `TRIAGE_ANTHROPIC_KEY` and never printed, logged, or
+saved. Without it, `--model haiku` builds with the template exactly as
+before. The hosted writer refuses `--alarms`, so a real export never
+leaves the machine (P2-C2, P4-C2).
+
+GitHub has no key, so a live build saves the raw replies to
+`showcase/haiku_record_holdout.json`, and the Pages workflow now builds with
+`--model haiku-replay`, which re-checks every saved reply. A reply is
+matched to a card by a hash of the card's exact prompt, so a card whose
+evidence changes gets the template rather than text about other evidence.
+
+Dependency note per Rule 10: `anthropic` (the Anthropic Python SDK) is a
+new dependency, added as the optional `showcase` extra in `pyproject.toml`.
+It is not in the agent's dependencies and nothing under `src/` imports it.
+Tests use a mocked client and make no API call.
+
+Verification, run in the build session:
+
+    python -m pytest -q
+    python -m tools.showcase --split holdout --model haiku
+
+439 tests pass, 21 of them new in `tests/test_haiku_writer.py`. The live
+batch (15 requests) returned 15 replies; 14 passed every check and are on
+the page. One, for `SYN1/AHU-21/MIXED_AIR_TEMP`, was rejected by the
+forbidden-verb list for "tracks changes in the outdoor and return air
+inputs", where "changes" is a noun. That card uses the template. The
+denylist matching a noun is the same class of false positive as the
+"setpoint" entry of 2026-09-08; it is recorded here, not loosened. Holdout
+still 548 events, 18 items. Batch cost from the reported usage: 16,052
+input and 3,239 output tokens, $0.0016 at the batch rate.
+
+---
+
 ## Out-of-guide tooling
 
 Recorded because Rules 1 and 2 expect work to trace to a Student
@@ -313,3 +364,7 @@ moves escalations to unresolved exactly as P2-C3 says.
 `tools/anonymize.py` - the export scrubber described in the same entry.
 It supports P4-C2 rather than replacing it: scrubbed exports still belong
 under `private/`, never in `data/`.
+
+`tools/haiku_writer.py` - the build-time Claude Haiku writer described in
+the 2026-10-16 entry. Presentation only, outside the package, and used only
+by the showcase build. The operator CLI and the demo never call it.

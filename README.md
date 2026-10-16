@@ -70,6 +70,24 @@ model. Without it, a fixed template writes them from that condition's own
 measurements and rule, through the same checks the model's text must
 pass, and the page says which one wrote them.
 
+The published copy has Claude Haiku write the cards when the page is built.
+Put an API key in the `TRIAGE_ANTHROPIC_KEY` environment variable and run:
+
+```
+pip install -e ".[showcase]"
+python -m tools.showcase --split holdout --model haiku
+```
+
+Every card goes out in one Message Batches request with the same evidence
+the local model is given. Every reply goes through the same checks the
+local model's text must pass, and any card that fails gets the template,
+named in the build output. The replies are saved to
+`showcase/haiku_record_holdout.json`, which the GitHub Pages build replays
+with `--model haiku-replay` and checks again, since GitHub has no key.
+Without the variable, `--model haiku` builds with the template exactly as
+before. The hosted writer is for the synthetic splits only; it refuses
+`--alarms`, so a real export never leaves the machine.
+
 To show it on a real building without showing the building, scrub the
 export first, then build the page from the scrubbed copy:
 
@@ -131,6 +149,8 @@ distributions against a real anonymized export.
 - `tools/demo.py` the one-command walkthrough described in `DEMO.md`
 - `tools/showcase.py` the one shareable web page for a whole split
 - `tools/template_writer.py` writes each card without a model, for the showcase
+- `tools/haiku_writer.py` has Claude Haiku write each card at showcase build time
+- `showcase/` the saved Haiku replies the published page is built from
 - `tools/anonymize.py` scrubs a real export before it is run or shown
 - `data/` the frozen corpus, with a SHA-256 manifest per window
 - `tests/` node tests against that corpus
