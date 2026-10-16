@@ -192,3 +192,14 @@ def test_the_showcase_runs_on_an_unlabeled_export(tmp_path, capsys):
 def test_alarms_without_trends_is_refused():
     with pytest.raises(SystemExit):
         showcase.main(["--alarms", str(FIXTURE / "alarm_export.csv")])
+
+
+def test_the_page_can_link_to_its_source(tmp_path, capsys):
+    out = tmp_path / "pages.html"
+    code = showcase.main([
+        "--split", "fixture", "--model", "template",
+        "--repo-url", "https://github.com/example/repo",
+        "--out", str(out),
+    ])
+    assert code == 0
+    assert 'href="https://github.com/example/repo"' in out.read_text(encoding="utf-8")
