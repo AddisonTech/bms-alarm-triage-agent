@@ -17,7 +17,7 @@
    "model": null,
    "cases_run": 58,
    "cases_total": 58,
-   "cases_passed": 43,
+   "cases_passed": 55,
    "partial": false,
    "graders": {
     "grounding": {
@@ -46,9 +46,9 @@
      "rate": 1.0
     },
     "format": {
-     "passed": 28,
+     "passed": 40,
      "applicable": 40,
-     "rate": 0.7
+     "rate": 1.0
     }
    }
   },

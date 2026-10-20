@@ -12,7 +12,7 @@
   "cases_total": 58,
   "cases_run": 58,
   "cases_not_run": [],
-  "cases_passed": 43,
+  "cases_passed": 55,
   "graders": {
    "grounding": {
     "applicable": 40,
@@ -56,18 +56,18 @@
    },
    "format": {
     "applicable": 40,
-    "passed": 28,
-    "rate": 0.7,
-    "writer_layer_passed": 28,
-    "writer_layer_rate": 0.7,
+    "passed": 40,
+    "rate": 1.0,
+    "writer_layer_passed": 40,
+    "writer_layer_rate": 1.0,
     "what": "Each reply passes the agent's Pydantic schema on the first try, and the reason and the next step are one sentence each, as the prompt asks."
    }
   },
   "by_type": {
    "alarm_log_only": {
     "cases": 3,
-    "passed": 0,
-    "rate": 0.0
+    "passed": 3,
+    "rate": 1.0
    },
    "cause_and_consequences": {
     "cases": 8,
@@ -86,8 +86,8 @@
    },
    "drift": {
     "cases": 3,
-    "passed": 0,
-    "rate": 0.0
+    "passed": 3,
+    "rate": 1.0
    },
    "fleeting": {
     "cases": 4,
@@ -96,8 +96,8 @@
    },
    "flood_with_real_faults": {
     "cases": 6,
-    "passed": 2,
-    "rate": 0.3333
+    "passed": 5,
+    "rate": 0.8333
    },
    "missing_trend": {
     "cases": 4,
@@ -131,8 +131,8 @@
    },
    "sustained_fault": {
     "cases": 3,
-    "passed": 0,
-    "rate": 0.0
+    "passed": 3,
+    "rate": 1.0
    },
    "two_events": {
     "cases": 1,
@@ -146,168 +146,6 @@
    }
   },
   "failures": [
-   {
-    "case": "hvac-ahu-dual-duct-ahu-21-clg-duct-temp",
-    "type": "sustained_fault",
-    "grader": "format",
-    "code": "F2",
-    "layer": "writer",
-    "point": "SYN1/AHU-21/CLG_DUCT_TEMP",
-    "reason": "the reason is 2 sentences, not one"
-   },
-   {
-    "case": "hvac-ahu-dual-duct-ahu-21-clg-sp",
-    "type": "alarm_log_only",
-    "grader": "format",
-    "code": "F2",
-    "layer": "writer",
-    "point": "SYN1/AHU-21/CLG_SP",
-    "reason": "the reason is 2 sentences, not one"
-   },
-   {
-    "case": "hvac-ahu-dual-duct-ahu-21-mixed-air-temp",
-    "type": "drift",
-    "grader": "format",
-    "code": "F2",
-    "layer": "writer",
-    "point": "SYN1/AHU-21/MIXED_AIR_TEMP",
-    "reason": "the reason is 2 sentences, not one"
-   },
-   {
-    "case": "hvac-ahu-dual-duct-window",
-    "type": "flood_with_real_faults",
-    "grader": "format",
-    "code": "F2",
-    "layer": "writer",
-    "point": "SYN1/AHU-21/CLG_DUCT_TEMP",
-    "reason": "the reason is 2 sentences, not one"
-   },
-   {
-    "case": "hvac-ahu-dual-duct-window",
-    "type": "flood_with_real_faults",
-    "grader": "format",
-    "code": "F2",
-    "layer": "writer",
-    "point": "SYN1/AHU-21/MIXED_AIR_TEMP",
-    "reason": "the reason is 2 sentences, not one"
-   },
-   {
-    "case": "hvac-ahu-dual-duct-window",
-    "type": "flood_with_real_faults",
-    "grader": "format",
-    "code": "F2",
-    "layer": "writer",
-    "point": "SYN1/AHU-21/CLG_SP",
-    "reason": "the reason is 2 sentences, not one"
-   },
-   {
-    "case": "hvac-boiler-blr-71-firing-rate",
-    "type": "alarm_log_only",
-    "grader": "format",
-    "code": "F2",
-    "layer": "writer",
-    "point": "SYN1/BLR-71/FIRING_RATE",
-    "reason": "the reason is 2 sentences, not one"
-   },
-   {
-    "case": "hvac-boiler-blr-71-hw-ret-temp",
-    "type": "drift",
-    "grader": "format",
-    "code": "F2",
-    "layer": "writer",
-    "point": "SYN1/BLR-71/HW_RET_TEMP",
-    "reason": "the reason is 2 sentences, not one"
-   },
-   {
-    "case": "hvac-boiler-blr-71-hw-sup-temp",
-    "type": "sustained_fault",
-    "grader": "format",
-    "code": "F2",
-    "layer": "writer",
-    "point": "SYN1/BLR-71/HW_SUP_TEMP",
-    "reason": "the reason is 2 sentences, not one"
-   },
-   {
-    "case": "hvac-boiler-window",
-    "type": "flood_with_real_faults",
-    "grader": "format",
-    "code": "F2",
-    "layer": "writer",
-    "point": "SYN1/BLR-71/HW_SUP_TEMP",
-    "reason": "the reason is 2 sentences, not one"
-   },
-   {
-    "case": "hvac-boiler-window",
-    "type": "flood_with_real_faults",
-    "grader": "format",
-    "code": "F2",
-    "layer": "writer",
-    "point": "SYN1/BLR-71/HW_RET_TEMP",
-    "reason": "the reason is 2 sentences, not one"
-   },
-   {
-    "case": "hvac-boiler-window",
-    "type": "flood_with_real_faults",
-    "grader": "format",
-    "code": "F2",
-    "layer": "writer",
-    "point": "SYN1/BLR-71/FIRING_RATE",
-    "reason": "the reason is 2 sentences, not one"
-   },
-   {
-    "case": "hvac-chiller-ch-61-chw-sup-temp",
-    "type": "sustained_fault",
-    "grader": "format",
-    "code": "F2",
-    "layer": "writer",
-    "point": "SYN1/CH-61/CHW_SUP_TEMP",
-    "reason": "the reason is 2 sentences, not one"
-   },
-   {
-    "case": "hvac-chiller-ch-61-cond-approach",
-    "type": "drift",
-    "grader": "format",
-    "code": "F2",
-    "layer": "writer",
-    "point": "SYN1/CH-61/COND_APPROACH",
-    "reason": "the reason is 2 sentences, not one"
-   },
-   {
-    "case": "hvac-chiller-ch-61-evap-press",
-    "type": "alarm_log_only",
-    "grader": "format",
-    "code": "F2",
-    "layer": "writer",
-    "point": "SYN1/CH-61/EVAP_PRESS",
-    "reason": "the reason is 2 sentences, not one"
-   },
-   {
-    "case": "hvac-chiller-window",
-    "type": "flood_with_real_faults",
-    "grader": "format",
-    "code": "F2",
-    "layer": "writer",
-    "point": "SYN1/CH-61/CHW_SUP_TEMP",
-    "reason": "the reason is 2 sentences, not one"
-   },
-   {
-    "case": "hvac-chiller-window",
-    "type": "flood_with_real_faults",
-    "grader": "format",
-    "code": "F2",
-    "layer": "writer",
-    "point": "SYN1/CH-61/COND_APPROACH",
-    "reason": "the reason is 2 sentences, not one"
-   },
-   {
-    "case": "hvac-chiller-window",
-    "type": "flood_with_real_faults",
-    "grader": "format",
-    "code": "F2",
-    "layer": "writer",
-    "point": "SYN1/CH-61/EVAP_PRESS",
-    "reason": "the reason is 2 sentences, not one"
-   },
    {
     "case": "power-generator-test",
     "type": "consequence_looks_like_cause",
@@ -429,7 +267,7 @@
         "raw": "{\"reason\": \"AHU-21-B's cooling duct temperature went 9.2 deadbands above its 60 degF limit, well past normal control error, across 5 alarms and 12.3 hours in alarm.\", \"verb\": \"inspect\", \"target\": \"SYN1/AHU-21-B/CLG_DUCT_TEMP\", \"detail\": \"look at what the equipment was doing at each excursion, and confirm the peak against a handheld thermometer at the sensor.\"}",
         "ok": true,
         "detail": "ok",
-        "elapsed_s": 0.0033
+        "elapsed_s": 0.0019
        }
       ],
       "rank": 1,
@@ -677,7 +515,7 @@
     "hvac",
     "single_condition"
    ],
-   "status": "fail",
+   "status": "pass",
    "graders": {
     "grounding": {
      "status": "pass",
@@ -705,16 +543,9 @@
      "failures": []
     },
     "format": {
-     "status": "fail",
+     "status": "pass",
      "checks": 5,
-     "failures": [
-      {
-       "code": "F2",
-       "layer": "writer",
-       "point": "SYN1/AHU-21/CLG_DUCT_TEMP",
-       "reason": "the reason is 2 sentences, not one"
-      }
-     ]
+     "failures": []
     }
    },
    "writeup": {
@@ -729,14 +560,14 @@
       "consequence_starts": [],
       "attempts": [
        {
-        "raw": "{\"reason\": \"AHU-21's cooling duct temperature stayed above its 60 degF limit for 85.4% of the window, and it was still out when the export ended. A reading that holds out that long is a standing problem, not control noise.\", \"verb\": \"verify\", \"target\": \"SYN1/AHU-21/CLG_DUCT_TEMP\", \"detail\": \"compare the trended value with a handheld thermometer at the sensor to confirm the reading is real, then review what the equipment was doing while it stayed out.\"}",
+        "raw": "{\"reason\": \"AHU-21's cooling duct temperature stayed above its 60 degF limit for 85.4% of the window, and it was still out when the export ended, which makes it a standing problem rather than control noise.\", \"verb\": \"verify\", \"target\": \"SYN1/AHU-21/CLG_DUCT_TEMP\", \"detail\": \"compare the trended value with a handheld thermometer at the sensor to confirm the reading is real, then review what the equipment was doing while it stayed out.\"}",
         "ok": true,
         "detail": "ok",
-        "elapsed_s": 0.0011
+        "elapsed_s": 0.0006
        }
       ],
       "rank": 1,
-      "reason": "AHU-21's cooling duct temperature stayed above its 60 degF limit for 85.4% of the window, and it was still out when the export ended. A reading that holds out that long is a standing problem, not control noise.",
+      "reason": "AHU-21's cooling duct temperature stayed above its 60 degF limit for 85.4% of the window, and it was still out when the export ended, which makes it a standing problem rather than control noise.",
       "verb": "verify",
       "target": "SYN1/AHU-21/CLG_DUCT_TEMP",
       "detail": "compare the trended value with a handheld thermometer at the sensor to confirm the reading is real, then review what the equipment was doing while it stayed out.",
@@ -755,7 +586,7 @@
     "hvac",
     "single_condition"
    ],
-   "status": "fail",
+   "status": "pass",
    "graders": {
     "grounding": {
      "status": "pass",
@@ -783,16 +614,9 @@
      "failures": []
     },
     "format": {
-     "status": "fail",
+     "status": "pass",
      "checks": 5,
-     "failures": [
-      {
-       "code": "F2",
-       "layer": "writer",
-       "point": "SYN1/AHU-21/CLG_SP",
-       "reason": "the reason is 2 sentences, not one"
-      }
-     ]
+     "failures": []
     }
    },
    "writeup": {
@@ -807,14 +631,14 @@
       "consequence_starts": [],
       "attempts": [
        {
-        "raw": "{\"reason\": \"No trend rule moved this one; it ranks on the alarm log. AHU-21's cooling static pressure raised 4 alarms at priority 3 over 11.5 hours in alarm, and it was still past the limit when the export ended.\", \"verb\": \"check\", \"target\": \"SYN1/AHU-21/CLG_SP\", \"detail\": \"compare the reading with a manometer at the sensor tap, and look at why it alarmed as often as it did.\"}",
+        "raw": "{\"reason\": \"No trend rule moved this one, so it ranks on the alarm log alone: AHU-21's cooling static pressure raised 4 alarms at priority 3 over 11.5 hours in alarm, and it was still past the limit when the export ended.\", \"verb\": \"check\", \"target\": \"SYN1/AHU-21/CLG_SP\", \"detail\": \"compare the reading with a manometer at the sensor tap, and look at why it alarmed as often as it did.\"}",
         "ok": true,
         "detail": "ok",
-        "elapsed_s": 0.0009
+        "elapsed_s": 0.0005
        }
       ],
       "rank": 1,
-      "reason": "No trend rule moved this one; it ranks on the alarm log. AHU-21's cooling static pressure raised 4 alarms at priority 3 over 11.5 hours in alarm, and it was still past the limit when the export ended.",
+      "reason": "No trend rule moved this one, so it ranks on the alarm log alone: AHU-21's cooling static pressure raised 4 alarms at priority 3 over 11.5 hours in alarm, and it was still past the limit when the export ended.",
       "verb": "check",
       "target": "SYN1/AHU-21/CLG_SP",
       "detail": "compare the reading with a manometer at the sensor tap, and look at why it alarmed as often as it did.",
@@ -881,7 +705,7 @@
         "raw": "{\"reason\": \"AHU-21's heating duct temperature went 9.2 deadbands below its 88 degF limit, well past normal control error, across 5 alarms and 12.3 hours in alarm.\", \"verb\": \"inspect\", \"target\": \"SYN1/AHU-21/HTG_DUCT_TEMP\", \"detail\": \"look at what the equipment was doing at each excursion, and confirm the peak against a handheld thermometer at the sensor.\"}",
         "ok": true,
         "detail": "ok",
-        "elapsed_s": 0.0009
+        "elapsed_s": 0.0006
        }
       ],
       "rank": 1,
@@ -904,7 +728,7 @@
     "hvac",
     "single_condition"
    ],
-   "status": "fail",
+   "status": "pass",
    "graders": {
     "grounding": {
      "status": "pass",
@@ -932,16 +756,9 @@
      "failures": []
     },
     "format": {
-     "status": "fail",
+     "status": "pass",
      "checks": 5,
-     "failures": [
-      {
-       "code": "F2",
-       "layer": "writer",
-       "point": "SYN1/AHU-21/MIXED_AIR_TEMP",
-       "reason": "the reason is 2 sentences, not one"
-      }
-     ]
+     "failures": []
     }
    },
    "writeup": {
@@ -956,14 +773,14 @@
       "consequence_starts": [],
       "attempts": [
        {
-        "raw": "{\"reason\": \"AHU-21's mixed air temperature moved steadily toward and past its 72 degF limit without reversing, peaking 3.2 deadbands out. The single alarm it raised understates a condition that is getting worse.\", \"verb\": \"review\", \"target\": \"SYN1/AHU-21/MIXED_AIR_TEMP\", \"detail\": \"trace the trend back to where the drift began, then compare the value with a handheld thermometer at the sensor to separate a drifting sensor from a drifting process.\"}",
+        "raw": "{\"reason\": \"AHU-21's mixed air temperature moved steadily toward and past its 72 degF limit without reversing, peaking 3.2 deadbands out, and the single alarm it raised understates a condition that is getting worse.\", \"verb\": \"review\", \"target\": \"SYN1/AHU-21/MIXED_AIR_TEMP\", \"detail\": \"trace the trend back to where the drift began, then compare the value with a handheld thermometer at the sensor to separate a drifting sensor from a drifting process.\"}",
         "ok": true,
         "detail": "ok",
-        "elapsed_s": 0.0007
+        "elapsed_s": 0.0004
        }
       ],
       "rank": 1,
-      "reason": "AHU-21's mixed air temperature moved steadily toward and past its 72 degF limit without reversing, peaking 3.2 deadbands out. The single alarm it raised understates a condition that is getting worse.",
+      "reason": "AHU-21's mixed air temperature moved steadily toward and past its 72 degF limit without reversing, peaking 3.2 deadbands out, and the single alarm it raised understates a condition that is getting worse.",
       "verb": "review",
       "target": "SYN1/AHU-21/MIXED_AIR_TEMP",
       "detail": "trace the trend back to where the drift began, then compare the value with a handheld thermometer at the sensor to separate a drifting sensor from a drifting process.",
@@ -983,7 +800,7 @@
     "flood",
     "multiple_causes"
    ],
-   "status": "fail",
+   "status": "pass",
    "graders": {
     "grounding": {
      "status": "pass",
@@ -1011,28 +828,9 @@
      "failures": []
     },
     "format": {
-     "status": "fail",
+     "status": "pass",
      "checks": 25,
-     "failures": [
-      {
-       "code": "F2",
-       "layer": "writer",
-       "point": "SYN1/AHU-21/CLG_DUCT_TEMP",
-       "reason": "the reason is 2 sentences, not one"
-      },
-      {
-       "code": "F2",
-       "layer": "writer",
-       "point": "SYN1/AHU-21/MIXED_AIR_TEMP",
-       "reason": "the reason is 2 sentences, not one"
-      },
-      {
-       "code": "F2",
-       "layer": "writer",
-       "point": "SYN1/AHU-21/CLG_SP",
-       "reason": "the reason is 2 sentences, not one"
-      }
-     ]
+     "failures": []
     }
    },
    "writeup": {
@@ -1093,14 +891,14 @@
       "consequence_starts": [],
       "attempts": [
        {
-        "raw": "{\"reason\": \"AHU-21's cooling duct temperature stayed above its 60 degF limit for 85.4% of the window, and it was still out when the export ended. A reading that holds out that long is a standing problem, not control noise.\", \"verb\": \"verify\", \"target\": \"SYN1/AHU-21/CLG_DUCT_TEMP\", \"detail\": \"compare the trended value with a handheld thermometer at the sensor to confirm the reading is real, then review what the equipment was doing while it stayed out.\"}",
+        "raw": "{\"reason\": \"AHU-21's cooling duct temperature stayed above its 60 degF limit for 85.4% of the window, and it was still out when the export ended, which makes it a standing problem rather than control noise.\", \"verb\": \"verify\", \"target\": \"SYN1/AHU-21/CLG_DUCT_TEMP\", \"detail\": \"compare the trended value with a handheld thermometer at the sensor to confirm the reading is real, then review what the equipment was doing while it stayed out.\"}",
         "ok": true,
         "detail": "ok",
-        "elapsed_s": 0.0007
+        "elapsed_s": 0.0004
        }
       ],
       "rank": 3,
-      "reason": "AHU-21's cooling duct temperature stayed above its 60 degF limit for 85.4% of the window, and it was still out when the export ended. A reading that holds out that long is a standing problem, not control noise.",
+      "reason": "AHU-21's cooling duct temperature stayed above its 60 degF limit for 85.4% of the window, and it was still out when the export ended, which makes it a standing problem rather than control noise.",
       "verb": "verify",
       "target": "SYN1/AHU-21/CLG_DUCT_TEMP",
       "detail": "compare the trended value with a handheld thermometer at the sensor to confirm the reading is real, then review what the equipment was doing while it stayed out.",
@@ -1116,14 +914,14 @@
       "consequence_starts": [],
       "attempts": [
        {
-        "raw": "{\"reason\": \"AHU-21's mixed air temperature moved steadily toward and past its 72 degF limit without reversing, peaking 3.2 deadbands out. The single alarm it raised understates a condition that is getting worse.\", \"verb\": \"review\", \"target\": \"SYN1/AHU-21/MIXED_AIR_TEMP\", \"detail\": \"trace the trend back to where the drift began, then compare the value with a handheld thermometer at the sensor to separate a drifting sensor from a drifting process.\"}",
+        "raw": "{\"reason\": \"AHU-21's mixed air temperature moved steadily toward and past its 72 degF limit without reversing, peaking 3.2 deadbands out, and the single alarm it raised understates a condition that is getting worse.\", \"verb\": \"review\", \"target\": \"SYN1/AHU-21/MIXED_AIR_TEMP\", \"detail\": \"trace the trend back to where the drift began, then compare the value with a handheld thermometer at the sensor to separate a drifting sensor from a drifting process.\"}",
         "ok": true,
         "detail": "ok",
-        "elapsed_s": 0.0005
+        "elapsed_s": 0.0003
        }
       ],
       "rank": 4,
-      "reason": "AHU-21's mixed air temperature moved steadily toward and past its 72 degF limit without reversing, peaking 3.2 deadbands out. The single alarm it raised understates a condition that is getting worse.",
+      "reason": "AHU-21's mixed air temperature moved steadily toward and past its 72 degF limit without reversing, peaking 3.2 deadbands out, and the single alarm it raised understates a condition that is getting worse.",
       "verb": "review",
       "target": "SYN1/AHU-21/MIXED_AIR_TEMP",
       "detail": "trace the trend back to where the drift began, then compare the value with a handheld thermometer at the sensor to separate a drifting sensor from a drifting process.",
@@ -1139,14 +937,14 @@
       "consequence_starts": [],
       "attempts": [
        {
-        "raw": "{\"reason\": \"No trend rule moved this one; it ranks on the alarm log. AHU-21's cooling static pressure raised 4 alarms at priority 3 over 11.5 hours in alarm, and it was still past the limit when the export ended.\", \"verb\": \"check\", \"target\": \"SYN1/AHU-21/CLG_SP\", \"detail\": \"compare the reading with a manometer at the sensor tap, and look at why it alarmed as often as it did.\"}",
+        "raw": "{\"reason\": \"No trend rule moved this one, so it ranks on the alarm log alone: AHU-21's cooling static pressure raised 4 alarms at priority 3 over 11.5 hours in alarm, and it was still past the limit when the export ended.\", \"verb\": \"check\", \"target\": \"SYN1/AHU-21/CLG_SP\", \"detail\": \"compare the reading with a manometer at the sensor tap, and look at why it alarmed as often as it did.\"}",
         "ok": true,
         "detail": "ok",
-        "elapsed_s": 0.0005
+        "elapsed_s": 0.0004
        }
       ],
       "rank": 5,
-      "reason": "No trend rule moved this one; it ranks on the alarm log. AHU-21's cooling static pressure raised 4 alarms at priority 3 over 11.5 hours in alarm, and it was still past the limit when the export ended.",
+      "reason": "No trend rule moved this one, so it ranks on the alarm log alone: AHU-21's cooling static pressure raised 4 alarms at priority 3 over 11.5 hours in alarm, and it was still past the limit when the export ended.",
       "verb": "check",
       "target": "SYN1/AHU-21/CLG_SP",
       "detail": "compare the reading with a manometer at the sensor tap, and look at why it alarmed as often as it did.",
@@ -1418,7 +1216,7 @@
         "raw": "{\"reason\": \"BLR-71-B's hot water supply temperature went 9.2 deadbands below its 168 degF limit, well past normal control error, across 5 alarms and 12.3 hours in alarm.\", \"verb\": \"inspect\", \"target\": \"SYN1/BLR-71-B/HW_SUP_TEMP\", \"detail\": \"look at what the equipment was doing at each excursion, and confirm the peak against a handheld thermometer at the sensor.\"}",
         "ok": true,
         "detail": "ok",
-        "elapsed_s": 0.0006
+        "elapsed_s": 0.0005
        }
       ],
       "rank": 1,
@@ -1551,7 +1349,7 @@
     "hvac",
     "single_condition"
    ],
-   "status": "fail",
+   "status": "pass",
    "graders": {
     "grounding": {
      "status": "pass",
@@ -1579,16 +1377,9 @@
      "failures": []
     },
     "format": {
-     "status": "fail",
+     "status": "pass",
      "checks": 5,
-     "failures": [
-      {
-       "code": "F2",
-       "layer": "writer",
-       "point": "SYN1/BLR-71/FIRING_RATE",
-       "reason": "the reason is 2 sentences, not one"
-      }
-     ]
+     "failures": []
     }
    },
    "writeup": {
@@ -1603,14 +1394,14 @@
       "consequence_starts": [],
       "attempts": [
        {
-        "raw": "{\"reason\": \"No trend rule moved this one; it ranks on the alarm log. BLR-71's firing rate raised 4 alarms at priority 4 over 11.5 hours in alarm, and it was still past the limit when the export ended.\", \"verb\": \"check\", \"target\": \"SYN1/BLR-71/FIRING_RATE\", \"detail\": \"compare the reading with the firing rate shown on the boiler's burner controller, and look at why it alarmed as often as it did.\"}",
+        "raw": "{\"reason\": \"No trend rule moved this one, so it ranks on the alarm log alone: BLR-71's firing rate raised 4 alarms at priority 4 over 11.5 hours in alarm, and it was still past the limit when the export ended.\", \"verb\": \"check\", \"target\": \"SYN1/BLR-71/FIRING_RATE\", \"detail\": \"compare the reading with the firing rate shown on the boiler's burner controller, and look at why it alarmed as often as it did.\"}",
         "ok": true,
         "detail": "ok",
-        "elapsed_s": 0.0005
+        "elapsed_s": 0.0006
        }
       ],
       "rank": 1,
-      "reason": "No trend rule moved this one; it ranks on the alarm log. BLR-71's firing rate raised 4 alarms at priority 4 over 11.5 hours in alarm, and it was still past the limit when the export ended.",
+      "reason": "No trend rule moved this one, so it ranks on the alarm log alone: BLR-71's firing rate raised 4 alarms at priority 4 over 11.5 hours in alarm, and it was still past the limit when the export ended.",
       "verb": "check",
       "target": "SYN1/BLR-71/FIRING_RATE",
       "detail": "compare the reading with the firing rate shown on the boiler's burner controller, and look at why it alarmed as often as it did.",
@@ -1629,7 +1420,7 @@
     "hvac",
     "single_condition"
    ],
-   "status": "fail",
+   "status": "pass",
    "graders": {
     "grounding": {
      "status": "pass",
@@ -1657,16 +1448,9 @@
      "failures": []
     },
     "format": {
-     "status": "fail",
+     "status": "pass",
      "checks": 5,
-     "failures": [
-      {
-       "code": "F2",
-       "layer": "writer",
-       "point": "SYN1/BLR-71/HW_RET_TEMP",
-       "reason": "the reason is 2 sentences, not one"
-      }
-     ]
+     "failures": []
     }
    },
    "writeup": {
@@ -1681,14 +1465,14 @@
       "consequence_starts": [],
       "attempts": [
        {
-        "raw": "{\"reason\": \"BLR-71's hot water return temperature moved steadily toward and past its 145 degF limit without reversing, peaking 3.2 deadbands out. The single alarm it raised understates a condition that is getting worse.\", \"verb\": \"review\", \"target\": \"SYN1/BLR-71/HW_RET_TEMP\", \"detail\": \"trace the trend back to where the drift began, then compare the value with a handheld thermometer at the sensor to separate a drifting sensor from a drifting process.\"}",
+        "raw": "{\"reason\": \"BLR-71's hot water return temperature moved steadily toward and past its 145 degF limit without reversing, peaking 3.2 deadbands out, and the single alarm it raised understates a condition that is getting worse.\", \"verb\": \"review\", \"target\": \"SYN1/BLR-71/HW_RET_TEMP\", \"detail\": \"trace the trend back to where the drift began, then compare the value with a handheld thermometer at the sensor to separate a drifting sensor from a drifting process.\"}",
         "ok": true,
         "detail": "ok",
         "elapsed_s": 0.0006
        }
       ],
       "rank": 1,
-      "reason": "BLR-71's hot water return temperature moved steadily toward and past its 145 degF limit without reversing, peaking 3.2 deadbands out. The single alarm it raised understates a condition that is getting worse.",
+      "reason": "BLR-71's hot water return temperature moved steadily toward and past its 145 degF limit without reversing, peaking 3.2 deadbands out, and the single alarm it raised understates a condition that is getting worse.",
       "verb": "review",
       "target": "SYN1/BLR-71/HW_RET_TEMP",
       "detail": "trace the trend back to where the drift began, then compare the value with a handheld thermometer at the sensor to separate a drifting sensor from a drifting process.",
@@ -1707,7 +1491,7 @@
     "hvac",
     "single_condition"
    ],
-   "status": "fail",
+   "status": "pass",
    "graders": {
     "grounding": {
      "status": "pass",
@@ -1735,16 +1519,9 @@
      "failures": []
     },
     "format": {
-     "status": "fail",
+     "status": "pass",
      "checks": 5,
-     "failures": [
-      {
-       "code": "F2",
-       "layer": "writer",
-       "point": "SYN1/BLR-71/HW_SUP_TEMP",
-       "reason": "the reason is 2 sentences, not one"
-      }
-     ]
+     "failures": []
     }
    },
    "writeup": {
@@ -1759,14 +1536,14 @@
       "consequence_starts": [],
       "attempts": [
        {
-        "raw": "{\"reason\": \"BLR-71's hot water supply temperature stayed below its 168 degF limit for 85.4% of the window, and it was still out when the export ended. A reading that holds out that long is a standing problem, not control noise.\", \"verb\": \"verify\", \"target\": \"SYN1/BLR-71/HW_SUP_TEMP\", \"detail\": \"compare the trended value with a handheld thermometer at the sensor to confirm the reading is real, then review what the equipment was doing while it stayed out.\"}",
+        "raw": "{\"reason\": \"BLR-71's hot water supply temperature stayed below its 168 degF limit for 85.4% of the window, and it was still out when the export ended, which makes it a standing problem rather than control noise.\", \"verb\": \"verify\", \"target\": \"SYN1/BLR-71/HW_SUP_TEMP\", \"detail\": \"compare the trended value with a handheld thermometer at the sensor to confirm the reading is real, then review what the equipment was doing while it stayed out.\"}",
         "ok": true,
         "detail": "ok",
         "elapsed_s": 0.0006
        }
       ],
       "rank": 1,
-      "reason": "BLR-71's hot water supply temperature stayed below its 168 degF limit for 85.4% of the window, and it was still out when the export ended. A reading that holds out that long is a standing problem, not control noise.",
+      "reason": "BLR-71's hot water supply temperature stayed below its 168 degF limit for 85.4% of the window, and it was still out when the export ended, which makes it a standing problem rather than control noise.",
       "verb": "verify",
       "target": "SYN1/BLR-71/HW_SUP_TEMP",
       "detail": "compare the trended value with a handheld thermometer at the sensor to confirm the reading is real, then review what the equipment was doing while it stayed out.",
@@ -1911,7 +1688,7 @@
     "flood",
     "multiple_causes"
    ],
-   "status": "fail",
+   "status": "pass",
    "graders": {
     "grounding": {
      "status": "pass",
@@ -1939,28 +1716,9 @@
      "failures": []
     },
     "format": {
-     "status": "fail",
+     "status": "pass",
      "checks": 25,
-     "failures": [
-      {
-       "code": "F2",
-       "layer": "writer",
-       "point": "SYN1/BLR-71/HW_SUP_TEMP",
-       "reason": "the reason is 2 sentences, not one"
-      },
-      {
-       "code": "F2",
-       "layer": "writer",
-       "point": "SYN1/BLR-71/HW_RET_TEMP",
-       "reason": "the reason is 2 sentences, not one"
-      },
-      {
-       "code": "F2",
-       "layer": "writer",
-       "point": "SYN1/BLR-71/FIRING_RATE",
-       "reason": "the reason is 2 sentences, not one"
-      }
-     ]
+     "failures": []
     }
    },
    "writeup": {
@@ -1978,7 +1736,7 @@
         "raw": "{\"reason\": \"BLR-71's stack temperature went 9.2 deadbands above its 420 degF limit, well past normal control error, across 5 alarms and 12.3 hours in alarm.\", \"verb\": \"inspect\", \"target\": \"SYN1/BLR-71/STACK_TEMP\", \"detail\": \"look at what the equipment was doing at each excursion, and confirm the peak against a handheld thermometer at the sensor.\"}",
         "ok": true,
         "detail": "ok",
-        "elapsed_s": 0.0005
+        "elapsed_s": 0.0009
        }
       ],
       "rank": 1,
@@ -2001,7 +1759,7 @@
         "raw": "{\"reason\": \"BLR-71-B's hot water supply temperature went 9.2 deadbands below its 168 degF limit, well past normal control error, across 5 alarms and 12.3 hours in alarm.\", \"verb\": \"inspect\", \"target\": \"SYN1/BLR-71-B/HW_SUP_TEMP\", \"detail\": \"look at what the equipment was doing at each excursion, and confirm the peak against a handheld thermometer at the sensor.\"}",
         "ok": true,
         "detail": "ok",
-        "elapsed_s": 0.0004
+        "elapsed_s": 0.0009
        }
       ],
       "rank": 2,
@@ -2021,14 +1779,14 @@
       "consequence_starts": [],
       "attempts": [
        {
-        "raw": "{\"reason\": \"BLR-71's hot water supply temperature stayed below its 168 degF limit for 85.4% of the window, and it was still out when the export ended. A reading that holds out that long is a standing problem, not control noise.\", \"verb\": \"verify\", \"target\": \"SYN1/BLR-71/HW_SUP_TEMP\", \"detail\": \"compare the trended value with a handheld thermometer at the sensor to confirm the reading is real, then review what the equipment was doing while it stayed out.\"}",
+        "raw": "{\"reason\": \"BLR-71's hot water supply temperature stayed below its 168 degF limit for 85.4% of the window, and it was still out when the export ended, which makes it a standing problem rather than control noise.\", \"verb\": \"verify\", \"target\": \"SYN1/BLR-71/HW_SUP_TEMP\", \"detail\": \"compare the trended value with a handheld thermometer at the sensor to confirm the reading is real, then review what the equipment was doing while it stayed out.\"}",
         "ok": true,
         "detail": "ok",
-        "elapsed_s": 0.0005
+        "elapsed_s": 0.0006
        }
       ],
       "rank": 3,
-      "reason": "BLR-71's hot water supply temperature stayed below its 168 degF limit for 85.4% of the window, and it was still out when the export ended. A reading that holds out that long is a standing problem, not control noise.",
+      "reason": "BLR-71's hot water supply temperature stayed below its 168 degF limit for 85.4% of the window, and it was still out when the export ended, which makes it a standing problem rather than control noise.",
       "verb": "verify",
       "target": "SYN1/BLR-71/HW_SUP_TEMP",
       "detail": "compare the trended value with a handheld thermometer at the sensor to confirm the reading is real, then review what the equipment was doing while it stayed out.",
@@ -2044,14 +1802,14 @@
       "consequence_starts": [],
       "attempts": [
        {
-        "raw": "{\"reason\": \"BLR-71's hot water return temperature moved steadily toward and past its 145 degF limit without reversing, peaking 3.2 deadbands out. The single alarm it raised understates a condition that is getting worse.\", \"verb\": \"review\", \"target\": \"SYN1/BLR-71/HW_RET_TEMP\", \"detail\": \"trace the trend back to where the drift began, then compare the value with a handheld thermometer at the sensor to separate a drifting sensor from a drifting process.\"}",
+        "raw": "{\"reason\": \"BLR-71's hot water return temperature moved steadily toward and past its 145 degF limit without reversing, peaking 3.2 deadbands out, and the single alarm it raised understates a condition that is getting worse.\", \"verb\": \"review\", \"target\": \"SYN1/BLR-71/HW_RET_TEMP\", \"detail\": \"trace the trend back to where the drift began, then compare the value with a handheld thermometer at the sensor to separate a drifting sensor from a drifting process.\"}",
         "ok": true,
         "detail": "ok",
         "elapsed_s": 0.0005
        }
       ],
       "rank": 4,
-      "reason": "BLR-71's hot water return temperature moved steadily toward and past its 145 degF limit without reversing, peaking 3.2 deadbands out. The single alarm it raised understates a condition that is getting worse.",
+      "reason": "BLR-71's hot water return temperature moved steadily toward and past its 145 degF limit without reversing, peaking 3.2 deadbands out, and the single alarm it raised understates a condition that is getting worse.",
       "verb": "review",
       "target": "SYN1/BLR-71/HW_RET_TEMP",
       "detail": "trace the trend back to where the drift began, then compare the value with a handheld thermometer at the sensor to separate a drifting sensor from a drifting process.",
@@ -2067,14 +1825,14 @@
       "consequence_starts": [],
       "attempts": [
        {
-        "raw": "{\"reason\": \"No trend rule moved this one; it ranks on the alarm log. BLR-71's firing rate raised 4 alarms at priority 4 over 11.5 hours in alarm, and it was still past the limit when the export ended.\", \"verb\": \"check\", \"target\": \"SYN1/BLR-71/FIRING_RATE\", \"detail\": \"compare the reading with the firing rate shown on the boiler's burner controller, and look at why it alarmed as often as it did.\"}",
+        "raw": "{\"reason\": \"No trend rule moved this one, so it ranks on the alarm log alone: BLR-71's firing rate raised 4 alarms at priority 4 over 11.5 hours in alarm, and it was still past the limit when the export ended.\", \"verb\": \"check\", \"target\": \"SYN1/BLR-71/FIRING_RATE\", \"detail\": \"compare the reading with the firing rate shown on the boiler's burner controller, and look at why it alarmed as often as it did.\"}",
         "ok": true,
         "detail": "ok",
         "elapsed_s": 0.0005
        }
       ],
       "rank": 5,
-      "reason": "No trend rule moved this one; it ranks on the alarm log. BLR-71's firing rate raised 4 alarms at priority 4 over 11.5 hours in alarm, and it was still past the limit when the export ended.",
+      "reason": "No trend rule moved this one, so it ranks on the alarm log alone: BLR-71's firing rate raised 4 alarms at priority 4 over 11.5 hours in alarm, and it was still past the limit when the export ended.",
       "verb": "check",
       "target": "SYN1/BLR-71/FIRING_RATE",
       "detail": "compare the reading with the firing rate shown on the boiler's burner controller, and look at why it alarmed as often as it did.",
@@ -2502,7 +2260,7 @@
     "hvac",
     "single_condition"
    ],
-   "status": "fail",
+   "status": "pass",
    "graders": {
     "grounding": {
      "status": "pass",
@@ -2530,16 +2288,9 @@
      "failures": []
     },
     "format": {
-     "status": "fail",
+     "status": "pass",
      "checks": 5,
-     "failures": [
-      {
-       "code": "F2",
-       "layer": "writer",
-       "point": "SYN1/CH-61/CHW_SUP_TEMP",
-       "reason": "the reason is 2 sentences, not one"
-      }
-     ]
+     "failures": []
     }
    },
    "writeup": {
@@ -2554,14 +2305,14 @@
       "consequence_starts": [],
       "attempts": [
        {
-        "raw": "{\"reason\": \"CH-61's chilled water supply temperature stayed above its 46 degF limit for 85.4% of the window, and it was still out when the export ended. A reading that holds out that long is a standing problem, not control noise.\", \"verb\": \"verify\", \"target\": \"SYN1/CH-61/CHW_SUP_TEMP\", \"detail\": \"compare the trended value with a handheld thermometer at the sensor to confirm the reading is real, then review what the equipment was doing while it stayed out.\"}",
+        "raw": "{\"reason\": \"CH-61's chilled water supply temperature stayed above its 46 degF limit for 85.4% of the window, and it was still out when the export ended, which makes it a standing problem rather than control noise.\", \"verb\": \"verify\", \"target\": \"SYN1/CH-61/CHW_SUP_TEMP\", \"detail\": \"compare the trended value with a handheld thermometer at the sensor to confirm the reading is real, then review what the equipment was doing while it stayed out.\"}",
         "ok": true,
         "detail": "ok",
-        "elapsed_s": 0.0009
+        "elapsed_s": 0.0015
        }
       ],
       "rank": 1,
-      "reason": "CH-61's chilled water supply temperature stayed above its 46 degF limit for 85.4% of the window, and it was still out when the export ended. A reading that holds out that long is a standing problem, not control noise.",
+      "reason": "CH-61's chilled water supply temperature stayed above its 46 degF limit for 85.4% of the window, and it was still out when the export ended, which makes it a standing problem rather than control noise.",
       "verb": "verify",
       "target": "SYN1/CH-61/CHW_SUP_TEMP",
       "detail": "compare the trended value with a handheld thermometer at the sensor to confirm the reading is real, then review what the equipment was doing while it stayed out.",
@@ -2580,7 +2331,7 @@
     "hvac",
     "single_condition"
    ],
-   "status": "fail",
+   "status": "pass",
    "graders": {
     "grounding": {
      "status": "pass",
@@ -2608,16 +2359,9 @@
      "failures": []
     },
     "format": {
-     "status": "fail",
+     "status": "pass",
      "checks": 5,
-     "failures": [
-      {
-       "code": "F2",
-       "layer": "writer",
-       "point": "SYN1/CH-61/COND_APPROACH",
-       "reason": "the reason is 2 sentences, not one"
-      }
-     ]
+     "failures": []
     }
    },
    "writeup": {
@@ -2632,14 +2376,14 @@
       "consequence_starts": [],
       "attempts": [
        {
-        "raw": "{\"reason\": \"CH-61's condenser approach moved steadily toward and past its 6 degF limit without reversing, peaking 3.2 deadbands out. The single alarm it raised understates a condition that is getting worse.\", \"verb\": \"review\", \"target\": \"SYN1/CH-61/COND_APPROACH\", \"detail\": \"trace the trend back to where the drift began, then compare the value with the two temperatures it is calculated from at the unit to separate a drifting sensor from a drifting process.\"}",
+        "raw": "{\"reason\": \"CH-61's condenser approach moved steadily toward and past its 6 degF limit without reversing, peaking 3.2 deadbands out, and the single alarm it raised understates a condition that is getting worse.\", \"verb\": \"review\", \"target\": \"SYN1/CH-61/COND_APPROACH\", \"detail\": \"trace the trend back to where the drift began, then compare the value with the two temperatures it is calculated from at the unit to separate a drifting sensor from a drifting process.\"}",
         "ok": true,
         "detail": "ok",
-        "elapsed_s": 0.0009
+        "elapsed_s": 0.0006
        }
       ],
       "rank": 1,
-      "reason": "CH-61's condenser approach moved steadily toward and past its 6 degF limit without reversing, peaking 3.2 deadbands out. The single alarm it raised understates a condition that is getting worse.",
+      "reason": "CH-61's condenser approach moved steadily toward and past its 6 degF limit without reversing, peaking 3.2 deadbands out, and the single alarm it raised understates a condition that is getting worse.",
       "verb": "review",
       "target": "SYN1/CH-61/COND_APPROACH",
       "detail": "trace the trend back to where the drift began, then compare the value with the two temperatures it is calculated from at the unit to separate a drifting sensor from a drifting process.",
@@ -2658,7 +2402,7 @@
     "hvac",
     "single_condition"
    ],
-   "status": "fail",
+   "status": "pass",
    "graders": {
     "grounding": {
      "status": "pass",
@@ -2686,16 +2430,9 @@
      "failures": []
     },
     "format": {
-     "status": "fail",
+     "status": "pass",
      "checks": 5,
-     "failures": [
-      {
-       "code": "F2",
-       "layer": "writer",
-       "point": "SYN1/CH-61/EVAP_PRESS",
-       "reason": "the reason is 2 sentences, not one"
-      }
-     ]
+     "failures": []
     }
    },
    "writeup": {
@@ -2710,14 +2447,14 @@
       "consequence_starts": [],
       "attempts": [
        {
-        "raw": "{\"reason\": \"No trend rule moved this one; it ranks on the alarm log. CH-61's evaporator pressure raised 4 alarms at priority 3 over 11.5 hours in alarm, and it was still past the limit when the export ended.\", \"verb\": \"check\", \"target\": \"SYN1/CH-61/EVAP_PRESS\", \"detail\": \"compare the reading with a test gauge on the same port, and look at why it alarmed as often as it did.\"}",
+        "raw": "{\"reason\": \"No trend rule moved this one, so it ranks on the alarm log alone: CH-61's evaporator pressure raised 4 alarms at priority 3 over 11.5 hours in alarm, and it was still past the limit when the export ended.\", \"verb\": \"check\", \"target\": \"SYN1/CH-61/EVAP_PRESS\", \"detail\": \"compare the reading with a test gauge on the same port, and look at why it alarmed as often as it did.\"}",
         "ok": true,
         "detail": "ok",
-        "elapsed_s": 0.0007
+        "elapsed_s": 0.0005
        }
       ],
       "rank": 1,
-      "reason": "No trend rule moved this one; it ranks on the alarm log. CH-61's evaporator pressure raised 4 alarms at priority 3 over 11.5 hours in alarm, and it was still past the limit when the export ended.",
+      "reason": "No trend rule moved this one, so it ranks on the alarm log alone: CH-61's evaporator pressure raised 4 alarms at priority 3 over 11.5 hours in alarm, and it was still past the limit when the export ended.",
       "verb": "check",
       "target": "SYN1/CH-61/EVAP_PRESS",
       "detail": "compare the reading with a test gauge on the same port, and look at why it alarmed as often as it did.",
@@ -2846,7 +2583,7 @@
     "flood",
     "multiple_causes"
    ],
-   "status": "fail",
+   "status": "pass",
    "graders": {
     "grounding": {
      "status": "pass",
@@ -2874,28 +2611,9 @@
      "failures": []
     },
     "format": {
-     "status": "fail",
+     "status": "pass",
      "checks": 25,
-     "failures": [
-      {
-       "code": "F2",
-       "layer": "writer",
-       "point": "SYN1/CH-61/CHW_SUP_TEMP",
-       "reason": "the reason is 2 sentences, not one"
-      },
-      {
-       "code": "F2",
-       "layer": "writer",
-       "point": "SYN1/CH-61/COND_APPROACH",
-       "reason": "the reason is 2 sentences, not one"
-      },
-      {
-       "code": "F2",
-       "layer": "writer",
-       "point": "SYN1/CH-61/EVAP_PRESS",
-       "reason": "the reason is 2 sentences, not one"
-      }
-     ]
+     "failures": []
     }
    },
    "writeup": {
@@ -2913,7 +2631,7 @@
         "raw": "{\"reason\": \"CH-61-B's chilled water supply temperature went 9.2 deadbands above its 46 degF limit, well past normal control error, across 5 alarms and 12.3 hours in alarm.\", \"verb\": \"inspect\", \"target\": \"SYN1/CH-61-B/CHW_SUP_TEMP\", \"detail\": \"look at what the equipment was doing at each excursion, and confirm the peak against a handheld thermometer at the sensor.\"}",
         "ok": true,
         "detail": "ok",
-        "elapsed_s": 0.0013
+        "elapsed_s": 0.0007
        }
       ],
       "rank": 1,
@@ -2936,7 +2654,7 @@
         "raw": "{\"reason\": \"CH-61's chilled water return temperature went 9.2 deadbands above its 58 degF limit, well past normal control error, across 5 alarms and 12.3 hours in alarm.\", \"verb\": \"inspect\", \"target\": \"SYN1/CH-61/CHW_RET_TEMP\", \"detail\": \"look at what the equipment was doing at each excursion, and confirm the peak against a handheld thermometer at the sensor.\"}",
         "ok": true,
         "detail": "ok",
-        "elapsed_s": 0.0007
+        "elapsed_s": 0.0008
        }
       ],
       "rank": 2,
@@ -2956,14 +2674,14 @@
       "consequence_starts": [],
       "attempts": [
        {
-        "raw": "{\"reason\": \"CH-61's chilled water supply temperature stayed above its 46 degF limit for 85.4% of the window, and it was still out when the export ended. A reading that holds out that long is a standing problem, not control noise.\", \"verb\": \"verify\", \"target\": \"SYN1/CH-61/CHW_SUP_TEMP\", \"detail\": \"compare the trended value with a handheld thermometer at the sensor to confirm the reading is real, then review what the equipment was doing while it stayed out.\"}",
+        "raw": "{\"reason\": \"CH-61's chilled water supply temperature stayed above its 46 degF limit for 85.4% of the window, and it was still out when the export ended, which makes it a standing problem rather than control noise.\", \"verb\": \"verify\", \"target\": \"SYN1/CH-61/CHW_SUP_TEMP\", \"detail\": \"compare the trended value with a handheld thermometer at the sensor to confirm the reading is real, then review what the equipment was doing while it stayed out.\"}",
         "ok": true,
         "detail": "ok",
-        "elapsed_s": 0.001
+        "elapsed_s": 0.0009
        }
       ],
       "rank": 3,
-      "reason": "CH-61's chilled water supply temperature stayed above its 46 degF limit for 85.4% of the window, and it was still out when the export ended. A reading that holds out that long is a standing problem, not control noise.",
+      "reason": "CH-61's chilled water supply temperature stayed above its 46 degF limit for 85.4% of the window, and it was still out when the export ended, which makes it a standing problem rather than control noise.",
       "verb": "verify",
       "target": "SYN1/CH-61/CHW_SUP_TEMP",
       "detail": "compare the trended value with a handheld thermometer at the sensor to confirm the reading is real, then review what the equipment was doing while it stayed out.",
@@ -2979,14 +2697,14 @@
       "consequence_starts": [],
       "attempts": [
        {
-        "raw": "{\"reason\": \"CH-61's condenser approach moved steadily toward and past its 6 degF limit without reversing, peaking 3.2 deadbands out. The single alarm it raised understates a condition that is getting worse.\", \"verb\": \"review\", \"target\": \"SYN1/CH-61/COND_APPROACH\", \"detail\": \"trace the trend back to where the drift began, then compare the value with the two temperatures it is calculated from at the unit to separate a drifting sensor from a drifting process.\"}",
+        "raw": "{\"reason\": \"CH-61's condenser approach moved steadily toward and past its 6 degF limit without reversing, peaking 3.2 deadbands out, and the single alarm it raised understates a condition that is getting worse.\", \"verb\": \"review\", \"target\": \"SYN1/CH-61/COND_APPROACH\", \"detail\": \"trace the trend back to where the drift began, then compare the value with the two temperatures it is calculated from at the unit to separate a drifting sensor from a drifting process.\"}",
         "ok": true,
         "detail": "ok",
-        "elapsed_s": 0.0009
+        "elapsed_s": 0.0011
        }
       ],
       "rank": 4,
-      "reason": "CH-61's condenser approach moved steadily toward and past its 6 degF limit without reversing, peaking 3.2 deadbands out. The single alarm it raised understates a condition that is getting worse.",
+      "reason": "CH-61's condenser approach moved steadily toward and past its 6 degF limit without reversing, peaking 3.2 deadbands out, and the single alarm it raised understates a condition that is getting worse.",
       "verb": "review",
       "target": "SYN1/CH-61/COND_APPROACH",
       "detail": "trace the trend back to where the drift began, then compare the value with the two temperatures it is calculated from at the unit to separate a drifting sensor from a drifting process.",
@@ -3002,14 +2720,14 @@
       "consequence_starts": [],
       "attempts": [
        {
-        "raw": "{\"reason\": \"No trend rule moved this one; it ranks on the alarm log. CH-61's evaporator pressure raised 4 alarms at priority 3 over 11.5 hours in alarm, and it was still past the limit when the export ended.\", \"verb\": \"check\", \"target\": \"SYN1/CH-61/EVAP_PRESS\", \"detail\": \"compare the reading with a test gauge on the same port, and look at why it alarmed as often as it did.\"}",
+        "raw": "{\"reason\": \"No trend rule moved this one, so it ranks on the alarm log alone: CH-61's evaporator pressure raised 4 alarms at priority 3 over 11.5 hours in alarm, and it was still past the limit when the export ended.\", \"verb\": \"check\", \"target\": \"SYN1/CH-61/EVAP_PRESS\", \"detail\": \"compare the reading with a test gauge on the same port, and look at why it alarmed as often as it did.\"}",
         "ok": true,
         "detail": "ok",
-        "elapsed_s": 0.001
+        "elapsed_s": 0.0008
        }
       ],
       "rank": 5,
-      "reason": "No trend rule moved this one; it ranks on the alarm log. CH-61's evaporator pressure raised 4 alarms at priority 3 over 11.5 hours in alarm, and it was still past the limit when the export ended.",
+      "reason": "No trend rule moved this one, so it ranks on the alarm log alone: CH-61's evaporator pressure raised 4 alarms at priority 3 over 11.5 hours in alarm, and it was still past the limit when the export ended.",
       "verb": "check",
       "target": "SYN1/CH-61/EVAP_PRESS",
       "detail": "compare the reading with a test gauge on the same port, and look at why it alarmed as often as it did.",
@@ -3129,7 +2847,7 @@
         "raw": "{\"reason\": \"Utility power failure at UTIL-1 is confirmed in the trend from 10:08:00 UTC to 10:09:48 UTC (about 108 seconds), and it accounts for 5 other alarms: UPS on battery at UPS-A, UPS on battery at UPS-B, generator start at GEN-1, ATS transfer to the emergency source at ATS-1, generator frequency dip at GEN-1.\", \"verb\": \"review\", \"target\": \"UTIL-1\", \"detail\": \"the utility voltage trend from loss to return, confirm the generator carried the load and both UPS batteries recovered their charge, and note the outage times for the utility report.\"}",
         "ok": true,
         "detail": "ok",
-        "elapsed_s": 0.0012
+        "elapsed_s": 0.0019
        }
       ],
       "rank": 1,
@@ -3297,7 +3015,7 @@
         "raw": "{\"reason\": \"Generator frequency dip at GEN-1 is confirmed in the trend at 10:08:12 UTC, and no confirmed utility failure, sag, or overload in this export explains it, so it needs its own look.\", \"verb\": \"check\", \"target\": \"GEN-1\", \"detail\": \"the generator governor response in the frequency trend around the load step, since no confirmed utility failure in this export accounts for the dip.\"}",
         "ok": true,
         "detail": "ok",
-        "elapsed_s": 0.0005
+        "elapsed_s": 0.0006
        }
       ],
       "rank": 2,
@@ -3320,7 +3038,7 @@
         "raw": "{\"reason\": \"Generator start at GEN-1 is confirmed in the trend from 10:08:08 UTC to 10:10:18 UTC (about 130 seconds), and no confirmed utility failure, sag, or overload in this export explains it, so it needs its own look.\", \"verb\": \"confirm\", \"target\": \"GEN-1\", \"detail\": \"what called for the generator, since no confirmed utility failure in this export accounts for it running.\"}",
         "ok": true,
         "detail": "ok",
-        "elapsed_s": 0.0003
+        "elapsed_s": 0.0005
        }
       ],
       "rank": 3,
@@ -3390,7 +3108,7 @@
         "raw": "{\"reason\": \"Low power factor at MECH-1 is confirmed in the trend from 10:13:06 UTC to 10:14:34 UTC (about 88 seconds), worst value 0.794, and no other alarm in this export depends on it.\", \"verb\": \"inspect\", \"target\": \"MECH-1\", \"detail\": \"the capacitor bank and its fuses at the panel, and compare the power factor trend with the panel load to see whether the bank dropped out.\"}",
         "ok": true,
         "detail": "ok",
-        "elapsed_s": 0.0004
+        "elapsed_s": 0.0007
        }
       ],
       "rank": 1,
@@ -3479,7 +3197,7 @@
         "raw": "{\"reason\": \"Utility power failure at UTIL-1 is confirmed in the trend from 15:38:00 IST to 15:39:48 IST (about 108 seconds), and it accounts for 5 other alarms: UPS on battery at UPS-A, UPS on battery at UPS-B, generator start at GEN-1, ATS transfer to the emergency source at ATS-1, generator frequency dip at GEN-1.\", \"verb\": \"review\", \"target\": \"UTIL-1\", \"detail\": \"the utility voltage trend from loss to return, confirm the generator carried the load and both UPS batteries recovered their charge, and note the outage times for the utility report.\"}",
         "ok": true,
         "detail": "ok",
-        "elapsed_s": 0.0004
+        "elapsed_s": 0.0007
        }
       ],
       "rank": 1,
@@ -3562,7 +3280,7 @@
         "raw": "{\"reason\": \"Utility power failure at UTIL-1 is confirmed in the trend from 06:08:00 EDT to 06:09:48 EDT (about 108 seconds), and it accounts for 5 other alarms: UPS on battery at UPS-A, UPS on battery at UPS-B, generator start at GEN-1, ATS transfer to the emergency source at ATS-1, generator frequency dip at GEN-1.\", \"verb\": \"review\", \"target\": \"UTIL-1\", \"detail\": \"the utility voltage trend from loss to return, confirm the generator carried the load and both UPS batteries recovered their charge, and note the outage times for the utility report.\"}",
         "ok": true,
         "detail": "ok",
-        "elapsed_s": 0.0004
+        "elapsed_s": 0.0007
        }
       ],
       "rank": 1,
@@ -3653,7 +3371,7 @@
         "raw": "{\"reason\": \"Utility power failure at UTIL-1 is confirmed in the trend from 10:05:00 UTC to 10:06:48 UTC (about 108 seconds), and it accounts for 5 other alarms: UPS on battery at UPS-A, UPS on battery at UPS-B, generator start at GEN-1, ATS transfer to the emergency source at ATS-1, generator frequency dip at GEN-1.\", \"verb\": \"review\", \"target\": \"UTIL-1\", \"detail\": \"the utility voltage trend from loss to return, confirm the generator carried the load and both UPS batteries recovered their charge, and note the outage times for the utility report.\"}",
         "ok": true,
         "detail": "ok",
-        "elapsed_s": 0.0006
+        "elapsed_s": 0.0007
        }
       ],
       "rank": 1,
@@ -3738,7 +3456,7 @@
         "raw": "{\"reason\": \"Utility power failure at UTIL-1 is confirmed in the trend from 05:05:00 CDT to 05:06:48 CDT (about 108 seconds), and it accounts for 5 other alarms: UPS on battery at UPS-A, UPS on battery at UPS-B, generator start at GEN-1, ATS transfer to the emergency source at ATS-1, generator frequency dip at GEN-1.\", \"verb\": \"review\", \"target\": \"UTIL-1\", \"detail\": \"the utility voltage trend from loss to return, confirm the generator carried the load and both UPS batteries recovered their charge, and note the outage times for the utility report.\"}",
         "ok": true,
         "detail": "ok",
-        "elapsed_s": 0.0006
+        "elapsed_s": 0.0007
        }
       ],
       "rank": 1,
@@ -3767,7 +3485,7 @@
         "raw": "{\"reason\": \"PDU overload at PDU-A1 is confirmed in the trend from 05:15:40 CDT to 05:16:56 CDT (about 76 seconds), and it accounts for 2 other alarms: PDU overload at PDU-A1, UPS load above its limit at UPS-A.\", \"verb\": \"review\", \"target\": \"PDU-A1\", \"detail\": \"the rack load added on this PDU before the alarm, and compare it with the partner PDU on the other side before any load is moved.\"}",
         "ok": true,
         "detail": "ok",
-        "elapsed_s": 0.0004
+        "elapsed_s": 0.0006
        }
       ],
       "rank": 2,
@@ -3851,7 +3569,7 @@
         "raw": "{\"reason\": \"Utility power failure at UTIL-1 is confirmed in the trend from 10:05:00 UTC to 10:06:48 UTC (about 108 seconds), and it accounts for 5 other alarms: UPS on battery at UPS-A, UPS on battery at UPS-B, generator start at GEN-1, ATS transfer to the emergency source at ATS-1, generator frequency dip at GEN-1.\", \"verb\": \"review\", \"target\": \"UTIL-1\", \"detail\": \"the utility voltage trend from loss to return, confirm the generator carried the load and both UPS batteries recovered their charge, and note the outage times for the utility report.\"}",
         "ok": true,
         "detail": "ok",
-        "elapsed_s": 0.0006
+        "elapsed_s": 0.0007
        }
       ],
       "rank": 1,
@@ -3960,7 +3678,7 @@
         "raw": "{\"reason\": \"Utility power failure at UTIL-1 is confirmed in the trend from 10:08:00 UTC to 10:09:48 UTC (about 108 seconds), and it accounts for 4 other alarms: UPS on battery at UPS-A, generator start at GEN-1, ATS transfer to the emergency source at ATS-1, generator frequency dip at GEN-1.\", \"verb\": \"review\", \"target\": \"UTIL-1\", \"detail\": \"the utility voltage trend from loss to return, confirm the generator carried the load and both UPS batteries recovered their charge, and note the outage times for the utility report.\"}",
         "ok": true,
         "detail": "ok",
-        "elapsed_s": 0.0005
+        "elapsed_s": 0.0007
        }
       ],
       "rank": 1,
@@ -4048,7 +3766,7 @@
         "raw": "{\"reason\": \"Utility power failure at UTIL-1 is confirmed in the trend from 10:08:00 UTC to 10:09:48 UTC (about 108 seconds), and it accounts for 5 other alarms: UPS on battery at UPS-A, UPS on battery at UPS-B, generator start at GEN-1, ATS transfer to the emergency source at ATS-1, generator frequency dip at GEN-1.\", \"verb\": \"review\", \"target\": \"UTIL-1\", \"detail\": \"the utility voltage trend from loss to return, confirm the generator carried the load and both UPS batteries recovered their charge, and note the outage times for the utility report.\"}",
         "ok": true,
         "detail": "ok",
-        "elapsed_s": 0.0006
+        "elapsed_s": 0.0007
        }
       ],
       "rank": 1,
@@ -4139,7 +3857,7 @@
         "raw": "{\"reason\": \"UPS on battery at UPS-A is confirmed in the trend from 10:08:00 UTC to 10:08:14 UTC (about 14 seconds), and no confirmed utility failure, sag, or overload in this export explains it, so it needs its own look.\", \"verb\": \"inspect\", \"target\": \"UPS-A\", \"detail\": \"the UPS input breaker status and rectifier alarms at the unit, since nothing confirmed upstream in this export explains the time on battery.\"}",
         "ok": true,
         "detail": "ok",
-        "elapsed_s": 0.0005
+        "elapsed_s": 0.0006
        }
       ],
       "rank": 1,
@@ -4162,7 +3880,7 @@
         "raw": "{\"reason\": \"UPS on battery at UPS-B is confirmed in the trend from 10:08:00 UTC to 10:08:14 UTC (about 14 seconds), and no confirmed utility failure, sag, or overload in this export explains it, so it needs its own look.\", \"verb\": \"inspect\", \"target\": \"UPS-B\", \"detail\": \"the UPS input breaker status and rectifier alarms at the unit, since nothing confirmed upstream in this export explains the time on battery.\"}",
         "ok": true,
         "detail": "ok",
-        "elapsed_s": 0.0003
+        "elapsed_s": 0.0006
        }
       ],
       "rank": 2,
@@ -4185,7 +3903,7 @@
         "raw": "{\"reason\": \"ATS transfer to the emergency source at ATS-1 is confirmed in the trend from 10:08:12 UTC to 10:10:18 UTC (about 126 seconds), and no confirmed utility failure, sag, or overload in this export explains it, so it needs its own look.\", \"verb\": \"confirm\", \"target\": \"ATS-1\", \"detail\": \"the ATS source position and the utility voltage at that time, since no confirmed utility failure in this export accounts for the transfer.\"}",
         "ok": true,
         "detail": "ok",
-        "elapsed_s": 0.0004
+        "elapsed_s": 0.0007
        }
       ],
       "rank": 3,
@@ -4208,7 +3926,7 @@
         "raw": "{\"reason\": \"Generator frequency dip at GEN-1 is confirmed in the trend at 10:08:12 UTC, and no confirmed utility failure, sag, or overload in this export explains it, so it needs its own look.\", \"verb\": \"check\", \"target\": \"GEN-1\", \"detail\": \"the generator governor response in the frequency trend around the load step, since no confirmed utility failure in this export accounts for the dip.\"}",
         "ok": true,
         "detail": "ok",
-        "elapsed_s": 0.0003
+        "elapsed_s": 0.0005
        }
       ],
       "rank": 4,
@@ -4231,7 +3949,7 @@
         "raw": "{\"reason\": \"Generator start at GEN-1 is confirmed in the trend from 10:08:08 UTC to 10:10:18 UTC (about 130 seconds), and no confirmed utility failure, sag, or overload in this export explains it, so it needs its own look.\", \"verb\": \"confirm\", \"target\": \"GEN-1\", \"detail\": \"what called for the generator, since no confirmed utility failure in this export accounts for it running.\"}",
         "ok": true,
         "detail": "ok",
-        "elapsed_s": 0.0002
+        "elapsed_s": 0.0005
        }
       ],
       "rank": 5,
@@ -4314,7 +4032,7 @@
         "raw": "{\"reason\": \"PDU overload at PDU-A1 is confirmed in the trend from 15:38:40 IST to 15:39:56 IST (about 76 seconds), and it accounts for 2 other alarms: PDU overload at PDU-A1, UPS load above its limit at UPS-A.\", \"verb\": \"review\", \"target\": \"PDU-A1\", \"detail\": \"the rack load added on this PDU before the alarm, and compare it with the partner PDU on the other side before any load is moved.\"}",
         "ok": true,
         "detail": "ok",
-        "elapsed_s": 0.0005
+        "elapsed_s": 0.0006
        }
       ],
       "rank": 1,
@@ -4391,7 +4109,7 @@
         "raw": "{\"reason\": \"PDU overload at PDU-A1 is confirmed in the trend from 06:08:40 EDT to 06:09:56 EDT (about 76 seconds), and it accounts for 2 other alarms: PDU overload at PDU-A1, UPS load above its limit at UPS-A.\", \"verb\": \"review\", \"target\": \"PDU-A1\", \"detail\": \"the rack load added on this PDU before the alarm, and compare it with the partner PDU on the other side before any load is moved.\"}",
         "ok": true,
         "detail": "ok",
-        "elapsed_s": 0.0004
+        "elapsed_s": 0.0006
        }
       ],
       "rank": 1,
@@ -4467,7 +4185,7 @@
         "raw": "{\"reason\": \"PDU overload at PDU-A1 is confirmed in the trend from 10:08:40 UTC to 10:09:56 UTC (about 76 seconds), and it accounts for 2 other alarms: PDU overload at PDU-A1, UPS load above its limit at UPS-A.\", \"verb\": \"review\", \"target\": \"PDU-A1\", \"detail\": \"the rack load added on this PDU before the alarm, and compare it with the partner PDU on the other side before any load is moved.\"}",
         "ok": true,
         "detail": "ok",
-        "elapsed_s": 0.0005
+        "elapsed_s": 0.0004
        }
       ],
       "rank": 1,
@@ -4592,7 +4310,7 @@
         "raw": "{\"reason\": \"Low power factor at MECH-1 is confirmed in the trend from 06:08:06 EDT to 06:09:34 EDT (about 88 seconds), worst value 0.796, and no other alarm in this export depends on it.\", \"verb\": \"inspect\", \"target\": \"MECH-1\", \"detail\": \"the capacitor bank and its fuses at the panel, and compare the power factor trend with the panel load to see whether the bank dropped out.\"}",
         "ok": true,
         "detail": "ok",
-        "elapsed_s": 0.0004
+        "elapsed_s": 0.0003
        }
       ],
       "rank": 1,
@@ -4662,7 +4380,7 @@
         "raw": "{\"reason\": \"Low power factor at MECH-1 is confirmed in the trend from 10:08:06 UTC to 10:09:34 UTC (about 88 seconds), worst value 0.796, and no other alarm in this export depends on it.\", \"verb\": \"inspect\", \"target\": \"MECH-1\", \"detail\": \"the capacitor bank and its fuses at the panel, and compare the power factor trend with the panel load to see whether the bank dropped out.\"}",
         "ok": true,
         "detail": "ok",
-        "elapsed_s": 0.0004
+        "elapsed_s": 0.0007
        }
       ],
       "rank": 1,
@@ -4738,7 +4456,7 @@
         "raw": "{\"reason\": \"Utility voltage sag at UTIL-1 is confirmed in the trend from 10:08:00 UTC to 10:08:04 UTC (about 4 seconds), and it accounts for 2 other alarms: UPS on battery at UPS-A, UPS on battery at UPS-B.\", \"verb\": \"check\", \"target\": \"UTIL-1\", \"detail\": \"the depth and length of the sag in the utility voltage trend, and confirm each UPS came back off battery with no battery alarm afterward.\"}",
         "ok": true,
         "detail": "ok",
-        "elapsed_s": 0.0005
+        "elapsed_s": 0.0003
        }
       ],
       "rank": 1,
@@ -5062,7 +4780,7 @@
         "raw": "{\"reason\": \"UPS on battery at UPS-B is confirmed in the trend from 06:08:00 EDT to 06:08:18 EDT (about 18 seconds), and no confirmed utility failure, sag, or overload in this export explains it, so it needs its own look.\", \"verb\": \"inspect\", \"target\": \"UPS-B\", \"detail\": \"the UPS input breaker status and rectifier alarms at the unit, since nothing confirmed upstream in this export explains the time on battery.\"}",
         "ok": true,
         "detail": "ok",
-        "elapsed_s": 0.0003
+        "elapsed_s": 0.0006
        }
       ],
       "rank": 1,
@@ -5132,7 +4850,7 @@
         "raw": "{\"reason\": \"UPS on battery at UPS-B is confirmed in the trend from 10:08:00 UTC to 10:08:18 UTC (about 18 seconds), and no confirmed utility failure, sag, or overload in this export explains it, so it needs its own look.\", \"verb\": \"inspect\", \"target\": \"UPS-B\", \"detail\": \"the UPS input breaker status and rectifier alarms at the unit, since nothing confirmed upstream in this export explains the time on battery.\"}",
         "ok": true,
         "detail": "ok",
-        "elapsed_s": 0.0005
+        "elapsed_s": 0.0004
        }
       ],
       "rank": 1,

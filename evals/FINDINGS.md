@@ -97,3 +97,26 @@ grader behavior.
   on the boiler's burner controller".
 - **Scores.** Template next_step 38 of 40 (95.0%) to 40 of 40 (100.0%).
   Every other grader unchanged. Haiku not affected.
+
+### 4. The template wrote two-sentence reasons where one is asked for
+
+- **What failed.** format, F2, on twelve HVAC cases: every card ranked by
+  R-P1 (sustained), R-P2 (drift), or by no rule at all had a two-sentence
+  reason, such as "CH-61's chilled water supply temperature stayed above its
+  46 degF limit for 85.4% of the window, and it was still out when the
+  export ended. A reading that holds out that long is a standing problem,
+  not control noise."
+- **Why.** The prompt every writer is given asks for the reason in one
+  sentence and the detail in one sentence. The template is held to the same
+  contract as a model and was not keeping it; the second sentence was the
+  judgment, written apart from the evidence it rests on.
+- **What changed.** Those three reasons are one sentence each, with the
+  judgment joined to the evidence: "..., which makes it a standing problem
+  rather than control noise", "..., and the single alarm it raised
+  understates a condition that is getting worse", and "No trend rule moved
+  this one, so it ranks on the alarm log alone: ...".
+- **Scores.** Template format 28 of 40 (70.0%) to 40 of 40 (100.0%). Every
+  other grader unchanged. Cases passing every grader: 43 of 58 before (it
+  held at 43 through fixes 1 to 3, because each of those cases also failed
+  another check), 55 of 58 after; the three left fail for pipeline reasons,
+  below. Haiku not affected.

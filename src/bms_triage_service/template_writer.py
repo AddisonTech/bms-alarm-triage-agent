@@ -129,8 +129,8 @@ def compose(prompt: str) -> dict:
     if rule == "R-P1":
         tail = ", and it was still out when the export ended" if ends_beyond else ""
         reason = (
-            "%s stayed %s its %s for %s of the window%s. A reading that holds "
-            "out that long is a standing problem, not control noise."
+            "%s stayed %s its %s for %s of the window%s, which makes it a standing "
+            "problem rather than control noise."
             % (subject, side, limit_desc, fraction, tail)
         )
         verb = "verify"
@@ -139,12 +139,12 @@ def compose(prompt: str) -> dict:
             "then review what the equipment was doing while it stayed out." % against
         )
     elif rule == "R-P2":
-        raised = "The single alarm it raised understates" if alarms == 1 else (
-            "The %d alarms it raised understate" % alarms
+        raised = "the single alarm it raised understates" if alarms == 1 else (
+            "the %d alarms it raised understate" % alarms
         )
         reason = (
             "%s moved steadily toward and past its %s without reversing, "
-            "peaking %.1f deadbands out. %s a condition that is getting worse."
+            "peaking %.1f deadbands out, and %s a condition that is getting worse."
             % (subject, limit_desc, peak, raised)
         )
         verb = "review"
@@ -170,8 +170,8 @@ def compose(prompt: str) -> dict:
         if repeats:
             raised += " and %s" % _plural(repeats, "repeat")
         reason = (
-            "No trend rule moved this one; it ranks on the alarm log. %s raised "
-            "%s at priority %d over %.1f hours in alarm%s."
+            "No trend rule moved this one, so it ranks on the alarm log alone: %s "
+            "raised %s at priority %d over %.1f hours in alarm%s."
             % (subject, raised, priority, hours, tail)
         )
         verb = "check"
