@@ -92,6 +92,41 @@
      "applicable": 16,
      "rate": 1.0
     }
+   },
+   "as_served": {
+    "held_back": 0,
+    "graders": {
+     "grounding": {
+      "passed": 16,
+      "applicable": 16,
+      "rate": 1.0
+     },
+     "root_cause": {
+      "passed": 16,
+      "applicable": 16,
+      "rate": 1.0
+     },
+     "escalation": {
+      "passed": 34,
+      "applicable": 34,
+      "rate": 1.0
+     },
+     "uncertainty": {
+      "passed": 16,
+      "applicable": 21,
+      "rate": 0.7619
+     },
+     "next_step": {
+      "passed": 13,
+      "applicable": 16,
+      "rate": 0.8125
+     },
+     "format": {
+      "passed": 16,
+      "applicable": 16,
+      "rate": 1.0
+     }
+    }
    }
   }
  }

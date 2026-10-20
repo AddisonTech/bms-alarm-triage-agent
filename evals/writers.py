@@ -20,6 +20,7 @@ import json
 import time
 from datetime import datetime, timezone
 from pathlib import Path
+from types import SimpleNamespace
 
 from bms_alarm_triage.errors import ModelUnavailableError
 from bms_alarm_triage.model import ForbiddenVerbCheck, build_retry_prompt, parse_explanation
@@ -144,6 +145,46 @@ class HaikuWriter:
         }
 
 
+class _Replies:
+    """A stand-in for the Anthropic client that answers from a HaikuWriter."""
+
+    def __init__(self, writer: HaikuWriter) -> None:
+        self._writer = writer
+
+    def create(self, **kwargs):
+        text = self._writer.generate(kwargs["messages"][0]["content"])
+        return SimpleNamespace(content=[SimpleNamespace(type="text", text=text)])
+
+
+class ServedHaiku:
+    """Claude Haiku as the service serves it, fed the same replies.
+
+    This is bms_triage_service's own HaikuLiveClient, with every check it
+    applies and its template fallback, so a reply its guardrails hold back
+    is replaced by the template's card exactly as an operator would see it.
+    Only run on cases the own-words pass already covered, so every prompt
+    it asks for has a reply.
+    """
+
+    kind = HAIKU
+
+    def __init__(self, own_words: HaikuWriter, forbidden_verbs) -> None:
+        self._live = service_haiku.HaikuLiveClient(
+            "replay", forbidden_verbs, client=SimpleNamespace(messages=_Replies(own_words)), budget_s=1e9
+        )
+
+    @property
+    def name(self) -> str:
+        return self._live.name
+
+    @property
+    def held_back(self) -> list[str]:
+        return list(self._live.fallbacks)
+
+    def generate(self, prompt: str) -> str:
+        return self._live.generate(prompt)
+
+
 def load_records(paths) -> list[tuple[Path, dict]]:
     out = []
     for path in paths:
@@ -218,6 +259,7 @@ def write(case: dict, writer, config) -> dict:
             continue
         cards.append(dict(
             base,
+            written_by=getattr(writer, "name", ""),
             rank=len(cards) + 1,
             reason=reply.reason,
             verb=reply.verb.value,

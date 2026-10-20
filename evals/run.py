@@ -160,6 +160,15 @@ def table(results: dict) -> str:
     if s["cases_not_run"]:
         lines += ["", "## Not run", ""]
         lines += ["- %s: %s" % (n["case"], n["why"]) for n in s["cases_not_run"]]
+    as_served = results.get("as_served")
+    if as_served:
+        lines += ["", "## Claude Haiku as served", "",
+                  "The same replies through the service's own guardrails; a reply they hold back is "
+                  "replaced by the template's card. %d held back." % len(as_served["held_back"]), "",
+                  "| Grader | Passed | Rate |", "|---|---|---|"]
+        for name, g in as_served["summary"]["graders"].items():
+            lines.append("| %s | %d of %d | %s |" % (name, g["passed"], g["applicable"], _pct(g["rate"])))
+        lines += ["", "Held back:", ""] + ["- %s" % h for h in as_served["held_back"]] if as_served["held_back"] else []
     model = results.get("model_graded", {}).get("clarity")
     lines += ["", "## Model-graded (separate from the scores above)", ""]
     if model:
@@ -186,7 +195,13 @@ def scorecard_entry(results: dict) -> dict:
             name: {"passed": g["passed"], "applicable": g["applicable"], "rate": g["rate"]}
             for name, g in s["graders"].items()
         },
-    }
+    } | ({"as_served": {
+        "held_back": len(results["as_served"]["held_back"]),
+        "graders": {
+            name: {"passed": g["passed"], "applicable": g["applicable"], "rate": g["rate"]}
+            for name, g in results["as_served"]["summary"]["graders"].items()
+        },
+    }} if results.get("as_served") else {})
 
 
 def publish(results: dict, path: Path = SCORECARD) -> None:
@@ -239,6 +254,20 @@ def run(writer, cases: list[dict], config, date: str) -> dict:
     }
     results["results_file"] = "evals/results/%s-%s.json" % (writer.kind, date)
     return results, pairs
+
+
+def served(own_words, cases: list[dict], results: dict, config) -> dict:
+    """The same Haiku replies through the service's own guardrails and fallback."""
+    covered = {g["id"] for g in results["cases"] if g["status"] != NOT_RUN}
+    writer = writers.ServedHaiku(own_words, config.safety.forbidden_verbs)
+    graded = [grade_case(c, writers.write(c, writer, config)) for c in cases if c["id"] in covered]
+    return {
+        "about": "Claude Haiku's replies through bms_triage_service's HaikuLiveClient: every check it "
+                 "applies, and the template's card where a check holds a reply back.",
+        "held_back": writer.held_back,
+        "summary": summarize(graded),
+        "cases": graded,
+    }
 
 
 def regrade(path: Path) -> dict:
@@ -301,6 +330,9 @@ def main(argv: list[str] | None = None) -> int:
             spent = getattr(writer, "spent_usd", 0.0)
             results["model_graded"]["clarity"] = clarity.grade_cards(
                 pairs, service_haiku.make_client(key), args.budget - spent)
+
+    if isinstance(writer, writers.HaikuWriter):
+        results["as_served"] = served(writer, cases, results, config)
 
     json_path, md_path = save(results, args.out)
     if isinstance(writer, writers.HaikuWriter) and writer.new:

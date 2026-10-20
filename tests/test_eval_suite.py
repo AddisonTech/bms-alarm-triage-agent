@@ -218,3 +218,18 @@ def test_every_grader_is_applicable_somewhere():
     latest = _latest("template")
     for name in NAMES:
         assert any(c["graders"][name]["status"] != NOT_APPLICABLE for c in latest["cases"]), name
+
+
+def test_haiku_as_served_runs_the_service_s_own_checks_and_fallback(config, cases):
+    case = next(c for c in cases if c["id"] == "power-outage-utc")
+    prompt = case["frozen"]["items"][0]["writer_input"]["prompt"]
+    target = writers.service_haiku.targets_in(prompt)[0]
+    # A time the evidence never states: the service's own check holds it back.
+    bad = json.dumps({"reason": "The utility power failure at UTIL-1 began at 10:07:00 UTC.", "verb": "review",
+                      "target": target, "detail": "the utility voltage trend from loss to return."})
+    own = writers.HaikuWriter([("r", {"replies": {card_id(prompt): {"text": bad}}})])
+    served = writers.ServedHaiku(own, config.safety.forbidden_verbs)
+    writeup = writers.write(case, served, config)
+    assert len(served.held_back) == 1
+    assert writeup["cards"][0]["written_by"] == "template, no model"
+    assert writeup["cards"][0]["reason"].startswith("Utility power failure at UTIL-1 is confirmed")
