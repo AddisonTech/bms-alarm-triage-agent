@@ -68,6 +68,8 @@ def instrument(point_name: str, units: str) -> str:
         return "the pan itself"
     if "SPD" in name:
         return "the speed shown on the drive's own display"
+    if "FIRING" in name:
+        return "the firing rate shown on the boiler's burner controller"
     if units == "degF" or "TEMP" in name:
         return "a handheld thermometer at the sensor"
     if units == "psi":

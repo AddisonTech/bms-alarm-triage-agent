@@ -41,9 +41,9 @@
      "rate": 1.0
     },
     "next_step": {
-     "passed": 38,
+     "passed": 40,
      "applicable": 40,
-     "rate": 0.95
+     "rate": 1.0
     },
     "format": {
      "passed": 28,

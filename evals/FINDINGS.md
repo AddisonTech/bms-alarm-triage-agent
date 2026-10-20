@@ -83,3 +83,17 @@ grader behavior.
   UPS on battery.
 - **Scores.** Template uncertainty 44 of 45 (97.8%) to 45 of 45 (100.0%).
   Every other grader unchanged. Haiku not affected.
+
+### 3. The template's firing rate step named nothing about firing rate
+
+- **What failed.** next_step, N2, on hvac-boiler-blr-71-firing-rate and
+  hvac-boiler-window: "compare the reading with the value shown on the
+  equipment's local display". Nothing in it says where a firing rate is
+  read or what to compare.
+- **Why.** The template picks the instrument to check a reading against
+  from the point name and units. Firing rate is in percent and has no
+  instrument of its own, so it fell through to the generic local display.
+- **What changed.** A firing rate is checked against "the firing rate shown
+  on the boiler's burner controller".
+- **Scores.** Template next_step 38 of 40 (95.0%) to 40 of 40 (100.0%).
+  Every other grader unchanged. Haiku not affected.
