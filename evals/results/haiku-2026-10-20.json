@@ -1,0 +1,3059 @@
+{
+ "suite": "write-up eval",
+ "synthetic": true,
+ "agent_version": "0.2.2",
+ "date": "2026-10-20",
+ "writer": {
+  "kind": "haiku",
+  "name": "Claude Haiku",
+  "model": "claude-haiku-5-5",
+  "api_calls": 0,
+  "replayed_replies": 29,
+  "replay_sources": [
+   "/home/user/bms-alarm-triage-agent/showcase/haiku_record_holdout.json"
+  ],
+  "usage": {
+   "input_tokens": 0,
+   "output_tokens": 0
+  },
+  "cost_usd": 0.0,
+  "stopped": null
+ },
+ "summary": {
+  "cases_total": 58,
+  "cases_run": 34,
+  "cases_not_run": [
+   {
+    "case": "hvac-ahu-dual-duct-ahu-21-mixed-air-temp",
+    "why": "no saved reply for this prompt and TRIAGE_ANTHROPIC_KEY is not set"
+   },
+   {
+    "case": "hvac-ahu-dual-duct-window",
+    "why": "no saved reply for this prompt and TRIAGE_ANTHROPIC_KEY is not set"
+   },
+   {
+    "case": "power-battery-alarms-first",
+    "why": "no saved reply for this prompt and TRIAGE_ANTHROPIC_KEY is not set"
+   },
+   {
+    "case": "power-generator-test",
+    "why": "no saved reply for this prompt and TRIAGE_ANTHROPIC_KEY is not set"
+   },
+   {
+    "case": "power-lone-battery-trend-missing",
+    "why": "no saved reply for this prompt and TRIAGE_ANTHROPIC_KEY is not set"
+   },
+   {
+    "case": "power-outage-kolkata",
+    "why": "no saved reply for this prompt and TRIAGE_ANTHROPIC_KEY is not set"
+   },
+   {
+    "case": "power-outage-new-york",
+    "why": "no saved reply for this prompt and TRIAGE_ANTHROPIC_KEY is not set"
+   },
+   {
+    "case": "power-outage-then-lone-battery",
+    "why": "no saved reply for this prompt and TRIAGE_ANTHROPIC_KEY is not set"
+   },
+   {
+    "case": "power-outage-then-overload-chicago",
+    "why": "no saved reply for this prompt and TRIAGE_ANTHROPIC_KEY is not set"
+   },
+   {
+    "case": "power-outage-then-overload-utc",
+    "why": "no saved reply for this prompt and TRIAGE_ANTHROPIC_KEY is not set"
+   },
+   {
+    "case": "power-outage-ups-trend-missing",
+    "why": "no saved reply for this prompt and TRIAGE_ANTHROPIC_KEY is not set"
+   },
+   {
+    "case": "power-outage-utc",
+    "why": "no saved reply for this prompt and TRIAGE_ANTHROPIC_KEY is not set"
+   },
+   {
+    "case": "power-outage-utility-trend-missing",
+    "why": "no saved reply for this prompt and TRIAGE_ANTHROPIC_KEY is not set"
+   },
+   {
+    "case": "power-pdu-overload-kolkata",
+    "why": "no saved reply for this prompt and TRIAGE_ANTHROPIC_KEY is not set"
+   },
+   {
+    "case": "power-pdu-overload-new-york",
+    "why": "no saved reply for this prompt and TRIAGE_ANTHROPIC_KEY is not set"
+   },
+   {
+    "case": "power-pdu-overload-utc",
+    "why": "no saved reply for this prompt and TRIAGE_ANTHROPIC_KEY is not set"
+   },
+   {
+    "case": "power-power-factor-new-york",
+    "why": "no saved reply for this prompt and TRIAGE_ANTHROPIC_KEY is not set"
+   },
+   {
+    "case": "power-power-factor-utc",
+    "why": "no saved reply for this prompt and TRIAGE_ANTHROPIC_KEY is not set"
+   },
+   {
+    "case": "power-sag-long-ride-through",
+    "why": "no saved reply for this prompt and TRIAGE_ANTHROPIC_KEY is not set"
+   },
+   {
+    "case": "power-sag-new-york",
+    "why": "no saved reply for this prompt and TRIAGE_ANTHROPIC_KEY is not set"
+   },
+   {
+    "case": "power-sag-utc",
+    "why": "no saved reply for this prompt and TRIAGE_ANTHROPIC_KEY is not set"
+   },
+   {
+    "case": "power-two-unrelated-events",
+    "why": "no saved reply for this prompt and TRIAGE_ANTHROPIC_KEY is not set"
+   },
+   {
+    "case": "power-ups-on-battery-new-york",
+    "why": "no saved reply for this prompt and TRIAGE_ANTHROPIC_KEY is not set"
+   },
+   {
+    "case": "power-ups-on-battery-utc",
+    "why": "no saved reply for this prompt and TRIAGE_ANTHROPIC_KEY is not set"
+   }
+  ],
+  "cases_passed": 29,
+  "graders": {
+   "grounding": {
+    "applicable": 16,
+    "passed": 16,
+    "rate": 1.0,
+    "writer_layer_passed": 16,
+    "writer_layer_rate": 1.0,
+    "what": "Every point name, number and time on a card has to be in the evidence the writer was given. Anything invented, converted or carried in from elsewhere fails."
+   },
+   "root_cause": {
+    "applicable": 16,
+    "passed": 16,
+    "rate": 1.0,
+    "writer_layer_passed": 16,
+    "writer_layer_rate": 1.0,
+    "what": "The write-up names the right cause, says what is wrong with it from the evidence, and never turns a consequence into the cause. With no cause in the evidence, it names none."
+   },
+   "escalation": {
+    "applicable": 34,
+    "passed": 34,
+    "rate": 1.0,
+    "writer_layer_passed": 34,
+    "writer_layer_rate": 1.0,
+    "what": "What should escalate gets a card and nothing else does, and no card talks its own escalation down as nuisance or nothing to act on."
+   },
+   "uncertainty": {
+    "applicable": 21,
+    "passed": 16,
+    "rate": 0.7619,
+    "writer_layer_passed": 16,
+    "writer_layer_rate": 0.7619,
+    "what": "Where evidence is missing or thin the write-up says so: unsupported items stay unresolved, thin cards say what they rest on, and no card guesses a diagnosis, claims certainty, or rules out what it could not check."
+   },
+   "next_step": {
+    "applicable": 16,
+    "passed": 13,
+    "rate": 0.8125,
+    "writer_layer_passed": 13,
+    "writer_layer_rate": 0.8125,
+    "what": "Every card has a next step, it is about that equipment and what the point measures, and it is read only: it observes, and never tells anyone to change, reset, acknowledge or operate anything."
+   },
+   "format": {
+    "applicable": 16,
+    "passed": 16,
+    "rate": 1.0,
+    "writer_layer_passed": 16,
+    "writer_layer_rate": 1.0,
+    "what": "Each reply passes the agent's Pydantic schema on the first try, and the reason and the next step are one sentence each, as the prompt asks."
+   }
+  },
+  "by_type": {
+   "alarm_log_only": {
+    "cases": 3,
+    "passed": 0,
+    "rate": 0.0
+   },
+   "chattering": {
+    "cases": 3,
+    "passed": 3,
+    "rate": 1.0
+   },
+   "drift": {
+    "cases": 2,
+    "passed": 2,
+    "rate": 1.0
+   },
+   "fleeting": {
+    "cases": 4,
+    "passed": 4,
+    "rate": 1.0
+   },
+   "flood_with_real_faults": {
+    "cases": 2,
+    "passed": 0,
+    "rate": 0.0
+   },
+   "missing_trend": {
+    "cases": 3,
+    "passed": 3,
+    "rate": 1.0
+   },
+   "not_enough_evidence": {
+    "cases": 2,
+    "passed": 2,
+    "rate": 1.0
+   },
+   "repeating": {
+    "cases": 3,
+    "passed": 3,
+    "rate": 1.0
+   },
+   "self_recovered": {
+    "cases": 3,
+    "passed": 3,
+    "rate": 1.0
+   },
+   "severe_excursion": {
+    "cases": 6,
+    "passed": 6,
+    "rate": 1.0
+   },
+   "sustained_fault": {
+    "cases": 3,
+    "passed": 3,
+    "rate": 1.0
+   }
+  },
+  "failures": [
+   {
+    "case": "hvac-ahu-dual-duct-ahu-21-clg-sp",
+    "type": "alarm_log_only",
+    "grader": "uncertainty",
+    "code": "U2",
+    "layer": "writer",
+    "point": "SYN1/AHU-21/CLG_SP",
+    "reason": "rests on limited evidence and never says so"
+   },
+   {
+    "case": "hvac-ahu-dual-duct-ahu-21-clg-sp",
+    "type": "alarm_log_only",
+    "grader": "next_step",
+    "code": "N2",
+    "layer": "writer",
+    "point": "SYN1/AHU-21/CLG_SP",
+    "reason": "the detail names nothing particular to SYN1/AHU-21/CLG_SP (none of: static, pressure, manometer, tap)"
+   },
+   {
+    "case": "hvac-boiler-blr-71-firing-rate",
+    "type": "alarm_log_only",
+    "grader": "uncertainty",
+    "code": "U2",
+    "layer": "writer",
+    "point": "SYN1/BLR-71/FIRING_RATE",
+    "reason": "rests on limited evidence and never says so"
+   },
+   {
+    "case": "hvac-boiler-window",
+    "type": "flood_with_real_faults",
+    "grader": "uncertainty",
+    "code": "U2",
+    "layer": "writer",
+    "point": "SYN1/BLR-71/FIRING_RATE",
+    "reason": "rests on limited evidence and never says so"
+   },
+   {
+    "case": "hvac-chiller-ch-61-evap-press",
+    "type": "alarm_log_only",
+    "grader": "uncertainty",
+    "code": "U2",
+    "layer": "writer",
+    "point": "SYN1/CH-61/EVAP_PRESS",
+    "reason": "rests on limited evidence and never says so"
+   },
+   {
+    "case": "hvac-chiller-ch-61-evap-press",
+    "type": "alarm_log_only",
+    "grader": "next_step",
+    "code": "N2",
+    "layer": "writer",
+    "point": "SYN1/CH-61/EVAP_PRESS",
+    "reason": "the detail names nothing particular to SYN1/CH-61/EVAP_PRESS (none of: pressure, gauge, transducer, port)"
+   },
+   {
+    "case": "hvac-chiller-window",
+    "type": "flood_with_real_faults",
+    "grader": "uncertainty",
+    "code": "U2",
+    "layer": "writer",
+    "point": "SYN1/CH-61/EVAP_PRESS",
+    "reason": "rests on limited evidence and never says so"
+   },
+   {
+    "case": "hvac-chiller-window",
+    "type": "flood_with_real_faults",
+    "grader": "next_step",
+    "code": "N2",
+    "layer": "writer",
+    "point": "SYN1/CH-61/EVAP_PRESS",
+    "reason": "the detail names nothing particular to SYN1/CH-61/EVAP_PRESS (none of: pressure, gauge, transducer, port)"
+   }
+  ]
+ },
+ "cases": [
+  {
+   "id": "hvac-ahu-dual-duct-ahu-21-b-clg-duct-temp",
+   "type": "severe_excursion",
+   "tags": [
+    "hvac",
+    "single_condition"
+   ],
+   "status": "pass",
+   "graders": {
+    "grounding": {
+     "status": "pass",
+     "checks": 3,
+     "failures": []
+    },
+    "root_cause": {
+     "status": "pass",
+     "checks": 6,
+     "failures": []
+    },
+    "escalation": {
+     "status": "pass",
+     "checks": 2,
+     "failures": []
+    },
+    "uncertainty": {
+     "status": "pass",
+     "checks": 2,
+     "failures": []
+    },
+    "next_step": {
+     "status": "pass",
+     "checks": 5,
+     "failures": []
+    },
+    "format": {
+     "status": "pass",
+     "checks": 5,
+     "failures": []
+    }
+   },
+   "writeup": {
+    "cards": [
+     {
+      "point": "SYN1/AHU-21-B/CLG_DUCT_TEMP",
+      "equipment": "AHU-21-B",
+      "start": "2026-07-28T04:01:00-07:00",
+      "label": "CriticalAlarmClass",
+      "rule": "R-P3",
+      "consequences": [],
+      "consequence_starts": [],
+      "attempts": [
+       {
+        "raw": "{\"reason\": \"The cooling discharge duct temperature alarm stayed above its 60.0 degF high limit for about 53% of the window, peaked about 9.17 deadbands past the limit, and was still past the limit at the end of the window, so the cooling condition is sustained rather than brief.\", \"verb\": \"verify\", \"target\": \"SYN1/AHU-21-B/CLG_DUCT_TEMP\", \"detail\": \"Check whether the trend shows the duct temperature staying above 60.0 degF through the late part of the window, and whether the 11 repeats and 4 returns to normal line up with the sustained high readings.\"}",
+        "ok": true,
+        "detail": "ok",
+        "elapsed_s": 0.0011
+       }
+      ],
+      "rank": 1,
+      "reason": "The cooling discharge duct temperature alarm stayed above its 60.0 degF high limit for about 53% of the window, peaked about 9.17 deadbands past the limit, and was still past the limit at the end of the window, so the cooling condition is sustained rather than brief.",
+      "verb": "verify",
+      "target": "SYN1/AHU-21-B/CLG_DUCT_TEMP",
+      "detail": "Check whether the trend shows the duct temperature staying above 60.0 degF through the late part of the window, and whether the 11 repeats and 4 returns to normal line up with the sustained high readings.",
+      "next_step": "Verify SYN1/AHU-21-B/CLG_DUCT_TEMP: Check whether the trend shows the duct temperature staying above 60.0 degF through the late part of the window, and whether the 11 repeats and 4 returns to normal line up with the sustained high readings."
+     }
+    ],
+    "dropped": [],
+    "nuisance": [],
+    "unresolved": []
+   }
+  },
+  {
+   "id": "hvac-ahu-dual-duct-ahu-21-b-clg-sp",
+   "type": "repeating",
+   "tags": [
+    "hvac",
+    "single_condition"
+   ],
+   "status": "pass",
+   "graders": {
+    "grounding": {
+     "status": "n/a",
+     "checks": 0,
+     "failures": []
+    },
+    "root_cause": {
+     "status": "n/a",
+     "checks": 0,
+     "failures": []
+    },
+    "escalation": {
+     "status": "pass",
+     "checks": 0,
+     "failures": []
+    },
+    "uncertainty": {
+     "status": "n/a",
+     "checks": 0,
+     "failures": []
+    },
+    "next_step": {
+     "status": "n/a",
+     "checks": 0,
+     "failures": []
+    },
+    "format": {
+     "status": "n/a",
+     "checks": 0,
+     "failures": []
+    }
+   },
+   "writeup": {
+    "cards": [],
+    "dropped": [],
+    "nuisance": [
+     {
+      "point": "SYN1/AHU-21-B/CLG_SP",
+      "signal": "DefaultAlarmClass",
+      "label": "DefaultAlarmClass",
+      "rule": "",
+      "finding": "no rule fired; the alarm-side classification repeating carried through"
+     }
+    ],
+    "unresolved": []
+   }
+  },
+  {
+   "id": "hvac-ahu-dual-duct-ahu-21-b-htg-dmpr-pos",
+   "type": "missing_trend",
+   "tags": [
+    "hvac",
+    "single_condition"
+   ],
+   "status": "pass",
+   "graders": {
+    "grounding": {
+     "status": "n/a",
+     "checks": 0,
+     "failures": []
+    },
+    "root_cause": {
+     "status": "n/a",
+     "checks": 0,
+     "failures": []
+    },
+    "escalation": {
+     "status": "pass",
+     "checks": 0,
+     "failures": []
+    },
+    "uncertainty": {
+     "status": "pass",
+     "checks": 3,
+     "failures": []
+    },
+    "next_step": {
+     "status": "n/a",
+     "checks": 0,
+     "failures": []
+    },
+    "format": {
+     "status": "n/a",
+     "checks": 0,
+     "failures": []
+    }
+   },
+   "writeup": {
+    "cards": [],
+    "dropped": [],
+    "nuisance": [],
+    "unresolved": [
+     {
+      "point": "SYN1/AHU-21-B/HTG_DMPR_POS",
+      "signal": "DefaultAlarmClass",
+      "reason": "no trend series for this point in the trend export"
+     }
+    ]
+   }
+  },
+  {
+   "id": "hvac-ahu-dual-duct-ahu-21-b-htg-duct-temp",
+   "type": "fleeting",
+   "tags": [
+    "hvac",
+    "single_condition"
+   ],
+   "status": "pass",
+   "graders": {
+    "grounding": {
+     "status": "n/a",
+     "checks": 0,
+     "failures": []
+    },
+    "root_cause": {
+     "status": "n/a",
+     "checks": 0,
+     "failures": []
+    },
+    "escalation": {
+     "status": "pass",
+     "checks": 0,
+     "failures": []
+    },
+    "uncertainty": {
+     "status": "n/a",
+     "checks": 0,
+     "failures": []
+    },
+    "next_step": {
+     "status": "n/a",
+     "checks": 0,
+     "failures": []
+    },
+    "format": {
+     "status": "n/a",
+     "checks": 0,
+     "failures": []
+    }
+   },
+   "writeup": {
+    "cards": [],
+    "dropped": [],
+    "nuisance": [
+     {
+      "point": "SYN1/AHU-21-B/HTG_DUCT_TEMP",
+      "signal": "DefaultAlarmClass",
+      "label": "DefaultAlarmClass",
+      "rule": "R-D2",
+      "finding": "total 180 s beyond the limit is under the 600 s minimum, a fleeting excursion with no dwell behind it"
+     }
+    ],
+    "unresolved": []
+   }
+  },
+  {
+   "id": "hvac-ahu-dual-duct-ahu-21-b-mixed-air-temp",
+   "type": "self_recovered",
+   "tags": [
+    "hvac",
+    "single_condition"
+   ],
+   "status": "pass",
+   "graders": {
+    "grounding": {
+     "status": "n/a",
+     "checks": 0,
+     "failures": []
+    },
+    "root_cause": {
+     "status": "n/a",
+     "checks": 0,
+     "failures": []
+    },
+    "escalation": {
+     "status": "pass",
+     "checks": 0,
+     "failures": []
+    },
+    "uncertainty": {
+     "status": "n/a",
+     "checks": 0,
+     "failures": []
+    },
+    "next_step": {
+     "status": "n/a",
+     "checks": 0,
+     "failures": []
+    },
+    "format": {
+     "status": "n/a",
+     "checks": 0,
+     "failures": []
+    }
+   },
+   "writeup": {
+    "cards": [],
+    "dropped": [],
+    "nuisance": [
+     {
+      "point": "SYN1/AHU-21-B/MIXED_AIR_TEMP",
+      "signal": "DefaultAlarmClass",
+      "label": "DefaultAlarmClass",
+      "rule": "R-D3",
+      "finding": "returned to normal and held 57600 s at no closer than 5.75 deadbands inside the limit, so the condition cleared itself and stayed clear"
+     },
+     {
+      "point": "SYN1/AHU-21-B/MIXED_AIR_TEMP",
+      "signal": "DefaultAlarmClass",
+      "label": "DefaultAlarmClass",
+      "rule": "R-D3",
+      "finding": "returned to normal and held 57600 s at no closer than 5.75 deadbands inside the limit, so the condition cleared itself and stayed clear"
+     }
+    ],
+    "unresolved": []
+   }
+  },
+  {
+   "id": "hvac-ahu-dual-duct-ahu-21-clg-duct-temp",
+   "type": "sustained_fault",
+   "tags": [
+    "hvac",
+    "single_condition"
+   ],
+   "status": "pass",
+   "graders": {
+    "grounding": {
+     "status": "pass",
+     "checks": 3,
+     "failures": []
+    },
+    "root_cause": {
+     "status": "pass",
+     "checks": 6,
+     "failures": []
+    },
+    "escalation": {
+     "status": "pass",
+     "checks": 2,
+     "failures": []
+    },
+    "uncertainty": {
+     "status": "pass",
+     "checks": 2,
+     "failures": []
+    },
+    "next_step": {
+     "status": "pass",
+     "checks": 5,
+     "failures": []
+    },
+    "format": {
+     "status": "pass",
+     "checks": 5,
+     "failures": []
+    }
+   },
+   "writeup": {
+    "cards": [
+     {
+      "point": "SYN1/AHU-21/CLG_DUCT_TEMP",
+      "equipment": "AHU-21",
+      "start": "2026-07-28T03:31:00-07:00",
+      "label": "CriticalAlarmClass",
+      "rule": "R-P1",
+      "consequences": [],
+      "consequence_starts": [],
+      "attempts": [
+       {
+        "raw": "{\"reason\": \"The cooling duct temperature stayed above its 60.0 degF high limit for 85.4 percent of the window and was still above it at the end, so the condition is persistent rather than a brief excursion, and the alarm has never returned to normal.\", \"verb\": \"verify\", \"target\": \"SYN1/AHU-21/CLG_DUCT_TEMP\", \"detail\": \"Confirm the trend shows the duct temperature held above 60.0 degF across most of the 20-hour window, with a peak about 5.17 deadbands past the limit and no return below the 1.5 degF deadband.\"}",
+        "ok": true,
+        "detail": "ok",
+        "elapsed_s": 0.0004
+       }
+      ],
+      "rank": 1,
+      "reason": "The cooling duct temperature stayed above its 60.0 degF high limit for 85.4 percent of the window and was still above it at the end, so the condition is persistent rather than a brief excursion, and the alarm has never returned to normal.",
+      "verb": "verify",
+      "target": "SYN1/AHU-21/CLG_DUCT_TEMP",
+      "detail": "Confirm the trend shows the duct temperature held above 60.0 degF across most of the 20-hour window, with a peak about 5.17 deadbands past the limit and no return below the 1.5 degF deadband.",
+      "next_step": "Verify SYN1/AHU-21/CLG_DUCT_TEMP: Confirm the trend shows the duct temperature held above 60.0 degF across most of the 20-hour window, with a peak about 5.17 deadbands past the limit and no return below the 1.5 degF deadband."
+     }
+    ],
+    "dropped": [],
+    "nuisance": [],
+    "unresolved": []
+   }
+  },
+  {
+   "id": "hvac-ahu-dual-duct-ahu-21-clg-sp",
+   "type": "alarm_log_only",
+   "tags": [
+    "hvac",
+    "single_condition"
+   ],
+   "status": "fail",
+   "graders": {
+    "grounding": {
+     "status": "pass",
+     "checks": 3,
+     "failures": []
+    },
+    "root_cause": {
+     "status": "pass",
+     "checks": 6,
+     "failures": []
+    },
+    "escalation": {
+     "status": "pass",
+     "checks": 2,
+     "failures": []
+    },
+    "uncertainty": {
+     "status": "fail",
+     "checks": 3,
+     "failures": [
+      {
+       "code": "U2",
+       "layer": "writer",
+       "point": "SYN1/AHU-21/CLG_SP",
+       "reason": "rests on limited evidence and never says so"
+      }
+     ]
+    },
+    "next_step": {
+     "status": "fail",
+     "checks": 5,
+     "failures": [
+      {
+       "code": "N2",
+       "layer": "writer",
+       "point": "SYN1/AHU-21/CLG_SP",
+       "reason": "the detail names nothing particular to SYN1/AHU-21/CLG_SP (none of: static, pressure, manometer, tap)"
+      }
+     ]
+    },
+    "format": {
+     "status": "pass",
+     "checks": 5,
+     "failures": []
+    }
+   },
+   "writeup": {
+    "cards": [
+     {
+      "point": "SYN1/AHU-21/CLG_SP",
+      "equipment": "AHU-21",
+      "start": "2026-07-28T07:00:00-07:00",
+      "label": "DefaultAlarmClass",
+      "rule": "",
+      "consequences": [],
+      "consequence_starts": [],
+      "attempts": [
+       {
+        "raw": "{\"reason\": \"The alarm limit on the SYN1/AHU-21/CLG_SP point was exceeded for 11.5 hours (50.0% of the window), peaking 2.25 deadbands past the limit and still past it at window end, so the condition persisted rather than clearing.\", \"verb\": \"inspect\", \"target\": \"SYN1/AHU-21/CLG_SP\", \"detail\": \"Look at the trend to confirm whether the CLG_SP value stays above the 1.5 inH2O limit through the window end at 21:00 and whether the four alarm transitions with three returns to normal reflect a repeating pattern.\"}",
+        "ok": true,
+        "detail": "ok",
+        "elapsed_s": 0.0004
+       }
+      ],
+      "rank": 1,
+      "reason": "The alarm limit on the SYN1/AHU-21/CLG_SP point was exceeded for 11.5 hours (50.0% of the window), peaking 2.25 deadbands past the limit and still past it at window end, so the condition persisted rather than clearing.",
+      "verb": "inspect",
+      "target": "SYN1/AHU-21/CLG_SP",
+      "detail": "Look at the trend to confirm whether the CLG_SP value stays above the 1.5 inH2O limit through the window end at 21:00 and whether the four alarm transitions with three returns to normal reflect a repeating pattern.",
+      "next_step": "Inspect SYN1/AHU-21/CLG_SP: Look at the trend to confirm whether the CLG_SP value stays above the 1.5 inH2O limit through the window end at 21:00 and whether the four alarm transitions with three returns to normal reflect a repeating pattern."
+     }
+    ],
+    "dropped": [],
+    "nuisance": [],
+    "unresolved": []
+   }
+  },
+  {
+   "id": "hvac-ahu-dual-duct-ahu-21-htg-duct-temp",
+   "type": "severe_excursion",
+   "tags": [
+    "hvac",
+    "single_condition"
+   ],
+   "status": "pass",
+   "graders": {
+    "grounding": {
+     "status": "pass",
+     "checks": 3,
+     "failures": []
+    },
+    "root_cause": {
+     "status": "pass",
+     "checks": 6,
+     "failures": []
+    },
+    "escalation": {
+     "status": "pass",
+     "checks": 2,
+     "failures": []
+    },
+    "uncertainty": {
+     "status": "pass",
+     "checks": 2,
+     "failures": []
+    },
+    "next_step": {
+     "status": "pass",
+     "checks": 5,
+     "failures": []
+    },
+    "format": {
+     "status": "pass",
+     "checks": 5,
+     "failures": []
+    }
+   },
+   "writeup": {
+    "cards": [
+     {
+      "point": "SYN1/AHU-21/HTG_DUCT_TEMP",
+      "equipment": "AHU-21",
+      "start": "2026-07-28T04:00:00-07:00",
+      "label": "DefaultAlarmClass",
+      "rule": "R-P3",
+      "consequences": [],
+      "consequence_starts": [],
+      "attempts": [
+       {
+        "raw": "{\"reason\": \"The heating duct temperature stayed below its 88.0 degF low limit for about 53% of the window and was still below it at the end, with a peak deviation of 9.20 deadbands, indicating a sustained low-temperature condition on AHU-21 that the evidence shows as persistent rather than transient.\", \"verb\": \"verify\", \"target\": \"SYN1/AHU-21/HTG_DUCT_TEMP\", \"detail\": \"Look for whether the duct temperature trend remains below the 88.0 degF limit through the end of the window, and confirm the period of deviation and the peak excursion of about 9.20 deadbands against the logged samples.\"}",
+        "ok": true,
+        "detail": "ok",
+        "elapsed_s": 0.0004
+       }
+      ],
+      "rank": 1,
+      "reason": "The heating duct temperature stayed below its 88.0 degF low limit for about 53% of the window and was still below it at the end, with a peak deviation of 9.20 deadbands, indicating a sustained low-temperature condition on AHU-21 that the evidence shows as persistent rather than transient.",
+      "verb": "verify",
+      "target": "SYN1/AHU-21/HTG_DUCT_TEMP",
+      "detail": "Look for whether the duct temperature trend remains below the 88.0 degF limit through the end of the window, and confirm the period of deviation and the peak excursion of about 9.20 deadbands against the logged samples.",
+      "next_step": "Verify SYN1/AHU-21/HTG_DUCT_TEMP: Look for whether the duct temperature trend remains below the 88.0 degF limit through the end of the window, and confirm the period of deviation and the peak excursion of about 9.20 deadbands against the logged samples."
+     }
+    ],
+    "dropped": [],
+    "nuisance": [],
+    "unresolved": []
+   }
+  },
+  {
+   "id": "hvac-ahu-dual-duct-ahu-21-mixed-air-temp",
+   "type": "drift",
+   "tags": [
+    "hvac",
+    "single_condition"
+   ],
+   "status": "not run",
+   "why_not": "no saved reply for this prompt and TRIAGE_ANTHROPIC_KEY is not set",
+   "graders": {},
+   "writeup": null
+  },
+  {
+   "id": "hvac-ahu-dual-duct-window",
+   "type": "flood_with_real_faults",
+   "tags": [
+    "hvac",
+    "flood",
+    "multiple_causes"
+   ],
+   "status": "not run",
+   "why_not": "no saved reply for this prompt and TRIAGE_ANTHROPIC_KEY is not set",
+   "graders": {},
+   "writeup": null
+  },
+  {
+   "id": "hvac-boiler-blr-71-b-comb-air-dp",
+   "type": "missing_trend",
+   "tags": [
+    "hvac",
+    "single_condition"
+   ],
+   "status": "pass",
+   "graders": {
+    "grounding": {
+     "status": "n/a",
+     "checks": 0,
+     "failures": []
+    },
+    "root_cause": {
+     "status": "n/a",
+     "checks": 0,
+     "failures": []
+    },
+    "escalation": {
+     "status": "pass",
+     "checks": 0,
+     "failures": []
+    },
+    "uncertainty": {
+     "status": "pass",
+     "checks": 3,
+     "failures": []
+    },
+    "next_step": {
+     "status": "n/a",
+     "checks": 0,
+     "failures": []
+    },
+    "format": {
+     "status": "n/a",
+     "checks": 0,
+     "failures": []
+    }
+   },
+   "writeup": {
+    "cards": [],
+    "dropped": [],
+    "nuisance": [],
+    "unresolved": [
+     {
+      "point": "SYN1/BLR-71-B/COMB_AIR_DP",
+      "signal": "DefaultAlarmClass",
+      "reason": "no trend series for this point in the trend export"
+     }
+    ]
+   }
+  },
+  {
+   "id": "hvac-boiler-blr-71-b-firing-rate",
+   "type": "repeating",
+   "tags": [
+    "hvac",
+    "single_condition"
+   ],
+   "status": "pass",
+   "graders": {
+    "grounding": {
+     "status": "n/a",
+     "checks": 0,
+     "failures": []
+    },
+    "root_cause": {
+     "status": "n/a",
+     "checks": 0,
+     "failures": []
+    },
+    "escalation": {
+     "status": "pass",
+     "checks": 0,
+     "failures": []
+    },
+    "uncertainty": {
+     "status": "n/a",
+     "checks": 0,
+     "failures": []
+    },
+    "next_step": {
+     "status": "n/a",
+     "checks": 0,
+     "failures": []
+    },
+    "format": {
+     "status": "n/a",
+     "checks": 0,
+     "failures": []
+    }
+   },
+   "writeup": {
+    "cards": [],
+    "dropped": [],
+    "nuisance": [
+     {
+      "point": "SYN1/BLR-71-B/FIRING_RATE",
+      "signal": "DefaultAlarmClass",
+      "label": "DefaultAlarmClass",
+      "rule": "",
+      "finding": "no rule fired; the alarm-side classification repeating carried through"
+     }
+    ],
+    "unresolved": []
+   }
+  },
+  {
+   "id": "hvac-boiler-blr-71-b-hw-ret-temp",
+   "type": "self_recovered",
+   "tags": [
+    "hvac",
+    "single_condition"
+   ],
+   "status": "pass",
+   "graders": {
+    "grounding": {
+     "status": "n/a",
+     "checks": 0,
+     "failures": []
+    },
+    "root_cause": {
+     "status": "n/a",
+     "checks": 0,
+     "failures": []
+    },
+    "escalation": {
+     "status": "pass",
+     "checks": 0,
+     "failures": []
+    },
+    "uncertainty": {
+     "status": "n/a",
+     "checks": 0,
+     "failures": []
+    },
+    "next_step": {
+     "status": "n/a",
+     "checks": 0,
+     "failures": []
+    },
+    "format": {
+     "status": "n/a",
+     "checks": 0,
+     "failures": []
+    }
+   },
+   "writeup": {
+    "cards": [],
+    "dropped": [],
+    "nuisance": [
+     {
+      "point": "SYN1/BLR-71-B/HW_RET_TEMP",
+      "signal": "DefaultAlarmClass",
+      "label": "DefaultAlarmClass",
+      "rule": "R-D3",
+      "finding": "returned to normal and held 57600 s at no closer than 5.80 deadbands inside the limit, so the condition cleared itself and stayed clear"
+     },
+     {
+      "point": "SYN1/BLR-71-B/HW_RET_TEMP",
+      "signal": "DefaultAlarmClass",
+      "label": "DefaultAlarmClass",
+      "rule": "R-D3",
+      "finding": "returned to normal and held 57600 s at no closer than 5.80 deadbands inside the limit, so the condition cleared itself and stayed clear"
+     }
+    ],
+    "unresolved": []
+   }
+  },
+  {
+   "id": "hvac-boiler-blr-71-b-hw-sup-temp",
+   "type": "severe_excursion",
+   "tags": [
+    "hvac",
+    "single_condition"
+   ],
+   "status": "pass",
+   "graders": {
+    "grounding": {
+     "status": "pass",
+     "checks": 3,
+     "failures": []
+    },
+    "root_cause": {
+     "status": "pass",
+     "checks": 6,
+     "failures": []
+    },
+    "escalation": {
+     "status": "pass",
+     "checks": 2,
+     "failures": []
+    },
+    "uncertainty": {
+     "status": "pass",
+     "checks": 2,
+     "failures": []
+    },
+    "next_step": {
+     "status": "pass",
+     "checks": 5,
+     "failures": []
+    },
+    "format": {
+     "status": "pass",
+     "checks": 5,
+     "failures": []
+    }
+   },
+   "writeup": {
+    "cards": [
+     {
+      "point": "SYN1/BLR-71-B/HW_SUP_TEMP",
+      "equipment": "BLR-71-B",
+      "start": "2026-07-30T04:01:00-07:00",
+      "label": "CriticalAlarmClass",
+      "rule": "R-P3",
+      "consequences": [],
+      "consequence_starts": [],
+      "attempts": [
+       {
+        "raw": "{\"reason\": \"The hot water supply temperature of boiler BLR-71-B fell below its 168.0 degF low alarm limit, stayed past the limit for about 53% of the window, and was still past it at the window end, with 12.3 hours in alarm and a peak deviation of 9.20 deadbands, so the condition is persistent and was promoted on reassessment.\", \"verb\": \"inspect\", \"target\": \"SYN1/BLR-71-B/HW_SUP_TEMP\", \"detail\": \"Look at the hot water supply temperature trend for the period it sat below 168.0 degF, including the depth of the dip (about 9.20 deadbands at peak) and whether it had not recovered by the end of the window at 23:01.\"}",
+        "ok": true,
+        "detail": "ok",
+        "elapsed_s": 0.0003
+       }
+      ],
+      "rank": 1,
+      "reason": "The hot water supply temperature of boiler BLR-71-B fell below its 168.0 degF low alarm limit, stayed past the limit for about 53% of the window, and was still past it at the window end, with 12.3 hours in alarm and a peak deviation of 9.20 deadbands, so the condition is persistent and was promoted on reassessment.",
+      "verb": "inspect",
+      "target": "SYN1/BLR-71-B/HW_SUP_TEMP",
+      "detail": "Look at the hot water supply temperature trend for the period it sat below 168.0 degF, including the depth of the dip (about 9.20 deadbands at peak) and whether it had not recovered by the end of the window at 23:01.",
+      "next_step": "Inspect SYN1/BLR-71-B/HW_SUP_TEMP: Look at the hot water supply temperature trend for the period it sat below 168.0 degF, including the depth of the dip (about 9.20 deadbands at peak) and whether it had not recovered by the end of the window at 23:01."
+     }
+    ],
+    "dropped": [],
+    "nuisance": [],
+    "unresolved": []
+   }
+  },
+  {
+   "id": "hvac-boiler-blr-71-b-stack-temp",
+   "type": "fleeting",
+   "tags": [
+    "hvac",
+    "single_condition"
+   ],
+   "status": "pass",
+   "graders": {
+    "grounding": {
+     "status": "n/a",
+     "checks": 0,
+     "failures": []
+    },
+    "root_cause": {
+     "status": "n/a",
+     "checks": 0,
+     "failures": []
+    },
+    "escalation": {
+     "status": "pass",
+     "checks": 0,
+     "failures": []
+    },
+    "uncertainty": {
+     "status": "n/a",
+     "checks": 0,
+     "failures": []
+    },
+    "next_step": {
+     "status": "n/a",
+     "checks": 0,
+     "failures": []
+    },
+    "format": {
+     "status": "n/a",
+     "checks": 0,
+     "failures": []
+    }
+   },
+   "writeup": {
+    "cards": [],
+    "dropped": [],
+    "nuisance": [
+     {
+      "point": "SYN1/BLR-71-B/STACK_TEMP",
+      "signal": "CriticalAlarmClass",
+      "label": "CriticalAlarmClass",
+      "rule": "R-D2",
+      "finding": "total 180 s beyond the limit is under the 600 s minimum, a fleeting excursion with no dwell behind it"
+     }
+    ],
+    "unresolved": []
+   }
+  },
+  {
+   "id": "hvac-boiler-blr-71-comb-air-dp",
+   "type": "chattering",
+   "tags": [
+    "hvac",
+    "single_condition"
+   ],
+   "status": "pass",
+   "graders": {
+    "grounding": {
+     "status": "n/a",
+     "checks": 0,
+     "failures": []
+    },
+    "root_cause": {
+     "status": "n/a",
+     "checks": 0,
+     "failures": []
+    },
+    "escalation": {
+     "status": "pass",
+     "checks": 0,
+     "failures": []
+    },
+    "uncertainty": {
+     "status": "n/a",
+     "checks": 0,
+     "failures": []
+    },
+    "next_step": {
+     "status": "n/a",
+     "checks": 0,
+     "failures": []
+    },
+    "format": {
+     "status": "n/a",
+     "checks": 0,
+     "failures": []
+    }
+   },
+   "writeup": {
+    "cards": [],
+    "dropped": [],
+    "nuisance": [
+     {
+      "point": "SYN1/BLR-71/COMB_AIR_DP",
+      "signal": "DefaultAlarmClass",
+      "label": "DefaultAlarmClass",
+      "rule": "R-D1",
+      "finding": "peak overshoot 0.67 deadbands, at or under the 1.00 allowed, so the alarm sat on its limit rather than departing from it"
+     }
+    ],
+    "unresolved": []
+   }
+  },
+  {
+   "id": "hvac-boiler-blr-71-firing-rate",
+   "type": "alarm_log_only",
+   "tags": [
+    "hvac",
+    "single_condition"
+   ],
+   "status": "fail",
+   "graders": {
+    "grounding": {
+     "status": "pass",
+     "checks": 3,
+     "failures": []
+    },
+    "root_cause": {
+     "status": "pass",
+     "checks": 6,
+     "failures": []
+    },
+    "escalation": {
+     "status": "pass",
+     "checks": 2,
+     "failures": []
+    },
+    "uncertainty": {
+     "status": "fail",
+     "checks": 3,
+     "failures": [
+      {
+       "code": "U2",
+       "layer": "writer",
+       "point": "SYN1/BLR-71/FIRING_RATE",
+       "reason": "rests on limited evidence and never says so"
+      }
+     ]
+    },
+    "next_step": {
+     "status": "pass",
+     "checks": 5,
+     "failures": []
+    },
+    "format": {
+     "status": "pass",
+     "checks": 5,
+     "failures": []
+    }
+   },
+   "writeup": {
+    "cards": [
+     {
+      "point": "SYN1/BLR-71/FIRING_RATE",
+      "equipment": "BLR-71",
+      "start": "2026-07-30T07:02:00-07:00",
+      "label": "DefaultAlarmClass",
+      "rule": "",
+      "consequences": [],
+      "consequence_starts": [],
+      "attempts": [
+       {
+        "raw": "{\"reason\": \"BLR-71 firing rate stayed above the 92.0 pct high alarm limit for half the window (11.5 hours in alarm across 4 transitions) and was still past the limit at window end, so the boiler may be operating at sustained high firing demand.\", \"verb\": \"inspect\", \"target\": \"SYN1/BLR-71/FIRING_RATE\", \"detail\": \"Look at the firing rate trend between 07:02 and 21:02 for the sustained period above 92.0 pct, including the peak excursion of about 2.28 deadbands past the limit and the reading still above the limit at the end of the window.\"}",
+        "ok": true,
+        "detail": "ok",
+        "elapsed_s": 0.0004
+       }
+      ],
+      "rank": 1,
+      "reason": "BLR-71 firing rate stayed above the 92.0 pct high alarm limit for half the window (11.5 hours in alarm across 4 transitions) and was still past the limit at window end, so the boiler may be operating at sustained high firing demand.",
+      "verb": "inspect",
+      "target": "SYN1/BLR-71/FIRING_RATE",
+      "detail": "Look at the firing rate trend between 07:02 and 21:02 for the sustained period above 92.0 pct, including the peak excursion of about 2.28 deadbands past the limit and the reading still above the limit at the end of the window.",
+      "next_step": "Inspect SYN1/BLR-71/FIRING_RATE: Look at the firing rate trend between 07:02 and 21:02 for the sustained period above 92.0 pct, including the peak excursion of about 2.28 deadbands past the limit and the reading still above the limit at the end of the window."
+     }
+    ],
+    "dropped": [],
+    "nuisance": [],
+    "unresolved": []
+   }
+  },
+  {
+   "id": "hvac-boiler-blr-71-hw-ret-temp",
+   "type": "drift",
+   "tags": [
+    "hvac",
+    "single_condition"
+   ],
+   "status": "pass",
+   "graders": {
+    "grounding": {
+     "status": "pass",
+     "checks": 3,
+     "failures": []
+    },
+    "root_cause": {
+     "status": "pass",
+     "checks": 6,
+     "failures": []
+    },
+    "escalation": {
+     "status": "pass",
+     "checks": 2,
+     "failures": []
+    },
+    "uncertainty": {
+     "status": "pass",
+     "checks": 2,
+     "failures": []
+    },
+    "next_step": {
+     "status": "pass",
+     "checks": 5,
+     "failures": []
+    },
+    "format": {
+     "status": "pass",
+     "checks": 5,
+     "failures": []
+    }
+   },
+   "writeup": {
+    "cards": [
+     {
+      "point": "SYN1/BLR-71/HW_RET_TEMP",
+      "equipment": "BLR-71",
+      "start": "2026-07-30T15:40:00-07:00",
+      "label": "DefaultAlarmClass",
+      "rule": "R-P2",
+      "consequences": [],
+      "consequence_starts": [],
+      "attempts": [
+       {
+        "raw": "{\"reason\": \"The hot water return temperature on boiler BLR-71 has stayed below its 145.0 degF low limit for about 34.7% of the window and was still past the limit at the end, with the deviation worsening steadily rather than holding a fixed offset, so the condition is persistent and degrading.\", \"verb\": \"inspect\", \"target\": \"SYN1/BLR-71/HW_RET_TEMP\", \"detail\": \"Look for a continuing downward trend in the hot water return temperature below 145.0 degF with a peak deviation of about 3.21 deadbands and no return to normal by the end of the window.\"}",
+        "ok": true,
+        "detail": "ok",
+        "elapsed_s": 0.0004
+       }
+      ],
+      "rank": 1,
+      "reason": "The hot water return temperature on boiler BLR-71 has stayed below its 145.0 degF low limit for about 34.7% of the window and was still past the limit at the end, with the deviation worsening steadily rather than holding a fixed offset, so the condition is persistent and degrading.",
+      "verb": "inspect",
+      "target": "SYN1/BLR-71/HW_RET_TEMP",
+      "detail": "Look for a continuing downward trend in the hot water return temperature below 145.0 degF with a peak deviation of about 3.21 deadbands and no return to normal by the end of the window.",
+      "next_step": "Inspect SYN1/BLR-71/HW_RET_TEMP: Look for a continuing downward trend in the hot water return temperature below 145.0 degF with a peak deviation of about 3.21 deadbands and no return to normal by the end of the window."
+     }
+    ],
+    "dropped": [],
+    "nuisance": [],
+    "unresolved": []
+   }
+  },
+  {
+   "id": "hvac-boiler-blr-71-hw-sup-temp",
+   "type": "sustained_fault",
+   "tags": [
+    "hvac",
+    "single_condition"
+   ],
+   "status": "pass",
+   "graders": {
+    "grounding": {
+     "status": "pass",
+     "checks": 3,
+     "failures": []
+    },
+    "root_cause": {
+     "status": "pass",
+     "checks": 6,
+     "failures": []
+    },
+    "escalation": {
+     "status": "pass",
+     "checks": 2,
+     "failures": []
+    },
+    "uncertainty": {
+     "status": "pass",
+     "checks": 2,
+     "failures": []
+    },
+    "next_step": {
+     "status": "pass",
+     "checks": 5,
+     "failures": []
+    },
+    "format": {
+     "status": "pass",
+     "checks": 5,
+     "failures": []
+    }
+   },
+   "writeup": {
+    "cards": [
+     {
+      "point": "SYN1/BLR-71/HW_SUP_TEMP",
+      "equipment": "BLR-71",
+      "start": "2026-07-30T03:31:00-07:00",
+      "label": "CriticalAlarmClass",
+      "rule": "R-P1",
+      "consequences": [],
+      "consequence_starts": [],
+      "attempts": [
+       {
+        "raw": "{\"reason\": \"The hot-water supply temperature on boiler BLR-71 has remained below its 168.0 degF low limit for 85.4 percent of the window and was still below it at the end, so the condition is persistent rather than transient, though the alarm record itself is marked stale.\", \"verb\": \"inspect\", \"target\": \"SYN1/BLR-71/HW_SUP_TEMP\", \"detail\": \"Look at the trend to confirm the supply temperature stays below the 168.0 degF limit (with the 2.0 degF deadband) across most of the 03:31 to 23:31 window and reaches a peak deviation of about 5.20 deadbands, and check whether the alarm state reflects the current value given its stale classification.\"}",
+        "ok": true,
+        "detail": "ok",
+        "elapsed_s": 0.0004
+       }
+      ],
+      "rank": 1,
+      "reason": "The hot-water supply temperature on boiler BLR-71 has remained below its 168.0 degF low limit for 85.4 percent of the window and was still below it at the end, so the condition is persistent rather than transient, though the alarm record itself is marked stale.",
+      "verb": "inspect",
+      "target": "SYN1/BLR-71/HW_SUP_TEMP",
+      "detail": "Look at the trend to confirm the supply temperature stays below the 168.0 degF limit (with the 2.0 degF deadband) across most of the 03:31 to 23:31 window and reaches a peak deviation of about 5.20 deadbands, and check whether the alarm state reflects the current value given its stale classification.",
+      "next_step": "Inspect SYN1/BLR-71/HW_SUP_TEMP: Look at the trend to confirm the supply temperature stays below the 168.0 degF limit (with the 2.0 degF deadband) across most of the 03:31 to 23:31 window and reaches a peak deviation of about 5.20 deadbands, and check whether the alarm state reflects the current value given its stale classification."
+     }
+    ],
+    "dropped": [],
+    "nuisance": [],
+    "unresolved": []
+   }
+  },
+  {
+   "id": "hvac-boiler-blr-71-stack-temp",
+   "type": "severe_excursion",
+   "tags": [
+    "hvac",
+    "single_condition"
+   ],
+   "status": "pass",
+   "graders": {
+    "grounding": {
+     "status": "pass",
+     "checks": 3,
+     "failures": []
+    },
+    "root_cause": {
+     "status": "pass",
+     "checks": 6,
+     "failures": []
+    },
+    "escalation": {
+     "status": "pass",
+     "checks": 2,
+     "failures": []
+    },
+    "uncertainty": {
+     "status": "pass",
+     "checks": 2,
+     "failures": []
+    },
+    "next_step": {
+     "status": "pass",
+     "checks": 5,
+     "failures": []
+    },
+    "format": {
+     "status": "pass",
+     "checks": 5,
+     "failures": []
+    }
+   },
+   "writeup": {
+    "cards": [
+     {
+      "point": "SYN1/BLR-71/STACK_TEMP",
+      "equipment": "BLR-71",
+      "start": "2026-07-30T04:00:00-07:00",
+      "label": "CriticalAlarmClass",
+      "rule": "R-P3",
+      "consequences": [],
+      "consequence_starts": [],
+      "attempts": [
+       {
+        "raw": "{\"reason\": \"BLR-71 stack temperature exceeded its 420.0 degF high limit for about 53.3% of the window, peaked 9.25 deadbands past the limit, and was still above the limit at window end, with 5 alarms and 23 repeats, so the condition is persistent and was promoted on the peak deviation evidence.\", \"verb\": \"inspect\", \"target\": \"SYN1/BLR-71/STACK_TEMP\", \"detail\": \"Look for the trend shape showing stack temperature held above 420.0 degF from roughly 04:00 to 23:30 with a peak about 9.25 deadbands above the limit and no return below the limit by the end of the window.\"}",
+        "ok": true,
+        "detail": "ok",
+        "elapsed_s": 0.0004
+       }
+      ],
+      "rank": 1,
+      "reason": "BLR-71 stack temperature exceeded its 420.0 degF high limit for about 53.3% of the window, peaked 9.25 deadbands past the limit, and was still above the limit at window end, with 5 alarms and 23 repeats, so the condition is persistent and was promoted on the peak deviation evidence.",
+      "verb": "inspect",
+      "target": "SYN1/BLR-71/STACK_TEMP",
+      "detail": "Look for the trend shape showing stack temperature held above 420.0 degF from roughly 04:00 to 23:30 with a peak about 9.25 deadbands above the limit and no return below the limit by the end of the window.",
+      "next_step": "Inspect SYN1/BLR-71/STACK_TEMP: Look for the trend shape showing stack temperature held above 420.0 degF from roughly 04:00 to 23:30 with a peak about 9.25 deadbands above the limit and no return below the limit by the end of the window."
+     }
+    ],
+    "dropped": [],
+    "nuisance": [],
+    "unresolved": []
+   }
+  },
+  {
+   "id": "hvac-boiler-stack-temp-trend-removed",
+   "type": "not_enough_evidence",
+   "tags": [
+    "hvac",
+    "single_condition",
+    "missing_trend"
+   ],
+   "status": "pass",
+   "graders": {
+    "grounding": {
+     "status": "n/a",
+     "checks": 0,
+     "failures": []
+    },
+    "root_cause": {
+     "status": "n/a",
+     "checks": 0,
+     "failures": []
+    },
+    "escalation": {
+     "status": "pass",
+     "checks": 0,
+     "failures": []
+    },
+    "uncertainty": {
+     "status": "pass",
+     "checks": 3,
+     "failures": []
+    },
+    "next_step": {
+     "status": "n/a",
+     "checks": 0,
+     "failures": []
+    },
+    "format": {
+     "status": "n/a",
+     "checks": 0,
+     "failures": []
+    }
+   },
+   "writeup": {
+    "cards": [],
+    "dropped": [],
+    "nuisance": [],
+    "unresolved": [
+     {
+      "point": "SYN1/BLR-71/STACK_TEMP",
+      "signal": "CriticalAlarmClass",
+      "reason": "no trend series for this point in the trend export"
+     }
+    ]
+   }
+  },
+  {
+   "id": "hvac-boiler-window",
+   "type": "flood_with_real_faults",
+   "tags": [
+    "hvac",
+    "flood",
+    "multiple_causes"
+   ],
+   "status": "fail",
+   "graders": {
+    "grounding": {
+     "status": "pass",
+     "checks": 15,
+     "failures": []
+    },
+    "root_cause": {
+     "status": "pass",
+     "checks": 26,
+     "failures": []
+    },
+    "escalation": {
+     "status": "pass",
+     "checks": 10,
+     "failures": []
+    },
+    "uncertainty": {
+     "status": "fail",
+     "checks": 19,
+     "failures": [
+      {
+       "code": "U2",
+       "layer": "writer",
+       "point": "SYN1/BLR-71/FIRING_RATE",
+       "reason": "rests on limited evidence and never says so"
+      }
+     ]
+    },
+    "next_step": {
+     "status": "pass",
+     "checks": 25,
+     "failures": []
+    },
+    "format": {
+     "status": "pass",
+     "checks": 25,
+     "failures": []
+    }
+   },
+   "writeup": {
+    "cards": [
+     {
+      "point": "SYN1/BLR-71/STACK_TEMP",
+      "equipment": "BLR-71",
+      "start": "2026-07-30T04:00:00-07:00",
+      "label": "CriticalAlarmClass",
+      "rule": "R-P3",
+      "consequences": [],
+      "consequence_starts": [],
+      "attempts": [
+       {
+        "raw": "{\"reason\": \"BLR-71 stack temperature exceeded its 420.0 degF high limit for about 53.3% of the window, peaked 9.25 deadbands past the limit, and was still above the limit at window end, with 5 alarms and 23 repeats, so the condition is persistent and was promoted on the peak deviation evidence.\", \"verb\": \"inspect\", \"target\": \"SYN1/BLR-71/STACK_TEMP\", \"detail\": \"Look for the trend shape showing stack temperature held above 420.0 degF from roughly 04:00 to 23:30 with a peak about 9.25 deadbands above the limit and no return below the limit by the end of the window.\"}",
+        "ok": true,
+        "detail": "ok",
+        "elapsed_s": 0.0006
+       }
+      ],
+      "rank": 1,
+      "reason": "BLR-71 stack temperature exceeded its 420.0 degF high limit for about 53.3% of the window, peaked 9.25 deadbands past the limit, and was still above the limit at window end, with 5 alarms and 23 repeats, so the condition is persistent and was promoted on the peak deviation evidence.",
+      "verb": "inspect",
+      "target": "SYN1/BLR-71/STACK_TEMP",
+      "detail": "Look for the trend shape showing stack temperature held above 420.0 degF from roughly 04:00 to 23:30 with a peak about 9.25 deadbands above the limit and no return below the limit by the end of the window.",
+      "next_step": "Inspect SYN1/BLR-71/STACK_TEMP: Look for the trend shape showing stack temperature held above 420.0 degF from roughly 04:00 to 23:30 with a peak about 9.25 deadbands above the limit and no return below the limit by the end of the window."
+     },
+     {
+      "point": "SYN1/BLR-71-B/HW_SUP_TEMP",
+      "equipment": "BLR-71-B",
+      "start": "2026-07-30T04:01:00-07:00",
+      "label": "CriticalAlarmClass",
+      "rule": "R-P3",
+      "consequences": [],
+      "consequence_starts": [],
+      "attempts": [
+       {
+        "raw": "{\"reason\": \"The hot water supply temperature of boiler BLR-71-B fell below its 168.0 degF low alarm limit, stayed past the limit for about 53% of the window, and was still past it at the window end, with 12.3 hours in alarm and a peak deviation of 9.20 deadbands, so the condition is persistent and was promoted on reassessment.\", \"verb\": \"inspect\", \"target\": \"SYN1/BLR-71-B/HW_SUP_TEMP\", \"detail\": \"Look at the hot water supply temperature trend for the period it sat below 168.0 degF, including the depth of the dip (about 9.20 deadbands at peak) and whether it had not recovered by the end of the window at 23:01.\"}",
+        "ok": true,
+        "detail": "ok",
+        "elapsed_s": 0.0004
+       }
+      ],
+      "rank": 2,
+      "reason": "The hot water supply temperature of boiler BLR-71-B fell below its 168.0 degF low alarm limit, stayed past the limit for about 53% of the window, and was still past it at the window end, with 12.3 hours in alarm and a peak deviation of 9.20 deadbands, so the condition is persistent and was promoted on reassessment.",
+      "verb": "inspect",
+      "target": "SYN1/BLR-71-B/HW_SUP_TEMP",
+      "detail": "Look at the hot water supply temperature trend for the period it sat below 168.0 degF, including the depth of the dip (about 9.20 deadbands at peak) and whether it had not recovered by the end of the window at 23:01.",
+      "next_step": "Inspect SYN1/BLR-71-B/HW_SUP_TEMP: Look at the hot water supply temperature trend for the period it sat below 168.0 degF, including the depth of the dip (about 9.20 deadbands at peak) and whether it had not recovered by the end of the window at 23:01."
+     },
+     {
+      "point": "SYN1/BLR-71/HW_SUP_TEMP",
+      "equipment": "BLR-71",
+      "start": "2026-07-30T03:31:00-07:00",
+      "label": "CriticalAlarmClass",
+      "rule": "R-P1",
+      "consequences": [],
+      "consequence_starts": [],
+      "attempts": [
+       {
+        "raw": "{\"reason\": \"The hot-water supply temperature on boiler BLR-71 has remained below its 168.0 degF low limit for 85.4 percent of the window and was still below it at the end, so the condition is persistent rather than transient, though the alarm record itself is marked stale.\", \"verb\": \"inspect\", \"target\": \"SYN1/BLR-71/HW_SUP_TEMP\", \"detail\": \"Look at the trend to confirm the supply temperature stays below the 168.0 degF limit (with the 2.0 degF deadband) across most of the 03:31 to 23:31 window and reaches a peak deviation of about 5.20 deadbands, and check whether the alarm state reflects the current value given its stale classification.\"}",
+        "ok": true,
+        "detail": "ok",
+        "elapsed_s": 0.0004
+       }
+      ],
+      "rank": 3,
+      "reason": "The hot-water supply temperature on boiler BLR-71 has remained below its 168.0 degF low limit for 85.4 percent of the window and was still below it at the end, so the condition is persistent rather than transient, though the alarm record itself is marked stale.",
+      "verb": "inspect",
+      "target": "SYN1/BLR-71/HW_SUP_TEMP",
+      "detail": "Look at the trend to confirm the supply temperature stays below the 168.0 degF limit (with the 2.0 degF deadband) across most of the 03:31 to 23:31 window and reaches a peak deviation of about 5.20 deadbands, and check whether the alarm state reflects the current value given its stale classification.",
+      "next_step": "Inspect SYN1/BLR-71/HW_SUP_TEMP: Look at the trend to confirm the supply temperature stays below the 168.0 degF limit (with the 2.0 degF deadband) across most of the 03:31 to 23:31 window and reaches a peak deviation of about 5.20 deadbands, and check whether the alarm state reflects the current value given its stale classification."
+     },
+     {
+      "point": "SYN1/BLR-71/HW_RET_TEMP",
+      "equipment": "BLR-71",
+      "start": "2026-07-30T15:40:00-07:00",
+      "label": "DefaultAlarmClass",
+      "rule": "R-P2",
+      "consequences": [],
+      "consequence_starts": [],
+      "attempts": [
+       {
+        "raw": "{\"reason\": \"The hot water return temperature on boiler BLR-71 has stayed below its 145.0 degF low limit for about 34.7% of the window and was still past the limit at the end, with the deviation worsening steadily rather than holding a fixed offset, so the condition is persistent and degrading.\", \"verb\": \"inspect\", \"target\": \"SYN1/BLR-71/HW_RET_TEMP\", \"detail\": \"Look for a continuing downward trend in the hot water return temperature below 145.0 degF with a peak deviation of about 3.21 deadbands and no return to normal by the end of the window.\"}",
+        "ok": true,
+        "detail": "ok",
+        "elapsed_s": 0.0003
+       }
+      ],
+      "rank": 4,
+      "reason": "The hot water return temperature on boiler BLR-71 has stayed below its 145.0 degF low limit for about 34.7% of the window and was still past the limit at the end, with the deviation worsening steadily rather than holding a fixed offset, so the condition is persistent and degrading.",
+      "verb": "inspect",
+      "target": "SYN1/BLR-71/HW_RET_TEMP",
+      "detail": "Look for a continuing downward trend in the hot water return temperature below 145.0 degF with a peak deviation of about 3.21 deadbands and no return to normal by the end of the window.",
+      "next_step": "Inspect SYN1/BLR-71/HW_RET_TEMP: Look for a continuing downward trend in the hot water return temperature below 145.0 degF with a peak deviation of about 3.21 deadbands and no return to normal by the end of the window."
+     },
+     {
+      "point": "SYN1/BLR-71/FIRING_RATE",
+      "equipment": "BLR-71",
+      "start": "2026-07-30T07:02:00-07:00",
+      "label": "DefaultAlarmClass",
+      "rule": "",
+      "consequences": [],
+      "consequence_starts": [],
+      "attempts": [
+       {
+        "raw": "{\"reason\": \"BLR-71 firing rate stayed above the 92.0 pct high alarm limit for half the window (11.5 hours in alarm across 4 transitions) and was still past the limit at window end, so the boiler may be operating at sustained high firing demand.\", \"verb\": \"inspect\", \"target\": \"SYN1/BLR-71/FIRING_RATE\", \"detail\": \"Look at the firing rate trend between 07:02 and 21:02 for the sustained period above 92.0 pct, including the peak excursion of about 2.28 deadbands past the limit and the reading still above the limit at the end of the window.\"}",
+        "ok": true,
+        "detail": "ok",
+        "elapsed_s": 0.0003
+       }
+      ],
+      "rank": 5,
+      "reason": "BLR-71 firing rate stayed above the 92.0 pct high alarm limit for half the window (11.5 hours in alarm across 4 transitions) and was still past the limit at window end, so the boiler may be operating at sustained high firing demand.",
+      "verb": "inspect",
+      "target": "SYN1/BLR-71/FIRING_RATE",
+      "detail": "Look at the firing rate trend between 07:02 and 21:02 for the sustained period above 92.0 pct, including the peak excursion of about 2.28 deadbands past the limit and the reading still above the limit at the end of the window.",
+      "next_step": "Inspect SYN1/BLR-71/FIRING_RATE: Look at the firing rate trend between 07:02 and 21:02 for the sustained period above 92.0 pct, including the peak excursion of about 2.28 deadbands past the limit and the reading still above the limit at the end of the window."
+     }
+    ],
+    "dropped": [],
+    "nuisance": [
+     {
+      "point": "SYN1/BLR-71-B/FIRING_RATE",
+      "signal": "DefaultAlarmClass",
+      "label": "DefaultAlarmClass",
+      "rule": "",
+      "finding": "no rule fired; the alarm-side classification repeating carried through"
+     },
+     {
+      "point": "SYN1/BLR-71-B/HW_RET_TEMP",
+      "signal": "DefaultAlarmClass",
+      "label": "DefaultAlarmClass",
+      "rule": "R-D3",
+      "finding": "returned to normal and held 57600 s at no closer than 5.80 deadbands inside the limit, so the condition cleared itself and stayed clear"
+     },
+     {
+      "point": "SYN1/BLR-71/COMB_AIR_DP",
+      "signal": "DefaultAlarmClass",
+      "label": "DefaultAlarmClass",
+      "rule": "R-D1",
+      "finding": "peak overshoot 0.67 deadbands, at or under the 1.00 allowed, so the alarm sat on its limit rather than departing from it"
+     },
+     {
+      "point": "SYN1/BLR-71-B/STACK_TEMP",
+      "signal": "CriticalAlarmClass",
+      "label": "CriticalAlarmClass",
+      "rule": "R-D2",
+      "finding": "total 180 s beyond the limit is under the 600 s minimum, a fleeting excursion with no dwell behind it"
+     },
+     {
+      "point": "SYN1/BLR-71-B/HW_RET_TEMP",
+      "signal": "DefaultAlarmClass",
+      "label": "DefaultAlarmClass",
+      "rule": "R-D3",
+      "finding": "returned to normal and held 57600 s at no closer than 5.80 deadbands inside the limit, so the condition cleared itself and stayed clear"
+     }
+    ],
+    "unresolved": [
+     {
+      "point": "SYN1/BLR-71-B/COMB_AIR_DP",
+      "signal": "DefaultAlarmClass",
+      "reason": "no trend series for this point in the trend export"
+     }
+    ]
+   }
+  },
+  {
+   "id": "hvac-chiller-ch-61-b-chw-ret-temp",
+   "type": "fleeting",
+   "tags": [
+    "hvac",
+    "single_condition"
+   ],
+   "status": "pass",
+   "graders": {
+    "grounding": {
+     "status": "n/a",
+     "checks": 0,
+     "failures": []
+    },
+    "root_cause": {
+     "status": "n/a",
+     "checks": 0,
+     "failures": []
+    },
+    "escalation": {
+     "status": "pass",
+     "checks": 0,
+     "failures": []
+    },
+    "uncertainty": {
+     "status": "n/a",
+     "checks": 0,
+     "failures": []
+    },
+    "next_step": {
+     "status": "n/a",
+     "checks": 0,
+     "failures": []
+    },
+    "format": {
+     "status": "n/a",
+     "checks": 0,
+     "failures": []
+    }
+   },
+   "writeup": {
+    "cards": [],
+    "dropped": [],
+    "nuisance": [
+     {
+      "point": "SYN1/CH-61-B/CHW_RET_TEMP",
+      "signal": "DefaultAlarmClass",
+      "label": "DefaultAlarmClass",
+      "rule": "R-D2",
+      "finding": "total 180 s beyond the limit is under the 600 s minimum, a fleeting excursion with no dwell behind it"
+     }
+    ],
+    "unresolved": []
+   }
+  },
+  {
+   "id": "hvac-chiller-ch-61-b-chw-sup-temp",
+   "type": "severe_excursion",
+   "tags": [
+    "hvac",
+    "single_condition"
+   ],
+   "status": "pass",
+   "graders": {
+    "grounding": {
+     "status": "pass",
+     "checks": 3,
+     "failures": []
+    },
+    "root_cause": {
+     "status": "pass",
+     "checks": 6,
+     "failures": []
+    },
+    "escalation": {
+     "status": "pass",
+     "checks": 2,
+     "failures": []
+    },
+    "uncertainty": {
+     "status": "pass",
+     "checks": 2,
+     "failures": []
+    },
+    "next_step": {
+     "status": "pass",
+     "checks": 5,
+     "failures": []
+    },
+    "format": {
+     "status": "pass",
+     "checks": 5,
+     "failures": []
+    }
+   },
+   "writeup": {
+    "cards": [
+     {
+      "point": "SYN1/CH-61-B/CHW_SUP_TEMP",
+      "equipment": "CH-61-B",
+      "start": "2026-07-29T04:01:00-07:00",
+      "label": "CriticalAlarmClass",
+      "rule": "R-P3",
+      "consequences": [],
+      "consequence_starts": [],
+      "attempts": [
+       {
+        "raw": "{\"reason\": \"Chilled water supply temperature on CH-61-B stays above its 46.0 degF high limit for about 53% of the window, peaks roughly 9 deadbands past the limit, and is still past the limit at window end, with 12.3 hours in alarm and a priority-1 critical alarm class, so the condition is persistent and significant.\", \"verb\": \"verify\", \"target\": \"SYN1/CH-61-B/CHW_SUP_TEMP\", \"detail\": \"Look for whether the chilled water supply temperature trend remains above 46.0 degF through the end of the window and whether the excursions correlate with the 5 alarm transitions and 4 returns to normal, confirming the reading against the sensor and its trend samples.\"}",
+        "ok": true,
+        "detail": "ok",
+        "elapsed_s": 0.0005
+       }
+      ],
+      "rank": 1,
+      "reason": "Chilled water supply temperature on CH-61-B stays above its 46.0 degF high limit for about 53% of the window, peaks roughly 9 deadbands past the limit, and is still past the limit at window end, with 12.3 hours in alarm and a priority-1 critical alarm class, so the condition is persistent and significant.",
+      "verb": "verify",
+      "target": "SYN1/CH-61-B/CHW_SUP_TEMP",
+      "detail": "Look for whether the chilled water supply temperature trend remains above 46.0 degF through the end of the window and whether the excursions correlate with the 5 alarm transitions and 4 returns to normal, confirming the reading against the sensor and its trend samples.",
+      "next_step": "Verify SYN1/CH-61-B/CHW_SUP_TEMP: Look for whether the chilled water supply temperature trend remains above 46.0 degF through the end of the window and whether the excursions correlate with the 5 alarm transitions and 4 returns to normal, confirming the reading against the sensor and its trend samples."
+     }
+    ],
+    "dropped": [],
+    "nuisance": [],
+    "unresolved": []
+   }
+  },
+  {
+   "id": "hvac-chiller-ch-61-b-cond-approach",
+   "type": "self_recovered",
+   "tags": [
+    "hvac",
+    "single_condition"
+   ],
+   "status": "pass",
+   "graders": {
+    "grounding": {
+     "status": "n/a",
+     "checks": 0,
+     "failures": []
+    },
+    "root_cause": {
+     "status": "n/a",
+     "checks": 0,
+     "failures": []
+    },
+    "escalation": {
+     "status": "pass",
+     "checks": 0,
+     "failures": []
+    },
+    "uncertainty": {
+     "status": "n/a",
+     "checks": 0,
+     "failures": []
+    },
+    "next_step": {
+     "status": "n/a",
+     "checks": 0,
+     "failures": []
+    },
+    "format": {
+     "status": "n/a",
+     "checks": 0,
+     "failures": []
+    }
+   },
+   "writeup": {
+    "cards": [],
+    "dropped": [],
+    "nuisance": [
+     {
+      "point": "SYN1/CH-61-B/COND_APPROACH",
+      "signal": "DefaultAlarmClass",
+      "label": "DefaultAlarmClass",
+      "rule": "R-D3",
+      "finding": "returned to normal and held 57600 s at no closer than 5.80 deadbands inside the limit, so the condition cleared itself and stayed clear"
+     },
+     {
+      "point": "SYN1/CH-61-B/COND_APPROACH",
+      "signal": "DefaultAlarmClass",
+      "label": "DefaultAlarmClass",
+      "rule": "R-D3",
+      "finding": "returned to normal and held 57600 s at no closer than 5.80 deadbands inside the limit, so the condition cleared itself and stayed clear"
+     }
+    ],
+    "unresolved": []
+   }
+  },
+  {
+   "id": "hvac-chiller-ch-61-b-evap-press",
+   "type": "repeating",
+   "tags": [
+    "hvac",
+    "single_condition"
+   ],
+   "status": "pass",
+   "graders": {
+    "grounding": {
+     "status": "n/a",
+     "checks": 0,
+     "failures": []
+    },
+    "root_cause": {
+     "status": "n/a",
+     "checks": 0,
+     "failures": []
+    },
+    "escalation": {
+     "status": "pass",
+     "checks": 0,
+     "failures": []
+    },
+    "uncertainty": {
+     "status": "n/a",
+     "checks": 0,
+     "failures": []
+    },
+    "next_step": {
+     "status": "n/a",
+     "checks": 0,
+     "failures": []
+    },
+    "format": {
+     "status": "n/a",
+     "checks": 0,
+     "failures": []
+    }
+   },
+   "writeup": {
+    "cards": [],
+    "dropped": [],
+    "nuisance": [
+     {
+      "point": "SYN1/CH-61-B/EVAP_PRESS",
+      "signal": "DefaultAlarmClass",
+      "label": "DefaultAlarmClass",
+      "rule": "",
+      "finding": "no rule fired; the alarm-side classification repeating carried through"
+     }
+    ],
+    "unresolved": []
+   }
+  },
+  {
+   "id": "hvac-chiller-ch-61-b-oil-press",
+   "type": "missing_trend",
+   "tags": [
+    "hvac",
+    "single_condition"
+   ],
+   "status": "pass",
+   "graders": {
+    "grounding": {
+     "status": "n/a",
+     "checks": 0,
+     "failures": []
+    },
+    "root_cause": {
+     "status": "n/a",
+     "checks": 0,
+     "failures": []
+    },
+    "escalation": {
+     "status": "pass",
+     "checks": 0,
+     "failures": []
+    },
+    "uncertainty": {
+     "status": "pass",
+     "checks": 3,
+     "failures": []
+    },
+    "next_step": {
+     "status": "n/a",
+     "checks": 0,
+     "failures": []
+    },
+    "format": {
+     "status": "n/a",
+     "checks": 0,
+     "failures": []
+    }
+   },
+   "writeup": {
+    "cards": [],
+    "dropped": [],
+    "nuisance": [],
+    "unresolved": [
+     {
+      "point": "SYN1/CH-61-B/OIL_PRESS",
+      "signal": "CriticalAlarmClass",
+      "reason": "no trend series for this point in the trend export"
+     }
+    ]
+   }
+  },
+  {
+   "id": "hvac-chiller-ch-61-chw-ret-temp",
+   "type": "severe_excursion",
+   "tags": [
+    "hvac",
+    "single_condition"
+   ],
+   "status": "pass",
+   "graders": {
+    "grounding": {
+     "status": "pass",
+     "checks": 3,
+     "failures": []
+    },
+    "root_cause": {
+     "status": "pass",
+     "checks": 6,
+     "failures": []
+    },
+    "escalation": {
+     "status": "pass",
+     "checks": 2,
+     "failures": []
+    },
+    "uncertainty": {
+     "status": "pass",
+     "checks": 2,
+     "failures": []
+    },
+    "next_step": {
+     "status": "pass",
+     "checks": 5,
+     "failures": []
+    },
+    "format": {
+     "status": "pass",
+     "checks": 5,
+     "failures": []
+    }
+   },
+   "writeup": {
+    "cards": [
+     {
+      "point": "SYN1/CH-61/CHW_RET_TEMP",
+      "equipment": "CH-61",
+      "start": "2026-07-29T04:00:00-07:00",
+      "label": "DefaultAlarmClass",
+      "rule": "R-P3",
+      "consequences": [],
+      "consequence_starts": [],
+      "attempts": [
+       {
+        "raw": "{\"reason\": \"The chilled water return temperature exceeded its 58.0 degF high limit for about 53% of the window, peaked around 9.21 deadbands past the limit, and was still above the limit at the window end, so the excursion is sustained and not a brief transient.\", \"verb\": \"verify\", \"target\": \"SYN1/CH-61/CHW_RET_TEMP\", \"detail\": \"Check whether the trend stays above the 58.0 degF limit beyond the 1.2 degF deadband across the 04:00 to 22:00 window, and whether the 4 returns to normal line up with the sustained periods above the limit.\"}",
+        "ok": true,
+        "detail": "ok",
+        "elapsed_s": 0.0005
+       }
+      ],
+      "rank": 1,
+      "reason": "The chilled water return temperature exceeded its 58.0 degF high limit for about 53% of the window, peaked around 9.21 deadbands past the limit, and was still above the limit at the window end, so the excursion is sustained and not a brief transient.",
+      "verb": "verify",
+      "target": "SYN1/CH-61/CHW_RET_TEMP",
+      "detail": "Check whether the trend stays above the 58.0 degF limit beyond the 1.2 degF deadband across the 04:00 to 22:00 window, and whether the 4 returns to normal line up with the sustained periods above the limit.",
+      "next_step": "Verify SYN1/CH-61/CHW_RET_TEMP: Check whether the trend stays above the 58.0 degF limit beyond the 1.2 degF deadband across the 04:00 to 22:00 window, and whether the 4 returns to normal line up with the sustained periods above the limit."
+     }
+    ],
+    "dropped": [],
+    "nuisance": [],
+    "unresolved": []
+   }
+  },
+  {
+   "id": "hvac-chiller-ch-61-chw-sup-temp",
+   "type": "sustained_fault",
+   "tags": [
+    "hvac",
+    "single_condition"
+   ],
+   "status": "pass",
+   "graders": {
+    "grounding": {
+     "status": "pass",
+     "checks": 3,
+     "failures": []
+    },
+    "root_cause": {
+     "status": "pass",
+     "checks": 6,
+     "failures": []
+    },
+    "escalation": {
+     "status": "pass",
+     "checks": 2,
+     "failures": []
+    },
+    "uncertainty": {
+     "status": "pass",
+     "checks": 2,
+     "failures": []
+    },
+    "next_step": {
+     "status": "pass",
+     "checks": 5,
+     "failures": []
+    },
+    "format": {
+     "status": "pass",
+     "checks": 5,
+     "failures": []
+    }
+   },
+   "writeup": {
+    "cards": [
+     {
+      "point": "SYN1/CH-61/CHW_SUP_TEMP",
+      "equipment": "CH-61",
+      "start": "2026-07-29T03:31:00-07:00",
+      "label": "CriticalAlarmClass",
+      "rule": "R-P1",
+      "consequences": [],
+      "consequence_starts": [],
+      "attempts": [
+       {
+        "raw": "{\"reason\": \"The chilled water supply temperature has stayed above its 46.0 degF high limit for about 85 percent of the window and was still above it at the end, with a peak deviation of 5.18 deadbands, so this is a sustained condition rather than a brief excursion.\", \"verb\": \"verify\", \"target\": \"SYN1/CH-61/CHW_SUP_TEMP\", \"detail\": \"Confirm whether the chilled water supply temperature trend stays above the 46.0 degF limit throughout the window and whether it remains above it at the end, noting the 1.0 degF deadband and the alarm's 20 repeats with no return to normal.\"}",
+        "ok": true,
+        "detail": "ok",
+        "elapsed_s": 0.0004
+       }
+      ],
+      "rank": 1,
+      "reason": "The chilled water supply temperature has stayed above its 46.0 degF high limit for about 85 percent of the window and was still above it at the end, with a peak deviation of 5.18 deadbands, so this is a sustained condition rather than a brief excursion.",
+      "verb": "verify",
+      "target": "SYN1/CH-61/CHW_SUP_TEMP",
+      "detail": "Confirm whether the chilled water supply temperature trend stays above the 46.0 degF limit throughout the window and whether it remains above it at the end, noting the 1.0 degF deadband and the alarm's 20 repeats with no return to normal.",
+      "next_step": "Verify SYN1/CH-61/CHW_SUP_TEMP: Confirm whether the chilled water supply temperature trend stays above the 46.0 degF limit throughout the window and whether it remains above it at the end, noting the 1.0 degF deadband and the alarm's 20 repeats with no return to normal."
+     }
+    ],
+    "dropped": [],
+    "nuisance": [],
+    "unresolved": []
+   }
+  },
+  {
+   "id": "hvac-chiller-ch-61-cond-approach",
+   "type": "drift",
+   "tags": [
+    "hvac",
+    "single_condition"
+   ],
+   "status": "pass",
+   "graders": {
+    "grounding": {
+     "status": "pass",
+     "checks": 3,
+     "failures": []
+    },
+    "root_cause": {
+     "status": "pass",
+     "checks": 6,
+     "failures": []
+    },
+    "escalation": {
+     "status": "pass",
+     "checks": 2,
+     "failures": []
+    },
+    "uncertainty": {
+     "status": "pass",
+     "checks": 2,
+     "failures": []
+    },
+    "next_step": {
+     "status": "pass",
+     "checks": 5,
+     "failures": []
+    },
+    "format": {
+     "status": "pass",
+     "checks": 5,
+     "failures": []
+    }
+   },
+   "writeup": {
+    "cards": [
+     {
+      "point": "SYN1/CH-61/COND_APPROACH",
+      "equipment": "CH-61",
+      "start": "2026-07-29T15:46:00-07:00",
+      "label": "DefaultAlarmClass",
+      "rule": "R-P2",
+      "consequences": [],
+      "consequence_starts": [],
+      "attempts": [
+       {
+        "raw": "{\"reason\": \"The condition shows the approach temperature on CH-61 above its 6.0 degF high limit for about 34.7% of the window and still past the limit at the end, with a peak of 3.21 deadbands and a steady drift away from the limit, so it is degrading rather than holding a fixed offset.\", \"verb\": \"inspect\", \"target\": \"SYN1/CH-61/COND_APPROACH\", \"detail\": \"Look for the upward trend in the approach value over the window, confirming it stays above the 6.0 degF limit at the end and continues to move away from the limit without reversing by more than about 0.09 deadbands.\"}",
+        "ok": true,
+        "detail": "ok",
+        "elapsed_s": 0.0006
+       }
+      ],
+      "rank": 1,
+      "reason": "The condition shows the approach temperature on CH-61 above its 6.0 degF high limit for about 34.7% of the window and still past the limit at the end, with a peak of 3.21 deadbands and a steady drift away from the limit, so it is degrading rather than holding a fixed offset.",
+      "verb": "inspect",
+      "target": "SYN1/CH-61/COND_APPROACH",
+      "detail": "Look for the upward trend in the approach value over the window, confirming it stays above the 6.0 degF limit at the end and continues to move away from the limit without reversing by more than about 0.09 deadbands.",
+      "next_step": "Inspect SYN1/CH-61/COND_APPROACH: Look for the upward trend in the approach value over the window, confirming it stays above the 6.0 degF limit at the end and continues to move away from the limit without reversing by more than about 0.09 deadbands."
+     }
+    ],
+    "dropped": [],
+    "nuisance": [],
+    "unresolved": []
+   }
+  },
+  {
+   "id": "hvac-chiller-ch-61-evap-press",
+   "type": "alarm_log_only",
+   "tags": [
+    "hvac",
+    "single_condition"
+   ],
+   "status": "fail",
+   "graders": {
+    "grounding": {
+     "status": "pass",
+     "checks": 3,
+     "failures": []
+    },
+    "root_cause": {
+     "status": "pass",
+     "checks": 6,
+     "failures": []
+    },
+    "escalation": {
+     "status": "pass",
+     "checks": 2,
+     "failures": []
+    },
+    "uncertainty": {
+     "status": "fail",
+     "checks": 3,
+     "failures": [
+      {
+       "code": "U2",
+       "layer": "writer",
+       "point": "SYN1/CH-61/EVAP_PRESS",
+       "reason": "rests on limited evidence and never says so"
+      }
+     ]
+    },
+    "next_step": {
+     "status": "fail",
+     "checks": 5,
+     "failures": [
+      {
+       "code": "N2",
+       "layer": "writer",
+       "point": "SYN1/CH-61/EVAP_PRESS",
+       "reason": "the detail names nothing particular to SYN1/CH-61/EVAP_PRESS (none of: pressure, gauge, transducer, port)"
+      }
+     ]
+    },
+    "format": {
+     "status": "pass",
+     "checks": 5,
+     "failures": []
+    }
+   },
+   "writeup": {
+    "cards": [
+     {
+      "point": "SYN1/CH-61/EVAP_PRESS",
+      "equipment": "CH-61",
+      "start": "2026-07-29T07:00:00-07:00",
+      "label": "DefaultAlarmClass",
+      "rule": "",
+      "consequences": [],
+      "consequence_starts": [],
+      "attempts": [
+       {
+        "raw": "{\"reason\": \"The evidence-side shows the evaporator pressure point of CH-61 was below its 58.0 psi LOW limit for 50.0% of the window (about 11.5 hours) and was still past the limit at window end, with a peak deviation of 2.40 deadbands, so the condition persisted rather than clearing.\", \"verb\": \"inspect\", \"target\": \"SYN1/CH-61/EVAP_PRESS\", \"detail\": \"Look at the SYN1/CH-61/EVAP_PRESS trend for the four alarm transitions and three returns to normal, and confirm whether the value stayed below 58.0 psi after 21:00 on 2026-07-29 and how far it dropped below the limit at its deepest point.\"}",
+        "ok": true,
+        "detail": "ok",
+        "elapsed_s": 0.0004
+       }
+      ],
+      "rank": 1,
+      "reason": "The evidence-side shows the evaporator pressure point of CH-61 was below its 58.0 psi LOW limit for 50.0% of the window (about 11.5 hours) and was still past the limit at window end, with a peak deviation of 2.40 deadbands, so the condition persisted rather than clearing.",
+      "verb": "inspect",
+      "target": "SYN1/CH-61/EVAP_PRESS",
+      "detail": "Look at the SYN1/CH-61/EVAP_PRESS trend for the four alarm transitions and three returns to normal, and confirm whether the value stayed below 58.0 psi after 21:00 on 2026-07-29 and how far it dropped below the limit at its deepest point.",
+      "next_step": "Inspect SYN1/CH-61/EVAP_PRESS: Look at the SYN1/CH-61/EVAP_PRESS trend for the four alarm transitions and three returns to normal, and confirm whether the value stayed below 58.0 psi after 21:00 on 2026-07-29 and how far it dropped below the limit at its deepest point."
+     }
+    ],
+    "dropped": [],
+    "nuisance": [],
+    "unresolved": []
+   }
+  },
+  {
+   "id": "hvac-chiller-ch-61-oil-press",
+   "type": "chattering",
+   "tags": [
+    "hvac",
+    "single_condition"
+   ],
+   "status": "pass",
+   "graders": {
+    "grounding": {
+     "status": "n/a",
+     "checks": 0,
+     "failures": []
+    },
+    "root_cause": {
+     "status": "n/a",
+     "checks": 0,
+     "failures": []
+    },
+    "escalation": {
+     "status": "pass",
+     "checks": 0,
+     "failures": []
+    },
+    "uncertainty": {
+     "status": "n/a",
+     "checks": 0,
+     "failures": []
+    },
+    "next_step": {
+     "status": "n/a",
+     "checks": 0,
+     "failures": []
+    },
+    "format": {
+     "status": "n/a",
+     "checks": 0,
+     "failures": []
+    }
+   },
+   "writeup": {
+    "cards": [],
+    "dropped": [],
+    "nuisance": [
+     {
+      "point": "SYN1/CH-61/OIL_PRESS",
+      "signal": "CriticalAlarmClass",
+      "label": "CriticalAlarmClass",
+      "rule": "R-D1",
+      "finding": "peak overshoot 0.65 deadbands, at or under the 1.00 allowed, so the alarm sat on its limit rather than departing from it"
+     }
+    ],
+    "unresolved": []
+   }
+  },
+  {
+   "id": "hvac-chiller-chw-ret-temp-trend-removed",
+   "type": "not_enough_evidence",
+   "tags": [
+    "hvac",
+    "single_condition",
+    "missing_trend"
+   ],
+   "status": "pass",
+   "graders": {
+    "grounding": {
+     "status": "n/a",
+     "checks": 0,
+     "failures": []
+    },
+    "root_cause": {
+     "status": "n/a",
+     "checks": 0,
+     "failures": []
+    },
+    "escalation": {
+     "status": "pass",
+     "checks": 0,
+     "failures": []
+    },
+    "uncertainty": {
+     "status": "pass",
+     "checks": 3,
+     "failures": []
+    },
+    "next_step": {
+     "status": "n/a",
+     "checks": 0,
+     "failures": []
+    },
+    "format": {
+     "status": "n/a",
+     "checks": 0,
+     "failures": []
+    }
+   },
+   "writeup": {
+    "cards": [],
+    "dropped": [],
+    "nuisance": [],
+    "unresolved": [
+     {
+      "point": "SYN1/CH-61/CHW_RET_TEMP",
+      "signal": "DefaultAlarmClass",
+      "reason": "no trend series for this point in the trend export"
+     }
+    ]
+   }
+  },
+  {
+   "id": "hvac-chiller-window",
+   "type": "flood_with_real_faults",
+   "tags": [
+    "hvac",
+    "flood",
+    "multiple_causes"
+   ],
+   "status": "fail",
+   "graders": {
+    "grounding": {
+     "status": "pass",
+     "checks": 15,
+     "failures": []
+    },
+    "root_cause": {
+     "status": "pass",
+     "checks": 26,
+     "failures": []
+    },
+    "escalation": {
+     "status": "pass",
+     "checks": 10,
+     "failures": []
+    },
+    "uncertainty": {
+     "status": "fail",
+     "checks": 19,
+     "failures": [
+      {
+       "code": "U2",
+       "layer": "writer",
+       "point": "SYN1/CH-61/EVAP_PRESS",
+       "reason": "rests on limited evidence and never says so"
+      }
+     ]
+    },
+    "next_step": {
+     "status": "fail",
+     "checks": 25,
+     "failures": [
+      {
+       "code": "N2",
+       "layer": "writer",
+       "point": "SYN1/CH-61/EVAP_PRESS",
+       "reason": "the detail names nothing particular to SYN1/CH-61/EVAP_PRESS (none of: pressure, gauge, transducer, port)"
+      }
+     ]
+    },
+    "format": {
+     "status": "pass",
+     "checks": 25,
+     "failures": []
+    }
+   },
+   "writeup": {
+    "cards": [
+     {
+      "point": "SYN1/CH-61-B/CHW_SUP_TEMP",
+      "equipment": "CH-61-B",
+      "start": "2026-07-29T04:01:00-07:00",
+      "label": "CriticalAlarmClass",
+      "rule": "R-P3",
+      "consequences": [],
+      "consequence_starts": [],
+      "attempts": [
+       {
+        "raw": "{\"reason\": \"Chilled water supply temperature on CH-61-B stays above its 46.0 degF high limit for about 53% of the window, peaks roughly 9 deadbands past the limit, and is still past the limit at window end, with 12.3 hours in alarm and a priority-1 critical alarm class, so the condition is persistent and significant.\", \"verb\": \"verify\", \"target\": \"SYN1/CH-61-B/CHW_SUP_TEMP\", \"detail\": \"Look for whether the chilled water supply temperature trend remains above 46.0 degF through the end of the window and whether the excursions correlate with the 5 alarm transitions and 4 returns to normal, confirming the reading against the sensor and its trend samples.\"}",
+        "ok": true,
+        "detail": "ok",
+        "elapsed_s": 0.0004
+       }
+      ],
+      "rank": 1,
+      "reason": "Chilled water supply temperature on CH-61-B stays above its 46.0 degF high limit for about 53% of the window, peaks roughly 9 deadbands past the limit, and is still past the limit at window end, with 12.3 hours in alarm and a priority-1 critical alarm class, so the condition is persistent and significant.",
+      "verb": "verify",
+      "target": "SYN1/CH-61-B/CHW_SUP_TEMP",
+      "detail": "Look for whether the chilled water supply temperature trend remains above 46.0 degF through the end of the window and whether the excursions correlate with the 5 alarm transitions and 4 returns to normal, confirming the reading against the sensor and its trend samples.",
+      "next_step": "Verify SYN1/CH-61-B/CHW_SUP_TEMP: Look for whether the chilled water supply temperature trend remains above 46.0 degF through the end of the window and whether the excursions correlate with the 5 alarm transitions and 4 returns to normal, confirming the reading against the sensor and its trend samples."
+     },
+     {
+      "point": "SYN1/CH-61/CHW_RET_TEMP",
+      "equipment": "CH-61",
+      "start": "2026-07-29T04:00:00-07:00",
+      "label": "DefaultAlarmClass",
+      "rule": "R-P3",
+      "consequences": [],
+      "consequence_starts": [],
+      "attempts": [
+       {
+        "raw": "{\"reason\": \"The chilled water return temperature exceeded its 58.0 degF high limit for about 53% of the window, peaked around 9.21 deadbands past the limit, and was still above the limit at the window end, so the excursion is sustained and not a brief transient.\", \"verb\": \"verify\", \"target\": \"SYN1/CH-61/CHW_RET_TEMP\", \"detail\": \"Check whether the trend stays above the 58.0 degF limit beyond the 1.2 degF deadband across the 04:00 to 22:00 window, and whether the 4 returns to normal line up with the sustained periods above the limit.\"}",
+        "ok": true,
+        "detail": "ok",
+        "elapsed_s": 0.0003
+       }
+      ],
+      "rank": 2,
+      "reason": "The chilled water return temperature exceeded its 58.0 degF high limit for about 53% of the window, peaked around 9.21 deadbands past the limit, and was still above the limit at the window end, so the excursion is sustained and not a brief transient.",
+      "verb": "verify",
+      "target": "SYN1/CH-61/CHW_RET_TEMP",
+      "detail": "Check whether the trend stays above the 58.0 degF limit beyond the 1.2 degF deadband across the 04:00 to 22:00 window, and whether the 4 returns to normal line up with the sustained periods above the limit.",
+      "next_step": "Verify SYN1/CH-61/CHW_RET_TEMP: Check whether the trend stays above the 58.0 degF limit beyond the 1.2 degF deadband across the 04:00 to 22:00 window, and whether the 4 returns to normal line up with the sustained periods above the limit."
+     },
+     {
+      "point": "SYN1/CH-61/CHW_SUP_TEMP",
+      "equipment": "CH-61",
+      "start": "2026-07-29T03:31:00-07:00",
+      "label": "CriticalAlarmClass",
+      "rule": "R-P1",
+      "consequences": [],
+      "consequence_starts": [],
+      "attempts": [
+       {
+        "raw": "{\"reason\": \"The chilled water supply temperature has stayed above its 46.0 degF high limit for about 85 percent of the window and was still above it at the end, with a peak deviation of 5.18 deadbands, so this is a sustained condition rather than a brief excursion.\", \"verb\": \"verify\", \"target\": \"SYN1/CH-61/CHW_SUP_TEMP\", \"detail\": \"Confirm whether the chilled water supply temperature trend stays above the 46.0 degF limit throughout the window and whether it remains above it at the end, noting the 1.0 degF deadband and the alarm's 20 repeats with no return to normal.\"}",
+        "ok": true,
+        "detail": "ok",
+        "elapsed_s": 0.0003
+       }
+      ],
+      "rank": 3,
+      "reason": "The chilled water supply temperature has stayed above its 46.0 degF high limit for about 85 percent of the window and was still above it at the end, with a peak deviation of 5.18 deadbands, so this is a sustained condition rather than a brief excursion.",
+      "verb": "verify",
+      "target": "SYN1/CH-61/CHW_SUP_TEMP",
+      "detail": "Confirm whether the chilled water supply temperature trend stays above the 46.0 degF limit throughout the window and whether it remains above it at the end, noting the 1.0 degF deadband and the alarm's 20 repeats with no return to normal.",
+      "next_step": "Verify SYN1/CH-61/CHW_SUP_TEMP: Confirm whether the chilled water supply temperature trend stays above the 46.0 degF limit throughout the window and whether it remains above it at the end, noting the 1.0 degF deadband and the alarm's 20 repeats with no return to normal."
+     },
+     {
+      "point": "SYN1/CH-61/COND_APPROACH",
+      "equipment": "CH-61",
+      "start": "2026-07-29T15:46:00-07:00",
+      "label": "DefaultAlarmClass",
+      "rule": "R-P2",
+      "consequences": [],
+      "consequence_starts": [],
+      "attempts": [
+       {
+        "raw": "{\"reason\": \"The condition shows the approach temperature on CH-61 above its 6.0 degF high limit for about 34.7% of the window and still past the limit at the end, with a peak of 3.21 deadbands and a steady drift away from the limit, so it is degrading rather than holding a fixed offset.\", \"verb\": \"inspect\", \"target\": \"SYN1/CH-61/COND_APPROACH\", \"detail\": \"Look for the upward trend in the approach value over the window, confirming it stays above the 6.0 degF limit at the end and continues to move away from the limit without reversing by more than about 0.09 deadbands.\"}",
+        "ok": true,
+        "detail": "ok",
+        "elapsed_s": 0.0004
+       }
+      ],
+      "rank": 4,
+      "reason": "The condition shows the approach temperature on CH-61 above its 6.0 degF high limit for about 34.7% of the window and still past the limit at the end, with a peak of 3.21 deadbands and a steady drift away from the limit, so it is degrading rather than holding a fixed offset.",
+      "verb": "inspect",
+      "target": "SYN1/CH-61/COND_APPROACH",
+      "detail": "Look for the upward trend in the approach value over the window, confirming it stays above the 6.0 degF limit at the end and continues to move away from the limit without reversing by more than about 0.09 deadbands.",
+      "next_step": "Inspect SYN1/CH-61/COND_APPROACH: Look for the upward trend in the approach value over the window, confirming it stays above the 6.0 degF limit at the end and continues to move away from the limit without reversing by more than about 0.09 deadbands."
+     },
+     {
+      "point": "SYN1/CH-61/EVAP_PRESS",
+      "equipment": "CH-61",
+      "start": "2026-07-29T07:00:00-07:00",
+      "label": "DefaultAlarmClass",
+      "rule": "",
+      "consequences": [],
+      "consequence_starts": [],
+      "attempts": [
+       {
+        "raw": "{\"reason\": \"The evidence-side shows the evaporator pressure point of CH-61 was below its 58.0 psi LOW limit for 50.0% of the window (about 11.5 hours) and was still past the limit at window end, with a peak deviation of 2.40 deadbands, so the condition persisted rather than clearing.\", \"verb\": \"inspect\", \"target\": \"SYN1/CH-61/EVAP_PRESS\", \"detail\": \"Look at the SYN1/CH-61/EVAP_PRESS trend for the four alarm transitions and three returns to normal, and confirm whether the value stayed below 58.0 psi after 21:00 on 2026-07-29 and how far it dropped below the limit at its deepest point.\"}",
+        "ok": true,
+        "detail": "ok",
+        "elapsed_s": 0.0004
+       }
+      ],
+      "rank": 5,
+      "reason": "The evidence-side shows the evaporator pressure point of CH-61 was below its 58.0 psi LOW limit for 50.0% of the window (about 11.5 hours) and was still past the limit at window end, with a peak deviation of 2.40 deadbands, so the condition persisted rather than clearing.",
+      "verb": "inspect",
+      "target": "SYN1/CH-61/EVAP_PRESS",
+      "detail": "Look at the SYN1/CH-61/EVAP_PRESS trend for the four alarm transitions and three returns to normal, and confirm whether the value stayed below 58.0 psi after 21:00 on 2026-07-29 and how far it dropped below the limit at its deepest point.",
+      "next_step": "Inspect SYN1/CH-61/EVAP_PRESS: Look at the SYN1/CH-61/EVAP_PRESS trend for the four alarm transitions and three returns to normal, and confirm whether the value stayed below 58.0 psi after 21:00 on 2026-07-29 and how far it dropped below the limit at its deepest point."
+     }
+    ],
+    "dropped": [],
+    "nuisance": [
+     {
+      "point": "SYN1/CH-61-B/EVAP_PRESS",
+      "signal": "DefaultAlarmClass",
+      "label": "DefaultAlarmClass",
+      "rule": "",
+      "finding": "no rule fired; the alarm-side classification repeating carried through"
+     },
+     {
+      "point": "SYN1/CH-61-B/COND_APPROACH",
+      "signal": "DefaultAlarmClass",
+      "label": "DefaultAlarmClass",
+      "rule": "R-D3",
+      "finding": "returned to normal and held 57600 s at no closer than 5.80 deadbands inside the limit, so the condition cleared itself and stayed clear"
+     },
+     {
+      "point": "SYN1/CH-61/OIL_PRESS",
+      "signal": "CriticalAlarmClass",
+      "label": "CriticalAlarmClass",
+      "rule": "R-D1",
+      "finding": "peak overshoot 0.65 deadbands, at or under the 1.00 allowed, so the alarm sat on its limit rather than departing from it"
+     },
+     {
+      "point": "SYN1/CH-61-B/COND_APPROACH",
+      "signal": "DefaultAlarmClass",
+      "label": "DefaultAlarmClass",
+      "rule": "R-D3",
+      "finding": "returned to normal and held 57600 s at no closer than 5.80 deadbands inside the limit, so the condition cleared itself and stayed clear"
+     },
+     {
+      "point": "SYN1/CH-61-B/CHW_RET_TEMP",
+      "signal": "DefaultAlarmClass",
+      "label": "DefaultAlarmClass",
+      "rule": "R-D2",
+      "finding": "total 180 s beyond the limit is under the 600 s minimum, a fleeting excursion with no dwell behind it"
+     }
+    ],
+    "unresolved": [
+     {
+      "point": "SYN1/CH-61-B/OIL_PRESS",
+      "signal": "CriticalAlarmClass",
+      "reason": "no trend series for this point in the trend export"
+     }
+    ]
+   }
+  },
+  {
+   "id": "power-battery-alarms-first",
+   "type": "consequence_looks_like_cause",
+   "tags": [
+    "power"
+   ],
+   "status": "not run",
+   "why_not": "no saved reply for this prompt and TRIAGE_ANTHROPIC_KEY is not set",
+   "graders": {},
+   "writeup": null
+  },
+  {
+   "id": "power-fleeting-sag",
+   "type": "fleeting",
+   "tags": [
+    "power"
+   ],
+   "status": "pass",
+   "graders": {
+    "grounding": {
+     "status": "n/a",
+     "checks": 0,
+     "failures": []
+    },
+    "root_cause": {
+     "status": "n/a",
+     "checks": 0,
+     "failures": []
+    },
+    "escalation": {
+     "status": "pass",
+     "checks": 0,
+     "failures": []
+    },
+    "uncertainty": {
+     "status": "n/a",
+     "checks": 0,
+     "failures": []
+    },
+    "next_step": {
+     "status": "n/a",
+     "checks": 0,
+     "failures": []
+    },
+    "format": {
+     "status": "n/a",
+     "checks": 0,
+     "failures": []
+    }
+   },
+   "writeup": {
+    "cards": [],
+    "dropped": [],
+    "nuisance": [
+     {
+      "point": "SYN1/UTIL-1/V_LO",
+      "signal": "voltage_sag",
+      "label": "utility voltage sag",
+      "rule": "E-D1",
+      "finding": "the journal reports it but none of the 2 trend samples around it is past the limit, so the alarm is not corroborated"
+     }
+    ],
+    "unresolved": []
+   }
+  },
+  {
+   "id": "power-generator-test",
+   "type": "consequence_looks_like_cause",
+   "tags": [
+    "power",
+    "no_cause_in_export"
+   ],
+   "status": "not run",
+   "why_not": "no saved reply for this prompt and TRIAGE_ANTHROPIC_KEY is not set",
+   "graders": {},
+   "writeup": null
+  },
+  {
+   "id": "power-lone-battery-trend-missing",
+   "type": "not_enough_evidence",
+   "tags": [
+    "power"
+   ],
+   "status": "not run",
+   "why_not": "no saved reply for this prompt and TRIAGE_ANTHROPIC_KEY is not set",
+   "graders": {},
+   "writeup": null
+  },
+  {
+   "id": "power-outage-kolkata",
+   "type": "cause_and_consequences",
+   "tags": [
+    "power",
+    "time_zone"
+   ],
+   "status": "not run",
+   "why_not": "no saved reply for this prompt and TRIAGE_ANTHROPIC_KEY is not set",
+   "graders": {},
+   "writeup": null
+  },
+  {
+   "id": "power-outage-new-york",
+   "type": "cause_and_consequences",
+   "tags": [
+    "power",
+    "time_zone"
+   ],
+   "status": "not run",
+   "why_not": "no saved reply for this prompt and TRIAGE_ANTHROPIC_KEY is not set",
+   "graders": {},
+   "writeup": null
+  },
+  {
+   "id": "power-outage-then-lone-battery",
+   "type": "flood_with_real_faults",
+   "tags": [
+    "power",
+    "flood",
+    "hidden_fault"
+   ],
+   "status": "not run",
+   "why_not": "no saved reply for this prompt and TRIAGE_ANTHROPIC_KEY is not set",
+   "graders": {},
+   "writeup": null
+  },
+  {
+   "id": "power-outage-then-overload-chicago",
+   "type": "flood_with_real_faults",
+   "tags": [
+    "power",
+    "flood",
+    "multiple_causes",
+    "time_zone"
+   ],
+   "status": "not run",
+   "why_not": "no saved reply for this prompt and TRIAGE_ANTHROPIC_KEY is not set",
+   "graders": {},
+   "writeup": null
+  },
+  {
+   "id": "power-outage-then-overload-utc",
+   "type": "flood_with_real_faults",
+   "tags": [
+    "power",
+    "flood",
+    "multiple_causes"
+   ],
+   "status": "not run",
+   "why_not": "no saved reply for this prompt and TRIAGE_ANTHROPIC_KEY is not set",
+   "graders": {},
+   "writeup": null
+  },
+  {
+   "id": "power-outage-ups-trend-missing",
+   "type": "missing_trend",
+   "tags": [
+    "power"
+   ],
+   "status": "not run",
+   "why_not": "no saved reply for this prompt and TRIAGE_ANTHROPIC_KEY is not set",
+   "graders": {},
+   "writeup": null
+  },
+  {
+   "id": "power-outage-utc",
+   "type": "cause_and_consequences",
+   "tags": [
+    "power"
+   ],
+   "status": "not run",
+   "why_not": "no saved reply for this prompt and TRIAGE_ANTHROPIC_KEY is not set",
+   "graders": {},
+   "writeup": null
+  },
+  {
+   "id": "power-outage-utility-trend-missing",
+   "type": "not_enough_evidence",
+   "tags": [
+    "power",
+    "no_cause_in_export"
+   ],
+   "status": "not run",
+   "why_not": "no saved reply for this prompt and TRIAGE_ANTHROPIC_KEY is not set",
+   "graders": {},
+   "writeup": null
+  },
+  {
+   "id": "power-pdu-overload-kolkata",
+   "type": "cause_and_consequences",
+   "tags": [
+    "power",
+    "time_zone"
+   ],
+   "status": "not run",
+   "why_not": "no saved reply for this prompt and TRIAGE_ANTHROPIC_KEY is not set",
+   "graders": {},
+   "writeup": null
+  },
+  {
+   "id": "power-pdu-overload-new-york",
+   "type": "cause_and_consequences",
+   "tags": [
+    "power",
+    "time_zone"
+   ],
+   "status": "not run",
+   "why_not": "no saved reply for this prompt and TRIAGE_ANTHROPIC_KEY is not set",
+   "graders": {},
+   "writeup": null
+  },
+  {
+   "id": "power-pdu-overload-utc",
+   "type": "cause_and_consequences",
+   "tags": [
+    "power"
+   ],
+   "status": "not run",
+   "why_not": "no saved reply for this prompt and TRIAGE_ANTHROPIC_KEY is not set",
+   "graders": {},
+   "writeup": null
+  },
+  {
+   "id": "power-power-factor-chattering",
+   "type": "chattering",
+   "tags": [
+    "power"
+   ],
+   "status": "pass",
+   "graders": {
+    "grounding": {
+     "status": "n/a",
+     "checks": 0,
+     "failures": []
+    },
+    "root_cause": {
+     "status": "n/a",
+     "checks": 0,
+     "failures": []
+    },
+    "escalation": {
+     "status": "pass",
+     "checks": 0,
+     "failures": []
+    },
+    "uncertainty": {
+     "status": "n/a",
+     "checks": 0,
+     "failures": []
+    },
+    "next_step": {
+     "status": "n/a",
+     "checks": 0,
+     "failures": []
+    },
+    "format": {
+     "status": "n/a",
+     "checks": 0,
+     "failures": []
+    }
+   },
+   "writeup": {
+    "cards": [],
+    "dropped": [],
+    "nuisance": [
+     {
+      "point": "SYN1/MECH-1/PF_LO",
+      "signal": "power_factor_low",
+      "label": "low power factor",
+      "rule": "E-D1",
+      "finding": "the journal reports it but none of the 11 trend samples around it is past the limit, so the alarm is not corroborated"
+     }
+    ],
+    "unresolved": []
+   }
+  },
+  {
+   "id": "power-power-factor-new-york",
+   "type": "standalone",
+   "tags": [
+    "power",
+    "time_zone"
+   ],
+   "status": "not run",
+   "why_not": "no saved reply for this prompt and TRIAGE_ANTHROPIC_KEY is not set",
+   "graders": {},
+   "writeup": null
+  },
+  {
+   "id": "power-power-factor-utc",
+   "type": "standalone",
+   "tags": [
+    "power"
+   ],
+   "status": "not run",
+   "why_not": "no saved reply for this prompt and TRIAGE_ANTHROPIC_KEY is not set",
+   "graders": {},
+   "writeup": null
+  },
+  {
+   "id": "power-sag-long-ride-through",
+   "type": "consequence_looks_like_cause",
+   "tags": [
+    "power"
+   ],
+   "status": "not run",
+   "why_not": "no saved reply for this prompt and TRIAGE_ANTHROPIC_KEY is not set",
+   "graders": {},
+   "writeup": null
+  },
+  {
+   "id": "power-sag-new-york",
+   "type": "cause_and_consequences",
+   "tags": [
+    "power",
+    "time_zone"
+   ],
+   "status": "not run",
+   "why_not": "no saved reply for this prompt and TRIAGE_ANTHROPIC_KEY is not set",
+   "graders": {},
+   "writeup": null
+  },
+  {
+   "id": "power-sag-utc",
+   "type": "cause_and_consequences",
+   "tags": [
+    "power"
+   ],
+   "status": "not run",
+   "why_not": "no saved reply for this prompt and TRIAGE_ANTHROPIC_KEY is not set",
+   "graders": {},
+   "writeup": null
+  },
+  {
+   "id": "power-two-unrelated-events",
+   "type": "two_events",
+   "tags": [
+    "power",
+    "multiple_causes"
+   ],
+   "status": "not run",
+   "why_not": "no saved reply for this prompt and TRIAGE_ANTHROPIC_KEY is not set",
+   "graders": {},
+   "writeup": null
+  },
+  {
+   "id": "power-ups-on-battery-new-york",
+   "type": "unexplained_alarm",
+   "tags": [
+    "power",
+    "time_zone"
+   ],
+   "status": "not run",
+   "why_not": "no saved reply for this prompt and TRIAGE_ANTHROPIC_KEY is not set",
+   "graders": {},
+   "writeup": null
+  },
+  {
+   "id": "power-ups-on-battery-utc",
+   "type": "unexplained_alarm",
+   "tags": [
+    "power"
+   ],
+   "status": "not run",
+   "why_not": "no saved reply for this prompt and TRIAGE_ANTHROPIC_KEY is not set",
+   "graders": {},
+   "writeup": null
+  }
+ ],
+ "model_graded": {
+  "clarity": null
+ },
+ "results_file": "evals/results/haiku-2026-10-20.json"
+}

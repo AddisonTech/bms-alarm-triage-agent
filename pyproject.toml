@@ -38,6 +38,9 @@ where = ["src"]
 # A test holds it byte for byte equal to config/triage.json.
 [tool.setuptools.package-data]
 bms_alarm_triage = ["triage.json"]
+# The write-up eval scorecard, so a program that installs the agent can show
+# how its writers are graded without the repository. evals/run.py writes it.
+bms_triage_service = ["eval_scorecard.json"]
 
 # tools/ holds the alarm-log generator and the evaluation harness. Neither
 # is product, so neither is packaged; keeping them out of the wheel is the

@@ -18,8 +18,10 @@ and has no path to any building or power system.
 """
 from __future__ import annotations
 
+import json
 import os
 import tempfile
+from importlib import resources
 
 from bms_alarm_triage import __version__, display
 from bms_alarm_triage import result as result_module
@@ -28,12 +30,24 @@ from bms_alarm_triage.graph import run_journal
 
 from . import haiku_writer, template_writer
 
-__all__ = ["triage", "select_writer", "UnknownTimeZone", "__version__"]
+__all__ = ["triage", "select_writer", "eval_scorecard", "UnknownTimeZone", "__version__"]
 
 UnknownTimeZone = display.UnknownTimeZone
 
 WRITER_TEMPLATE = "template"
 WRITER_HAIKU = "haiku"
+
+
+def eval_scorecard() -> dict:
+    """How the writers are graded: the latest pass rates of the write-up eval suite.
+
+    Written by the agent repository's evals/run.py and shipped in the package,
+    one entry per writer, each with its pass rate per grader, the date it was
+    run, and a link to the showcase page that explains the graders. The
+    eval cases are synthetic.
+    """
+    text = resources.files(__package__).joinpath("eval_scorecard.json").read_text(encoding="utf-8")
+    return json.loads(text)
 
 
 def select_writer(config: Config, environ=None):
