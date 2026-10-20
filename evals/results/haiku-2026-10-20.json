@@ -359,7 +359,7 @@
         "raw": "{\"reason\": \"The cooling discharge duct temperature alarm stayed above its 60.0 degF high limit for about 53% of the window, peaked about 9.17 deadbands past the limit, and was still past the limit at the end of the window, so the cooling condition is sustained rather than brief.\", \"verb\": \"verify\", \"target\": \"SYN1/AHU-21-B/CLG_DUCT_TEMP\", \"detail\": \"Check whether the trend shows the duct temperature staying above 60.0 degF through the late part of the window, and whether the 11 repeats and 4 returns to normal line up with the sustained high readings.\"}",
         "ok": true,
         "detail": "ok",
-        "elapsed_s": 0.0012
+        "elapsed_s": 0.0011
        }
       ],
       "written_by": "Claude Haiku",
@@ -742,7 +742,7 @@
         "raw": "{\"reason\": \"The alarm limit on the SYN1/AHU-21/CLG_SP point was exceeded for 11.5 hours (50.0% of the window), peaking 2.25 deadbands past the limit and still past it at window end, so the condition persisted rather than clearing.\", \"verb\": \"inspect\", \"target\": \"SYN1/AHU-21/CLG_SP\", \"detail\": \"Look at the trend to confirm whether the CLG_SP value stays above the 1.5 inH2O limit through the window end at 21:00 and whether the four alarm transitions with three returns to normal reflect a repeating pattern.\"}",
         "ok": true,
         "detail": "ok",
-        "elapsed_s": 0.0004
+        "elapsed_s": 0.0005
        }
       ],
       "written_by": "Claude Haiku",
@@ -814,7 +814,7 @@
         "raw": "{\"reason\": \"The heating duct temperature stayed below its 88.0 degF low limit for about 53% of the window and was still below it at the end, with a peak deviation of 9.20 deadbands, indicating a sustained low-temperature condition on AHU-21 that the evidence shows as persistent rather than transient.\", \"verb\": \"verify\", \"target\": \"SYN1/AHU-21/HTG_DUCT_TEMP\", \"detail\": \"Look for whether the duct temperature trend remains below the 88.0 degF limit through the end of the window, and confirm the period of deviation and the peak excursion of about 9.20 deadbands against the logged samples.\"}",
         "ok": true,
         "detail": "ok",
-        "elapsed_s": 0.0005
+        "elapsed_s": 0.0004
        }
       ],
       "written_by": "Claude Haiku",
@@ -1081,7 +1081,7 @@
         "raw": "{\"reason\": \"The hot water supply temperature of boiler BLR-71-B fell below its 168.0 degF low alarm limit, stayed past the limit for about 53% of the window, and was still past it at the window end, with 12.3 hours in alarm and a peak deviation of 9.20 deadbands, so the condition is persistent and was promoted on reassessment.\", \"verb\": \"inspect\", \"target\": \"SYN1/BLR-71-B/HW_SUP_TEMP\", \"detail\": \"Look at the hot water supply temperature trend for the period it sat below 168.0 degF, including the depth of the dip (about 9.20 deadbands at peak) and whether it had not recovered by the end of the window at 23:01.\"}",
         "ok": true,
         "detail": "ok",
-        "elapsed_s": 0.0007
+        "elapsed_s": 0.0003
        }
       ],
       "written_by": "Claude Haiku",
@@ -1342,7 +1342,7 @@
         "raw": "{\"reason\": \"The hot water return temperature on boiler BLR-71 has stayed below its 145.0 degF low limit for about 34.7% of the window and was still past the limit at the end, with the deviation worsening steadily rather than holding a fixed offset, so the condition is persistent and degrading.\", \"verb\": \"inspect\", \"target\": \"SYN1/BLR-71/HW_RET_TEMP\", \"detail\": \"Look for a continuing downward trend in the hot water return temperature below 145.0 degF with a peak deviation of about 3.21 deadbands and no return to normal by the end of the window.\"}",
         "ok": true,
         "detail": "ok",
-        "elapsed_s": 0.0006
+        "elapsed_s": 0.0004
        }
       ],
       "written_by": "Claude Haiku",
@@ -1486,7 +1486,7 @@
         "raw": "{\"reason\": \"BLR-71 stack temperature exceeded its 420.0 degF high limit for about 53.3% of the window, peaked 9.25 deadbands past the limit, and was still above the limit at window end, with 5 alarms and 23 repeats, so the condition is persistent and was promoted on the peak deviation evidence.\", \"verb\": \"inspect\", \"target\": \"SYN1/BLR-71/STACK_TEMP\", \"detail\": \"Look for the trend shape showing stack temperature held above 420.0 degF from roughly 04:00 to 23:30 with a peak about 9.25 deadbands above the limit and no return below the limit by the end of the window.\"}",
         "ok": true,
         "detail": "ok",
-        "elapsed_s": 0.0009
+        "elapsed_s": 0.0004
        }
       ],
       "written_by": "Claude Haiku",
@@ -1620,7 +1620,7 @@
         "raw": "{\"reason\": \"BLR-71 stack temperature exceeded its 420.0 degF high limit for about 53.3% of the window, peaked 9.25 deadbands past the limit, and was still above the limit at window end, with 5 alarms and 23 repeats, so the condition is persistent and was promoted on the peak deviation evidence.\", \"verb\": \"inspect\", \"target\": \"SYN1/BLR-71/STACK_TEMP\", \"detail\": \"Look for the trend shape showing stack temperature held above 420.0 degF from roughly 04:00 to 23:30 with a peak about 9.25 deadbands above the limit and no return below the limit by the end of the window.\"}",
         "ok": true,
         "detail": "ok",
-        "elapsed_s": 0.0007
+        "elapsed_s": 0.0005
        }
       ],
       "written_by": "Claude Haiku",
@@ -1668,7 +1668,7 @@
         "raw": "{\"reason\": \"The hot-water supply temperature on boiler BLR-71 has remained below its 168.0 degF low limit for 85.4 percent of the window and was still below it at the end, so the condition is persistent rather than transient, though the alarm record itself is marked stale.\", \"verb\": \"inspect\", \"target\": \"SYN1/BLR-71/HW_SUP_TEMP\", \"detail\": \"Look at the trend to confirm the supply temperature stays below the 168.0 degF limit (with the 2.0 degF deadband) across most of the 03:31 to 23:31 window and reaches a peak deviation of about 5.20 deadbands, and check whether the alarm state reflects the current value given its stale classification.\"}",
         "ok": true,
         "detail": "ok",
-        "elapsed_s": 0.0007
+        "elapsed_s": 0.0004
        }
       ],
       "written_by": "Claude Haiku",
@@ -1692,7 +1692,7 @@
         "raw": "{\"reason\": \"The hot water return temperature on boiler BLR-71 has stayed below its 145.0 degF low limit for about 34.7% of the window and was still past the limit at the end, with the deviation worsening steadily rather than holding a fixed offset, so the condition is persistent and degrading.\", \"verb\": \"inspect\", \"target\": \"SYN1/BLR-71/HW_RET_TEMP\", \"detail\": \"Look for a continuing downward trend in the hot water return temperature below 145.0 degF with a peak deviation of about 3.21 deadbands and no return to normal by the end of the window.\"}",
         "ok": true,
         "detail": "ok",
-        "elapsed_s": 0.0006
+        "elapsed_s": 0.0003
        }
       ],
       "written_by": "Claude Haiku",
@@ -1716,7 +1716,7 @@
         "raw": "{\"reason\": \"BLR-71 firing rate stayed above the 92.0 pct high alarm limit for half the window (11.5 hours in alarm across 4 transitions) and was still past the limit at window end, so the boiler may be operating at sustained high firing demand.\", \"verb\": \"inspect\", \"target\": \"SYN1/BLR-71/FIRING_RATE\", \"detail\": \"Look at the firing rate trend between 07:02 and 21:02 for the sustained period above 92.0 pct, including the peak excursion of about 2.28 deadbands past the limit and the reading still above the limit at the end of the window.\"}",
         "ok": true,
         "detail": "ok",
-        "elapsed_s": 0.0006
+        "elapsed_s": 0.0003
        }
       ],
       "written_by": "Claude Haiku",
@@ -1885,7 +1885,7 @@
         "raw": "{\"reason\": \"Chilled water supply temperature on CH-61-B stays above its 46.0 degF high limit for about 53% of the window, peaks roughly 9 deadbands past the limit, and is still past the limit at window end, with 12.3 hours in alarm and a priority-1 critical alarm class, so the condition is persistent and significant.\", \"verb\": \"verify\", \"target\": \"SYN1/CH-61-B/CHW_SUP_TEMP\", \"detail\": \"Look for whether the chilled water supply temperature trend remains above 46.0 degF through the end of the window and whether the excursions correlate with the 5 alarm transitions and 4 returns to normal, confirming the reading against the sensor and its trend samples.\"}",
         "ok": true,
         "detail": "ok",
-        "elapsed_s": 0.0009
+        "elapsed_s": 0.0004
        }
       ],
       "written_by": "Claude Haiku",
@@ -2127,7 +2127,7 @@
         "raw": "{\"reason\": \"The chilled water return temperature exceeded its 58.0 degF high limit for about 53% of the window, peaked around 9.21 deadbands past the limit, and was still above the limit at the window end, so the excursion is sustained and not a brief transient.\", \"verb\": \"verify\", \"target\": \"SYN1/CH-61/CHW_RET_TEMP\", \"detail\": \"Check whether the trend stays above the 58.0 degF limit beyond the 1.2 degF deadband across the 04:00 to 22:00 window, and whether the 4 returns to normal line up with the sustained periods above the limit.\"}",
         "ok": true,
         "detail": "ok",
-        "elapsed_s": 0.0007
+        "elapsed_s": 0.0005
        }
       ],
       "written_by": "Claude Haiku",
@@ -2271,7 +2271,7 @@
         "raw": "{\"reason\": \"The condition shows the approach temperature on CH-61 above its 6.0 degF high limit for about 34.7% of the window and still past the limit at the end, with a peak of 3.21 deadbands and a steady drift away from the limit, so it is degrading rather than holding a fixed offset.\", \"verb\": \"inspect\", \"target\": \"SYN1/CH-61/COND_APPROACH\", \"detail\": \"Look for the upward trend in the approach value over the window, confirming it stays above the 6.0 degF limit at the end and continues to move away from the limit without reversing by more than about 0.09 deadbands.\"}",
         "ok": true,
         "detail": "ok",
-        "elapsed_s": 0.0006
+        "elapsed_s": 0.0004
        }
       ],
       "written_by": "Claude Haiku",
@@ -2357,7 +2357,7 @@
         "raw": "{\"reason\": \"The evidence-side shows the evaporator pressure point of CH-61 was below its 58.0 psi LOW limit for 50.0% of the window (about 11.5 hours) and was still past the limit at window end, with a peak deviation of 2.40 deadbands, so the condition persisted rather than clearing.\", \"verb\": \"inspect\", \"target\": \"SYN1/CH-61/EVAP_PRESS\", \"detail\": \"Look at the SYN1/CH-61/EVAP_PRESS trend for the four alarm transitions and three returns to normal, and confirm whether the value stayed below 58.0 psi after 21:00 on 2026-07-29 and how far it dropped below the limit at its deepest point.\"}",
         "ok": true,
         "detail": "ok",
-        "elapsed_s": 0.0006
+        "elapsed_s": 0.0005
        }
       ],
       "written_by": "Claude Haiku",
@@ -2577,7 +2577,7 @@
         "raw": "{\"reason\": \"The chilled water return temperature exceeded its 58.0 degF high limit for about 53% of the window, peaked around 9.21 deadbands past the limit, and was still above the limit at the window end, so the excursion is sustained and not a brief transient.\", \"verb\": \"verify\", \"target\": \"SYN1/CH-61/CHW_RET_TEMP\", \"detail\": \"Check whether the trend stays above the 58.0 degF limit beyond the 1.2 degF deadband across the 04:00 to 22:00 window, and whether the 4 returns to normal line up with the sustained periods above the limit.\"}",
         "ok": true,
         "detail": "ok",
-        "elapsed_s": 0.0003
+        "elapsed_s": 0.0004
        }
       ],
       "written_by": "Claude Haiku",
@@ -3082,12 +3082,18 @@
  "results_file": "evals/results/haiku-2026-10-20.json",
  "as_served": {
   "about": "Claude Haiku's replies through bms_triage_service's HaikuLiveClient: every check it applies, and the template's card where a check holds a reply back.",
-  "held_back": [],
+  "held_back": [
+   "no trend rule moved this condition, so it ranks on the alarm log alone, and the reply does not say so",
+   "no trend rule moved this condition, so it ranks on the alarm log alone, and the reply does not say so",
+   "no trend rule moved this condition, so it ranks on the alarm log alone, and the reply does not say so",
+   "no trend rule moved this condition, so it ranks on the alarm log alone, and the reply does not say so",
+   "no trend rule moved this condition, so it ranks on the alarm log alone, and the reply does not say so"
+  ],
   "summary": {
    "cases_total": 34,
    "cases_run": 34,
    "cases_not_run": [],
-   "cases_passed": 29,
+   "cases_passed": 34,
    "graders": {
     "grounding": {
      "applicable": 16,
@@ -3115,18 +3121,18 @@
     },
     "uncertainty": {
      "applicable": 21,
-     "passed": 16,
-     "rate": 0.7619,
-     "writer_layer_passed": 16,
-     "writer_layer_rate": 0.7619,
+     "passed": 21,
+     "rate": 1.0,
+     "writer_layer_passed": 21,
+     "writer_layer_rate": 1.0,
      "what": "Where evidence is missing or thin the write-up says so: unsupported items stay unresolved, thin cards say what they rest on, and no card guesses a diagnosis, claims certainty, or rules out what it could not check."
     },
     "next_step": {
      "applicable": 16,
-     "passed": 13,
-     "rate": 0.8125,
-     "writer_layer_passed": 13,
-     "writer_layer_rate": 0.8125,
+     "passed": 16,
+     "rate": 1.0,
+     "writer_layer_passed": 16,
+     "writer_layer_rate": 1.0,
      "what": "Every card has a next step, it is about that equipment and what the point measures, and it is read only: it observes, and never tells anyone to change, reset, acknowledge or operate anything."
     },
     "format": {
@@ -3141,8 +3147,8 @@
    "by_type": {
     "alarm_log_only": {
      "cases": 3,
-     "passed": 0,
-     "rate": 0.0
+     "passed": 3,
+     "rate": 1.0
     },
     "chattering": {
      "cases": 3,
@@ -3161,8 +3167,8 @@
     },
     "flood_with_real_faults": {
      "cases": 2,
-     "passed": 0,
-     "rate": 0.0
+     "passed": 2,
+     "rate": 1.0
     },
     "missing_trend": {
      "cases": 3,
@@ -3195,80 +3201,7 @@
      "rate": 1.0
     }
    },
-   "failures": [
-    {
-     "case": "hvac-ahu-dual-duct-ahu-21-clg-sp",
-     "type": "alarm_log_only",
-     "grader": "uncertainty",
-     "code": "U2",
-     "layer": "writer",
-     "point": "SYN1/AHU-21/CLG_SP",
-     "reason": "rests on limited evidence and never says so"
-    },
-    {
-     "case": "hvac-ahu-dual-duct-ahu-21-clg-sp",
-     "type": "alarm_log_only",
-     "grader": "next_step",
-     "code": "N2",
-     "layer": "writer",
-     "point": "SYN1/AHU-21/CLG_SP",
-     "reason": "the detail names nothing particular to SYN1/AHU-21/CLG_SP (none of: static, pressure, manometer, tap)"
-    },
-    {
-     "case": "hvac-boiler-blr-71-firing-rate",
-     "type": "alarm_log_only",
-     "grader": "uncertainty",
-     "code": "U2",
-     "layer": "writer",
-     "point": "SYN1/BLR-71/FIRING_RATE",
-     "reason": "rests on limited evidence and never says so"
-    },
-    {
-     "case": "hvac-boiler-window",
-     "type": "flood_with_real_faults",
-     "grader": "uncertainty",
-     "code": "U2",
-     "layer": "writer",
-     "point": "SYN1/BLR-71/FIRING_RATE",
-     "reason": "rests on limited evidence and never says so"
-    },
-    {
-     "case": "hvac-chiller-ch-61-evap-press",
-     "type": "alarm_log_only",
-     "grader": "uncertainty",
-     "code": "U2",
-     "layer": "writer",
-     "point": "SYN1/CH-61/EVAP_PRESS",
-     "reason": "rests on limited evidence and never says so"
-    },
-    {
-     "case": "hvac-chiller-ch-61-evap-press",
-     "type": "alarm_log_only",
-     "grader": "next_step",
-     "code": "N2",
-     "layer": "writer",
-     "point": "SYN1/CH-61/EVAP_PRESS",
-     "reason": "the detail names nothing particular to SYN1/CH-61/EVAP_PRESS (none of: pressure, gauge, transducer, port)"
-    },
-    {
-     "case": "hvac-chiller-window",
-     "type": "flood_with_real_faults",
-     "grader": "uncertainty",
-     "code": "U2",
-     "layer": "writer",
-     "point": "SYN1/CH-61/EVAP_PRESS",
-     "reason": "rests on limited evidence and never says so"
-    },
-    {
-     "case": "hvac-chiller-window",
-     "type": "flood_with_real_faults",
-     "grader": "next_step",
-     "code": "N2",
-     "layer": "writer",
-     "point": "SYN1/CH-61/EVAP_PRESS",
-     "reason": "the detail names nothing particular to SYN1/CH-61/EVAP_PRESS (none of: pressure, gauge, transducer, port)"
-    }
-   ]
+   "failures": []
   },
   "cases": [
    {
@@ -3623,7 +3556,7 @@
          "raw": "{\"reason\": \"The cooling duct temperature stayed above its 60.0 degF high limit for 85.4 percent of the window and was still above it at the end, so the condition is persistent rather than a brief excursion, and the alarm has never returned to normal.\", \"verb\": \"verify\", \"target\": \"SYN1/AHU-21/CLG_DUCT_TEMP\", \"detail\": \"Confirm the trend shows the duct temperature held above 60.0 degF across most of the 20-hour window, with a peak about 5.17 deadbands past the limit and no return below the 1.5 degF deadband.\"}",
          "ok": true,
          "detail": "ok",
-         "elapsed_s": 0.0008
+         "elapsed_s": 0.001
         }
        ],
        "written_by": "Claude Haiku",
@@ -3647,7 +3580,7 @@
      "hvac",
      "single_condition"
     ],
-    "status": "fail",
+    "status": "pass",
     "graders": {
      "grounding": {
       "status": "pass",
@@ -3665,28 +3598,14 @@
       "failures": []
      },
      "uncertainty": {
-      "status": "fail",
+      "status": "pass",
       "checks": 3,
-      "failures": [
-       {
-        "code": "U2",
-        "layer": "writer",
-        "point": "SYN1/AHU-21/CLG_SP",
-        "reason": "rests on limited evidence and never says so"
-       }
-      ]
+      "failures": []
      },
      "next_step": {
-      "status": "fail",
+      "status": "pass",
       "checks": 5,
-      "failures": [
-       {
-        "code": "N2",
-        "layer": "writer",
-        "point": "SYN1/AHU-21/CLG_SP",
-        "reason": "the detail names nothing particular to SYN1/AHU-21/CLG_SP (none of: static, pressure, manometer, tap)"
-       }
-      ]
+      "failures": []
      },
      "format": {
       "status": "pass",
@@ -3706,19 +3625,19 @@
        "consequence_starts": [],
        "attempts": [
         {
-         "raw": "{\"reason\": \"The alarm limit on the SYN1/AHU-21/CLG_SP point was exceeded for 11.5 hours (50.0% of the window), peaking 2.25 deadbands past the limit and still past it at window end, so the condition persisted rather than clearing.\", \"verb\": \"inspect\", \"target\": \"SYN1/AHU-21/CLG_SP\", \"detail\": \"Look at the trend to confirm whether the CLG_SP value stays above the 1.5 inH2O limit through the window end at 21:00 and whether the four alarm transitions with three returns to normal reflect a repeating pattern.\"}",
+         "raw": "{\"reason\": \"No trend rule moved this one, so it ranks on the alarm log alone: AHU-21's cooling static pressure raised 4 alarms at priority 3 over 11.5 hours in alarm, and it was still past the limit when the export ended.\", \"verb\": \"check\", \"target\": \"SYN1/AHU-21/CLG_SP\", \"detail\": \"compare the reading with a manometer at the sensor tap, and look at why it alarmed as often as it did.\"}",
          "ok": true,
          "detail": "ok",
-         "elapsed_s": 0.0009
+         "elapsed_s": 0.0028
         }
        ],
-       "written_by": "Claude Haiku",
+       "written_by": "template, no model",
        "rank": 1,
-       "reason": "The alarm limit on the SYN1/AHU-21/CLG_SP point was exceeded for 11.5 hours (50.0% of the window), peaking 2.25 deadbands past the limit and still past it at window end, so the condition persisted rather than clearing.",
-       "verb": "inspect",
+       "reason": "No trend rule moved this one, so it ranks on the alarm log alone: AHU-21's cooling static pressure raised 4 alarms at priority 3 over 11.5 hours in alarm, and it was still past the limit when the export ended.",
+       "verb": "check",
        "target": "SYN1/AHU-21/CLG_SP",
-       "detail": "Look at the trend to confirm whether the CLG_SP value stays above the 1.5 inH2O limit through the window end at 21:00 and whether the four alarm transitions with three returns to normal reflect a repeating pattern.",
-       "next_step": "Inspect SYN1/AHU-21/CLG_SP: Look at the trend to confirm whether the CLG_SP value stays above the 1.5 inH2O limit through the window end at 21:00 and whether the four alarm transitions with three returns to normal reflect a repeating pattern."
+       "detail": "compare the reading with a manometer at the sensor tap, and look at why it alarmed as often as it did.",
+       "next_step": "Check SYN1/AHU-21/CLG_SP: compare the reading with a manometer at the sensor tap, and look at why it alarmed as often as it did."
       }
      ],
      "dropped": [],
@@ -4023,7 +3942,7 @@
          "raw": "{\"reason\": \"The hot water supply temperature of boiler BLR-71-B fell below its 168.0 degF low alarm limit, stayed past the limit for about 53% of the window, and was still past it at the window end, with 12.3 hours in alarm and a peak deviation of 9.20 deadbands, so the condition is persistent and was promoted on reassessment.\", \"verb\": \"inspect\", \"target\": \"SYN1/BLR-71-B/HW_SUP_TEMP\", \"detail\": \"Look at the hot water supply temperature trend for the period it sat below 168.0 degF, including the depth of the dip (about 9.20 deadbands at peak) and whether it had not recovered by the end of the window at 23:01.\"}",
          "ok": true,
          "detail": "ok",
-         "elapsed_s": 0.0009
+         "elapsed_s": 0.0013
         }
        ],
        "written_by": "Claude Haiku",
@@ -4157,7 +4076,7 @@
      "hvac",
      "single_condition"
     ],
-    "status": "fail",
+    "status": "pass",
     "graders": {
      "grounding": {
       "status": "pass",
@@ -4175,16 +4094,9 @@
       "failures": []
      },
      "uncertainty": {
-      "status": "fail",
+      "status": "pass",
       "checks": 3,
-      "failures": [
-       {
-        "code": "U2",
-        "layer": "writer",
-        "point": "SYN1/BLR-71/FIRING_RATE",
-        "reason": "rests on limited evidence and never says so"
-       }
-      ]
+      "failures": []
      },
      "next_step": {
       "status": "pass",
@@ -4209,19 +4121,19 @@
        "consequence_starts": [],
        "attempts": [
         {
-         "raw": "{\"reason\": \"BLR-71 firing rate stayed above the 92.0 pct high alarm limit for half the window (11.5 hours in alarm across 4 transitions) and was still past the limit at window end, so the boiler may be operating at sustained high firing demand.\", \"verb\": \"inspect\", \"target\": \"SYN1/BLR-71/FIRING_RATE\", \"detail\": \"Look at the firing rate trend between 07:02 and 21:02 for the sustained period above 92.0 pct, including the peak excursion of about 2.28 deadbands past the limit and the reading still above the limit at the end of the window.\"}",
+         "raw": "{\"reason\": \"No trend rule moved this one, so it ranks on the alarm log alone: BLR-71's firing rate raised 4 alarms at priority 4 over 11.5 hours in alarm, and it was still past the limit when the export ended.\", \"verb\": \"check\", \"target\": \"SYN1/BLR-71/FIRING_RATE\", \"detail\": \"compare the reading with the firing rate shown on the boiler's burner controller, and look at why it alarmed as often as it did.\"}",
          "ok": true,
          "detail": "ok",
-         "elapsed_s": 0.0009
+         "elapsed_s": 0.0012
         }
        ],
-       "written_by": "Claude Haiku",
+       "written_by": "template, no model",
        "rank": 1,
-       "reason": "BLR-71 firing rate stayed above the 92.0 pct high alarm limit for half the window (11.5 hours in alarm across 4 transitions) and was still past the limit at window end, so the boiler may be operating at sustained high firing demand.",
-       "verb": "inspect",
+       "reason": "No trend rule moved this one, so it ranks on the alarm log alone: BLR-71's firing rate raised 4 alarms at priority 4 over 11.5 hours in alarm, and it was still past the limit when the export ended.",
+       "verb": "check",
        "target": "SYN1/BLR-71/FIRING_RATE",
-       "detail": "Look at the firing rate trend between 07:02 and 21:02 for the sustained period above 92.0 pct, including the peak excursion of about 2.28 deadbands past the limit and the reading still above the limit at the end of the window.",
-       "next_step": "Inspect SYN1/BLR-71/FIRING_RATE: Look at the firing rate trend between 07:02 and 21:02 for the sustained period above 92.0 pct, including the peak excursion of about 2.28 deadbands past the limit and the reading still above the limit at the end of the window."
+       "detail": "compare the reading with the firing rate shown on the boiler's burner controller, and look at why it alarmed as often as it did.",
+       "next_step": "Check SYN1/BLR-71/FIRING_RATE: compare the reading with the firing rate shown on the boiler's burner controller, and look at why it alarmed as often as it did."
       }
      ],
      "dropped": [],
@@ -4284,7 +4196,7 @@
          "raw": "{\"reason\": \"The hot water return temperature on boiler BLR-71 has stayed below its 145.0 degF low limit for about 34.7% of the window and was still past the limit at the end, with the deviation worsening steadily rather than holding a fixed offset, so the condition is persistent and degrading.\", \"verb\": \"inspect\", \"target\": \"SYN1/BLR-71/HW_RET_TEMP\", \"detail\": \"Look for a continuing downward trend in the hot water return temperature below 145.0 degF with a peak deviation of about 3.21 deadbands and no return to normal by the end of the window.\"}",
          "ok": true,
          "detail": "ok",
-         "elapsed_s": 0.0008
+         "elapsed_s": 0.0012
         }
        ],
        "written_by": "Claude Haiku",
@@ -4356,7 +4268,7 @@
          "raw": "{\"reason\": \"The hot-water supply temperature on boiler BLR-71 has remained below its 168.0 degF low limit for 85.4 percent of the window and was still below it at the end, so the condition is persistent rather than transient, though the alarm record itself is marked stale.\", \"verb\": \"inspect\", \"target\": \"SYN1/BLR-71/HW_SUP_TEMP\", \"detail\": \"Look at the trend to confirm the supply temperature stays below the 168.0 degF limit (with the 2.0 degF deadband) across most of the 03:31 to 23:31 window and reaches a peak deviation of about 5.20 deadbands, and check whether the alarm state reflects the current value given its stale classification.\"}",
          "ok": true,
          "detail": "ok",
-         "elapsed_s": 0.001
+         "elapsed_s": 0.0014
         }
        ],
        "written_by": "Claude Haiku",
@@ -4428,7 +4340,7 @@
          "raw": "{\"reason\": \"BLR-71 stack temperature exceeded its 420.0 degF high limit for about 53.3% of the window, peaked 9.25 deadbands past the limit, and was still above the limit at window end, with 5 alarms and 23 repeats, so the condition is persistent and was promoted on the peak deviation evidence.\", \"verb\": \"inspect\", \"target\": \"SYN1/BLR-71/STACK_TEMP\", \"detail\": \"Look for the trend shape showing stack temperature held above 420.0 degF from roughly 04:00 to 23:30 with a peak about 9.25 deadbands above the limit and no return below the limit by the end of the window.\"}",
          "ok": true,
          "detail": "ok",
-         "elapsed_s": 0.0009
+         "elapsed_s": 0.0012
         }
        ],
        "written_by": "Claude Haiku",
@@ -4507,7 +4419,7 @@
      "flood",
      "multiple_causes"
     ],
-    "status": "fail",
+    "status": "pass",
     "graders": {
      "grounding": {
       "status": "pass",
@@ -4525,16 +4437,9 @@
       "failures": []
      },
      "uncertainty": {
-      "status": "fail",
+      "status": "pass",
       "checks": 19,
-      "failures": [
-       {
-        "code": "U2",
-        "layer": "writer",
-        "point": "SYN1/BLR-71/FIRING_RATE",
-        "reason": "rests on limited evidence and never says so"
-       }
-      ]
+      "failures": []
      },
      "next_step": {
       "status": "pass",
@@ -4562,7 +4467,7 @@
          "raw": "{\"reason\": \"BLR-71 stack temperature exceeded its 420.0 degF high limit for about 53.3% of the window, peaked 9.25 deadbands past the limit, and was still above the limit at window end, with 5 alarms and 23 repeats, so the condition is persistent and was promoted on the peak deviation evidence.\", \"verb\": \"inspect\", \"target\": \"SYN1/BLR-71/STACK_TEMP\", \"detail\": \"Look for the trend shape showing stack temperature held above 420.0 degF from roughly 04:00 to 23:30 with a peak about 9.25 deadbands above the limit and no return below the limit by the end of the window.\"}",
          "ok": true,
          "detail": "ok",
-         "elapsed_s": 0.001
+         "elapsed_s": 0.0011
         }
        ],
        "written_by": "Claude Haiku",
@@ -4610,7 +4515,7 @@
          "raw": "{\"reason\": \"The hot-water supply temperature on boiler BLR-71 has remained below its 168.0 degF low limit for 85.4 percent of the window and was still below it at the end, so the condition is persistent rather than transient, though the alarm record itself is marked stale.\", \"verb\": \"inspect\", \"target\": \"SYN1/BLR-71/HW_SUP_TEMP\", \"detail\": \"Look at the trend to confirm the supply temperature stays below the 168.0 degF limit (with the 2.0 degF deadband) across most of the 03:31 to 23:31 window and reaches a peak deviation of about 5.20 deadbands, and check whether the alarm state reflects the current value given its stale classification.\"}",
          "ok": true,
          "detail": "ok",
-         "elapsed_s": 0.001
+         "elapsed_s": 0.0012
         }
        ],
        "written_by": "Claude Haiku",
@@ -4634,7 +4539,7 @@
          "raw": "{\"reason\": \"The hot water return temperature on boiler BLR-71 has stayed below its 145.0 degF low limit for about 34.7% of the window and was still past the limit at the end, with the deviation worsening steadily rather than holding a fixed offset, so the condition is persistent and degrading.\", \"verb\": \"inspect\", \"target\": \"SYN1/BLR-71/HW_RET_TEMP\", \"detail\": \"Look for a continuing downward trend in the hot water return temperature below 145.0 degF with a peak deviation of about 3.21 deadbands and no return to normal by the end of the window.\"}",
          "ok": true,
          "detail": "ok",
-         "elapsed_s": 0.0008
+         "elapsed_s": 0.001
         }
        ],
        "written_by": "Claude Haiku",
@@ -4655,19 +4560,19 @@
        "consequence_starts": [],
        "attempts": [
         {
-         "raw": "{\"reason\": \"BLR-71 firing rate stayed above the 92.0 pct high alarm limit for half the window (11.5 hours in alarm across 4 transitions) and was still past the limit at window end, so the boiler may be operating at sustained high firing demand.\", \"verb\": \"inspect\", \"target\": \"SYN1/BLR-71/FIRING_RATE\", \"detail\": \"Look at the firing rate trend between 07:02 and 21:02 for the sustained period above 92.0 pct, including the peak excursion of about 2.28 deadbands past the limit and the reading still above the limit at the end of the window.\"}",
+         "raw": "{\"reason\": \"No trend rule moved this one, so it ranks on the alarm log alone: BLR-71's firing rate raised 4 alarms at priority 4 over 11.5 hours in alarm, and it was still past the limit when the export ended.\", \"verb\": \"check\", \"target\": \"SYN1/BLR-71/FIRING_RATE\", \"detail\": \"compare the reading with the firing rate shown on the boiler's burner controller, and look at why it alarmed as often as it did.\"}",
          "ok": true,
          "detail": "ok",
-         "elapsed_s": 0.0016
+         "elapsed_s": 0.0014
         }
        ],
-       "written_by": "Claude Haiku",
+       "written_by": "template, no model",
        "rank": 5,
-       "reason": "BLR-71 firing rate stayed above the 92.0 pct high alarm limit for half the window (11.5 hours in alarm across 4 transitions) and was still past the limit at window end, so the boiler may be operating at sustained high firing demand.",
-       "verb": "inspect",
+       "reason": "No trend rule moved this one, so it ranks on the alarm log alone: BLR-71's firing rate raised 4 alarms at priority 4 over 11.5 hours in alarm, and it was still past the limit when the export ended.",
+       "verb": "check",
        "target": "SYN1/BLR-71/FIRING_RATE",
-       "detail": "Look at the firing rate trend between 07:02 and 21:02 for the sustained period above 92.0 pct, including the peak excursion of about 2.28 deadbands past the limit and the reading still above the limit at the end of the window.",
-       "next_step": "Inspect SYN1/BLR-71/FIRING_RATE: Look at the firing rate trend between 07:02 and 21:02 for the sustained period above 92.0 pct, including the peak excursion of about 2.28 deadbands past the limit and the reading still above the limit at the end of the window."
+       "detail": "compare the reading with the firing rate shown on the boiler's burner controller, and look at why it alarmed as often as it did.",
+       "next_step": "Check SYN1/BLR-71/FIRING_RATE: compare the reading with the firing rate shown on the boiler's burner controller, and look at why it alarmed as often as it did."
       }
      ],
      "dropped": [],
@@ -4827,7 +4732,7 @@
          "raw": "{\"reason\": \"Chilled water supply temperature on CH-61-B stays above its 46.0 degF high limit for about 53% of the window, peaks roughly 9 deadbands past the limit, and is still past the limit at window end, with 12.3 hours in alarm and a priority-1 critical alarm class, so the condition is persistent and significant.\", \"verb\": \"verify\", \"target\": \"SYN1/CH-61-B/CHW_SUP_TEMP\", \"detail\": \"Look for whether the chilled water supply temperature trend remains above 46.0 degF through the end of the window and whether the excursions correlate with the 5 alarm transitions and 4 returns to normal, confirming the reading against the sensor and its trend samples.\"}",
          "ok": true,
          "detail": "ok",
-         "elapsed_s": 0.0012
+         "elapsed_s": 0.0016
         }
        ],
        "written_by": "Claude Haiku",
@@ -5141,7 +5046,7 @@
          "raw": "{\"reason\": \"The chilled water supply temperature has stayed above its 46.0 degF high limit for about 85 percent of the window and was still above it at the end, with a peak deviation of 5.18 deadbands, so this is a sustained condition rather than a brief excursion.\", \"verb\": \"verify\", \"target\": \"SYN1/CH-61/CHW_SUP_TEMP\", \"detail\": \"Confirm whether the chilled water supply temperature trend stays above the 46.0 degF limit throughout the window and whether it remains above it at the end, noting the 1.0 degF deadband and the alarm's 20 repeats with no return to normal.\"}",
          "ok": true,
          "detail": "ok",
-         "elapsed_s": 0.0008
+         "elapsed_s": 0.0009
         }
        ],
        "written_by": "Claude Haiku",
@@ -5213,7 +5118,7 @@
          "raw": "{\"reason\": \"The condition shows the approach temperature on CH-61 above its 6.0 degF high limit for about 34.7% of the window and still past the limit at the end, with a peak of 3.21 deadbands and a steady drift away from the limit, so it is degrading rather than holding a fixed offset.\", \"verb\": \"inspect\", \"target\": \"SYN1/CH-61/COND_APPROACH\", \"detail\": \"Look for the upward trend in the approach value over the window, confirming it stays above the 6.0 degF limit at the end and continues to move away from the limit without reversing by more than about 0.09 deadbands.\"}",
          "ok": true,
          "detail": "ok",
-         "elapsed_s": 0.0009
+         "elapsed_s": 0.0014
         }
        ],
        "written_by": "Claude Haiku",
@@ -5237,7 +5142,7 @@
      "hvac",
      "single_condition"
     ],
-    "status": "fail",
+    "status": "pass",
     "graders": {
      "grounding": {
       "status": "pass",
@@ -5255,28 +5160,14 @@
       "failures": []
      },
      "uncertainty": {
-      "status": "fail",
+      "status": "pass",
       "checks": 3,
-      "failures": [
-       {
-        "code": "U2",
-        "layer": "writer",
-        "point": "SYN1/CH-61/EVAP_PRESS",
-        "reason": "rests on limited evidence and never says so"
-       }
-      ]
+      "failures": []
      },
      "next_step": {
-      "status": "fail",
+      "status": "pass",
       "checks": 5,
-      "failures": [
-       {
-        "code": "N2",
-        "layer": "writer",
-        "point": "SYN1/CH-61/EVAP_PRESS",
-        "reason": "the detail names nothing particular to SYN1/CH-61/EVAP_PRESS (none of: pressure, gauge, transducer, port)"
-       }
-      ]
+      "failures": []
      },
      "format": {
       "status": "pass",
@@ -5296,19 +5187,19 @@
        "consequence_starts": [],
        "attempts": [
         {
-         "raw": "{\"reason\": \"The evidence-side shows the evaporator pressure point of CH-61 was below its 58.0 psi LOW limit for 50.0% of the window (about 11.5 hours) and was still past the limit at window end, with a peak deviation of 2.40 deadbands, so the condition persisted rather than clearing.\", \"verb\": \"inspect\", \"target\": \"SYN1/CH-61/EVAP_PRESS\", \"detail\": \"Look at the SYN1/CH-61/EVAP_PRESS trend for the four alarm transitions and three returns to normal, and confirm whether the value stayed below 58.0 psi after 21:00 on 2026-07-29 and how far it dropped below the limit at its deepest point.\"}",
+         "raw": "{\"reason\": \"No trend rule moved this one, so it ranks on the alarm log alone: CH-61's evaporator pressure raised 4 alarms at priority 3 over 11.5 hours in alarm, and it was still past the limit when the export ended.\", \"verb\": \"check\", \"target\": \"SYN1/CH-61/EVAP_PRESS\", \"detail\": \"compare the reading with a test gauge on the same port, and look at why it alarmed as often as it did.\"}",
          "ok": true,
          "detail": "ok",
-         "elapsed_s": 0.001
+         "elapsed_s": 0.0014
         }
        ],
-       "written_by": "Claude Haiku",
+       "written_by": "template, no model",
        "rank": 1,
-       "reason": "The evidence-side shows the evaporator pressure point of CH-61 was below its 58.0 psi LOW limit for 50.0% of the window (about 11.5 hours) and was still past the limit at window end, with a peak deviation of 2.40 deadbands, so the condition persisted rather than clearing.",
-       "verb": "inspect",
+       "reason": "No trend rule moved this one, so it ranks on the alarm log alone: CH-61's evaporator pressure raised 4 alarms at priority 3 over 11.5 hours in alarm, and it was still past the limit when the export ended.",
+       "verb": "check",
        "target": "SYN1/CH-61/EVAP_PRESS",
-       "detail": "Look at the SYN1/CH-61/EVAP_PRESS trend for the four alarm transitions and three returns to normal, and confirm whether the value stayed below 58.0 psi after 21:00 on 2026-07-29 and how far it dropped below the limit at its deepest point.",
-       "next_step": "Inspect SYN1/CH-61/EVAP_PRESS: Look at the SYN1/CH-61/EVAP_PRESS trend for the four alarm transitions and three returns to normal, and confirm whether the value stayed below 58.0 psi after 21:00 on 2026-07-29 and how far it dropped below the limit at its deepest point."
+       "detail": "compare the reading with a test gauge on the same port, and look at why it alarmed as often as it did.",
+       "next_step": "Check SYN1/CH-61/EVAP_PRESS: compare the reading with a test gauge on the same port, and look at why it alarmed as often as it did."
       }
      ],
      "dropped": [],
@@ -5433,7 +5324,7 @@
      "flood",
      "multiple_causes"
     ],
-    "status": "fail",
+    "status": "pass",
     "graders": {
      "grounding": {
       "status": "pass",
@@ -5451,28 +5342,14 @@
       "failures": []
      },
      "uncertainty": {
-      "status": "fail",
+      "status": "pass",
       "checks": 19,
-      "failures": [
-       {
-        "code": "U2",
-        "layer": "writer",
-        "point": "SYN1/CH-61/EVAP_PRESS",
-        "reason": "rests on limited evidence and never says so"
-       }
-      ]
+      "failures": []
      },
      "next_step": {
-      "status": "fail",
+      "status": "pass",
       "checks": 25,
-      "failures": [
-       {
-        "code": "N2",
-        "layer": "writer",
-        "point": "SYN1/CH-61/EVAP_PRESS",
-        "reason": "the detail names nothing particular to SYN1/CH-61/EVAP_PRESS (none of: pressure, gauge, transducer, port)"
-       }
-      ]
+      "failures": []
      },
      "format": {
       "status": "pass",
@@ -5543,7 +5420,7 @@
          "raw": "{\"reason\": \"The chilled water supply temperature has stayed above its 46.0 degF high limit for about 85 percent of the window and was still above it at the end, with a peak deviation of 5.18 deadbands, so this is a sustained condition rather than a brief excursion.\", \"verb\": \"verify\", \"target\": \"SYN1/CH-61/CHW_SUP_TEMP\", \"detail\": \"Confirm whether the chilled water supply temperature trend stays above the 46.0 degF limit throughout the window and whether it remains above it at the end, noting the 1.0 degF deadband and the alarm's 20 repeats with no return to normal.\"}",
          "ok": true,
          "detail": "ok",
-         "elapsed_s": 0.0007
+         "elapsed_s": 0.0009
         }
        ],
        "written_by": "Claude Haiku",
@@ -5567,7 +5444,7 @@
          "raw": "{\"reason\": \"The condition shows the approach temperature on CH-61 above its 6.0 degF high limit for about 34.7% of the window and still past the limit at the end, with a peak of 3.21 deadbands and a steady drift away from the limit, so it is degrading rather than holding a fixed offset.\", \"verb\": \"inspect\", \"target\": \"SYN1/CH-61/COND_APPROACH\", \"detail\": \"Look for the upward trend in the approach value over the window, confirming it stays above the 6.0 degF limit at the end and continues to move away from the limit without reversing by more than about 0.09 deadbands.\"}",
          "ok": true,
          "detail": "ok",
-         "elapsed_s": 0.0008
+         "elapsed_s": 0.001
         }
        ],
        "written_by": "Claude Haiku",
@@ -5588,19 +5465,19 @@
        "consequence_starts": [],
        "attempts": [
         {
-         "raw": "{\"reason\": \"The evidence-side shows the evaporator pressure point of CH-61 was below its 58.0 psi LOW limit for 50.0% of the window (about 11.5 hours) and was still past the limit at window end, with a peak deviation of 2.40 deadbands, so the condition persisted rather than clearing.\", \"verb\": \"inspect\", \"target\": \"SYN1/CH-61/EVAP_PRESS\", \"detail\": \"Look at the SYN1/CH-61/EVAP_PRESS trend for the four alarm transitions and three returns to normal, and confirm whether the value stayed below 58.0 psi after 21:00 on 2026-07-29 and how far it dropped below the limit at its deepest point.\"}",
+         "raw": "{\"reason\": \"No trend rule moved this one, so it ranks on the alarm log alone: CH-61's evaporator pressure raised 4 alarms at priority 3 over 11.5 hours in alarm, and it was still past the limit when the export ended.\", \"verb\": \"check\", \"target\": \"SYN1/CH-61/EVAP_PRESS\", \"detail\": \"compare the reading with a test gauge on the same port, and look at why it alarmed as often as it did.\"}",
          "ok": true,
          "detail": "ok",
-         "elapsed_s": 0.0009
+         "elapsed_s": 0.0014
         }
        ],
-       "written_by": "Claude Haiku",
+       "written_by": "template, no model",
        "rank": 5,
-       "reason": "The evidence-side shows the evaporator pressure point of CH-61 was below its 58.0 psi LOW limit for 50.0% of the window (about 11.5 hours) and was still past the limit at window end, with a peak deviation of 2.40 deadbands, so the condition persisted rather than clearing.",
-       "verb": "inspect",
+       "reason": "No trend rule moved this one, so it ranks on the alarm log alone: CH-61's evaporator pressure raised 4 alarms at priority 3 over 11.5 hours in alarm, and it was still past the limit when the export ended.",
+       "verb": "check",
        "target": "SYN1/CH-61/EVAP_PRESS",
-       "detail": "Look at the SYN1/CH-61/EVAP_PRESS trend for the four alarm transitions and three returns to normal, and confirm whether the value stayed below 58.0 psi after 21:00 on 2026-07-29 and how far it dropped below the limit at its deepest point.",
-       "next_step": "Inspect SYN1/CH-61/EVAP_PRESS: Look at the SYN1/CH-61/EVAP_PRESS trend for the four alarm transitions and three returns to normal, and confirm whether the value stayed below 58.0 psi after 21:00 on 2026-07-29 and how far it dropped below the limit at its deepest point."
+       "detail": "compare the reading with a test gauge on the same port, and look at why it alarmed as often as it did.",
+       "next_step": "Check SYN1/CH-61/EVAP_PRESS: compare the reading with a test gauge on the same port, and look at why it alarmed as often as it did."
       }
      ],
      "dropped": [],

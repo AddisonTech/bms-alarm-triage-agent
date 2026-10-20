@@ -32,8 +32,15 @@ def _target(request: dict) -> str:
 
 
 def good_reply(request: dict) -> str:
+    # A good reply keeps the evidence's limits: a card no trend rule moved
+    # says it ranks on the alarm log, as the service's evidence check requires.
+    prompt = request["params"]["messages"][0]["content"]
+    if "set by no rule fired" in prompt:
+        reason = "No trend rule moved it, so it ranks on the alarm log alone, past its limit for hours."
+    else:
+        reason = "The reading stayed past its limit for most of the window, which is not noise."
     return json.dumps({
-        "reason": "The reading stayed past its limit for most of the window, which is not noise.",
+        "reason": reason,
         "verb": "verify",
         "target": _target(request),
         "detail": "compare the trended value with a reading taken at the device.",

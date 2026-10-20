@@ -94,7 +94,7 @@
     }
    },
    "as_served": {
-    "held_back": 0,
+    "held_back": 5,
     "graders": {
      "grounding": {
       "passed": 16,
@@ -112,14 +112,14 @@
       "rate": 1.0
      },
      "uncertainty": {
-      "passed": 16,
+      "passed": 21,
       "applicable": 21,
-      "rate": 0.7619
+      "rate": 1.0
      },
      "next_step": {
-      "passed": 13,
+      "passed": 16,
       "applicable": 16,
-      "rate": 0.8125
+      "rate": 1.0
      },
      "format": {
       "passed": 16,

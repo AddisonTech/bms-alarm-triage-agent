@@ -120,3 +120,36 @@ grader behavior.
   held at 43 through fixes 1 to 3, because each of those cases also failed
   another check), 55 of 58 after; the three left fail for pipeline reasons,
   below. Haiku not affected.
+
+### 5. Haiku's alarm-log-only cards read as if the trend had confirmed them
+
+- **What failed.** For Claude Haiku: uncertainty, U2, on the three
+  conditions no trend rule moved (AHU-21 cooling static pressure, BLR-71
+  firing rate, CH-61 evaporator pressure, five cards counting the window
+  cases), and next_step, N2, on two of them. The reply for CH-61 said the
+  pressure "was below its 58.0 psi LOW limit for 50.0% of the window ... so
+  the condition persisted rather than clearing", and its step was to "look
+  at the trend". Nothing said the trend rules had not confirmed it.
+- **Why.** The prompt hands every writer "band: UNCHANGED, set by no rule
+  fired", but nothing required a reply to pass that on, and no guardrail
+  looked. The template says it; Haiku did not. An operator reading Haiku's
+  card would take an alarm-log ranking for a trend-confirmed fault.
+- **What changed.** A guardrail, not a prompt change.
+  `bms_triage_service.haiku_writer.evidence_problem` fails a reply on a
+  condition no trend rule moved unless it says the card ranks on the alarm
+  log. The service's Haiku check and the showcase build's Haiku check both
+  apply it, so a reply that leaves the limit out gets the template's card,
+  which says it. The HVAC prompt was left byte for byte as it was, so every
+  saved reply still matches its prompt and could be replayed without a key.
+- **Scores.** Haiku in its own words is unchanged: uncertainty 16 of 21
+  (76.2%), next_step 13 of 16 (81.2%), because these are its words and only
+  a new prompt and new calls can change them. Haiku as served, through the
+  service's guardrails: uncertainty 16 of 21 (76.2%) to 21 of 21 (100.0%),
+  next_step 13 of 16 (81.2%) to 16 of 16 (100.0%), with 5 replies held back.
+  The published showcase now serves the template on those 3 cards. Template
+  not affected.
+- **Still open.** Haiku's own words. The likely fix is one line in the HVAC
+  prompt asking the writer to say when a condition ranks on the alarm log,
+  and to name the instrument a reading should be checked against rather
+  than the trend the agent already read. That changes the prompt, so it
+  needs a key to measure; it was not made blind.

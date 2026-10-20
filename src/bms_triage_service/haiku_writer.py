@@ -8,8 +8,9 @@ the same prompt N8 builds for any writer.
 
 The guardrails are the same either way. Every reply is checked here with
 N8's own parse_explanation (the allowed verbs, the condition's own point or
-equipment as the target, the thermal-domain guard) and its forbidden-verb
-list, and a reply that fails, a request that errors, or a run past its time
+equipment as the target, the thermal-domain guard), its forbidden-verb
+list, the time check, and the evidence check (a condition no trend rule
+moved has to be called alarm-log only), and a reply that fails, a request that errors, or a run past its time
 budget gets the template's text for that card instead. N8 then checks the
 accepted text a second time itself. name always says who wrote the reply
 just returned, which is what N8 records on the card.
@@ -110,6 +111,26 @@ def time_problem(text: str, prompt: str) -> str | None:
     return None
 
 
+_NO_RULE = re.compile(r"^\s*band: \w+, set by no rule fired\s*$", re.MULTILINE)
+_SAYS_ALARM_LOG = re.compile(
+    r"\b(alarm log|alarm-side|alarm side|no trend rule|trend rules? did not|not confirmed by the trend)\b",
+    re.IGNORECASE,
+)
+
+
+def evidence_problem(text: str, prompt: str) -> str | None:
+    """A reply has to keep the evidence's own limits.
+
+    When no trend rule moved a condition, the prompt says so and the card
+    ranks on the alarm log alone. A reply that leaves that out reads as if
+    the trend had confirmed it, so it fails here and the template, which
+    says it, writes that card instead.
+    """
+    if _NO_RULE.search(prompt) and not _SAYS_ALARM_LOG.search(text):
+        return "no trend rule moved this condition, so it ranks on the alarm log alone, and the reply does not say so"
+    return None
+
+
 def check(raw: str, prompt: str, verb_check: ForbiddenVerbCheck) -> str | None:
     """N8's acceptance test for one reply. None means it passed."""
     targets = targets_in(prompt)
@@ -122,7 +143,8 @@ def check(raw: str, prompt: str, verb_check: ForbiddenVerbCheck) -> str | None:
     found = verb_check.find(candidate.detail)
     if found:
         return "recommendation contains the control action verb(s) %s" % ", ".join(found)
-    return time_problem("%s %s" % (candidate.reason, candidate.detail), prompt)
+    text = "%s %s" % (candidate.reason, candidate.detail)
+    return time_problem(text, prompt) or evidence_problem(text, prompt)
 
 
 def make_client(key: str, timeout_s: float = REQUEST_TIMEOUT_S):
