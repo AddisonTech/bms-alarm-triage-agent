@@ -1,0 +1,31 @@
+{
+ "about": "Two failures the eval found and the fix for each, shown on the showcase page. A test holds every 'after' to what the writers write now, so this file cannot drift from the code.",
+ "examples": [
+  {
+   "title": "Ruling out a cause it could not check",
+   "fix": 2,
+   "grader": "uncertainty",
+   "check": "U5",
+   "case": "power-outage-utility-trend-missing",
+   "point": "SYN1/UPS-A/ONBATT",
+   "writer": "template",
+   "field": "reason",
+   "before": "UPS on battery at UPS-A is confirmed in the trend from 10:08:00 UTC to 10:08:14 UTC (about 14 seconds), and no utility failure, sag, or overload in this export explains it, so it needs its own look.",
+   "after": "UPS on battery at UPS-A is confirmed in the trend from 10:08:00 UTC to 10:08:14 UTC (about 14 seconds), and no confirmed utility failure, sag, or overload in this export explains it, so it needs its own look.",
+   "why": "The export held a utility failure alarm whose trend was missing. The evidence said no confirmed cause explains the battery alarm; the card said there was no utility failure at all, which points an operator away from the likeliest cause. One word, taken from the evidence, fixes it."
+  },
+  {
+   "title": "An alarm-log ranking that read as trend-confirmed",
+   "fix": 5,
+   "grader": "uncertainty",
+   "check": "U2",
+   "case": "hvac-chiller-ch-61-evap-press",
+   "point": "SYN1/CH-61/EVAP_PRESS",
+   "writer": "haiku",
+   "field": "reason",
+   "before": "The evidence-side shows the evaporator pressure point of CH-61 was below its 58.0 psi LOW limit for 50.0% of the window (about 11.5 hours) and was still past the limit at window end, with a peak deviation of 2.40 deadbands, so the condition persisted rather than clearing.",
+   "after": "No trend rule moved this one, so it ranks on the alarm log alone: CH-61's evaporator pressure raised 4 alarms at priority 3 over 11.5 hours in alarm, and it was still past the limit when the export ended.",
+   "why": "No trend rule confirmed this condition, and Claude Haiku's reply never said so. A new guardrail now holds back any reply that drops that limit, and the template, which states it, writes the card instead. Haiku's own words still fail this check; only a new prompt can change those."
+  }
+ ]
+}

@@ -18,37 +18,44 @@
    "cases_run": 58,
    "cases_total": 58,
    "cases_passed": 55,
+   "cases_failing_pipeline_only": 3,
    "partial": false,
    "graders": {
     "grounding": {
      "passed": 40,
      "applicable": 40,
-     "rate": 1.0
+     "rate": 1.0,
+     "writer_layer_rate": 1.0
     },
     "root_cause": {
      "passed": 38,
      "applicable": 40,
-     "rate": 0.95
+     "rate": 0.95,
+     "writer_layer_rate": 1.0
     },
     "escalation": {
      "passed": 55,
      "applicable": 58,
-     "rate": 0.9483
+     "rate": 0.9483,
+     "writer_layer_rate": 1.0
     },
     "uncertainty": {
      "passed": 45,
      "applicable": 45,
-     "rate": 1.0
+     "rate": 1.0,
+     "writer_layer_rate": 1.0
     },
     "next_step": {
      "passed": 40,
      "applicable": 40,
-     "rate": 1.0
+     "rate": 1.0,
+     "writer_layer_rate": 1.0
     },
     "format": {
      "passed": 40,
      "applicable": 40,
-     "rate": 1.0
+     "rate": 1.0,
+     "writer_layer_rate": 1.0
     }
    }
   },
@@ -60,37 +67,44 @@
    "cases_run": 34,
    "cases_total": 58,
    "cases_passed": 29,
+   "cases_failing_pipeline_only": 0,
    "partial": true,
    "graders": {
     "grounding": {
      "passed": 16,
      "applicable": 16,
-     "rate": 1.0
+     "rate": 1.0,
+     "writer_layer_rate": 1.0
     },
     "root_cause": {
      "passed": 16,
      "applicable": 16,
-     "rate": 1.0
+     "rate": 1.0,
+     "writer_layer_rate": 1.0
     },
     "escalation": {
      "passed": 34,
      "applicable": 34,
-     "rate": 1.0
+     "rate": 1.0,
+     "writer_layer_rate": 1.0
     },
     "uncertainty": {
      "passed": 16,
      "applicable": 21,
-     "rate": 0.7619
+     "rate": 0.7619,
+     "writer_layer_rate": 0.7619
     },
     "next_step": {
      "passed": 13,
      "applicable": 16,
-     "rate": 0.8125
+     "rate": 0.8125,
+     "writer_layer_rate": 0.8125
     },
     "format": {
      "passed": 16,
      "applicable": 16,
-     "rate": 1.0
+     "rate": 1.0,
+     "writer_layer_rate": 1.0
     }
    },
    "as_served": {

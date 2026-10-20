@@ -105,9 +105,15 @@ def summarize(graded: list[dict]) -> dict:
         for name in NAMES
         for failure in g["graders"][name]["failures"]
     ]
+    failing = [g for g in run if g["status"] == FAIL]
+    pipeline_only = [
+        g["id"] for g in failing
+        if all(f["layer"] != WRITER for v in g["graders"].values() for f in v["failures"])
+    ]
     return {
         "cases_total": len(graded),
         "cases_run": len(run),
+        "cases_failing_pipeline_only": pipeline_only,
         "cases_not_run": [{"case": g["id"], "why": g["why_not"]} for g in graded if g["status"] == NOT_RUN],
         "cases_passed": sum(1 for g in run if g["status"] == PASS),
         "graders": per_grader,
@@ -190,9 +196,11 @@ def scorecard_entry(results: dict) -> dict:
         "cases_run": s["cases_run"],
         "cases_total": s["cases_total"],
         "cases_passed": s["cases_passed"],
+        "cases_failing_pipeline_only": len(s["cases_failing_pipeline_only"]),
         "partial": s["cases_run"] < s["cases_total"],
         "graders": {
-            name: {"passed": g["passed"], "applicable": g["applicable"], "rate": g["rate"]}
+            name: {"passed": g["passed"], "applicable": g["applicable"], "rate": g["rate"],
+                   "writer_layer_rate": g["writer_layer_rate"]}
             for name, g in s["graders"].items()
         },
     } | ({"as_served": {

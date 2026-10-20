@@ -233,3 +233,39 @@ def test_haiku_as_served_runs_the_service_s_own_checks_and_fallback(config, case
     assert len(served.held_back) == 1
     assert writeup["cards"][0]["written_by"] == "template, no model"
     assert writeup["cards"][0]["reason"].startswith("Utility power failure at UTIL-1 is confirmed")
+
+
+# ---------------------------------------------------------- the showcase
+
+def test_every_showcase_example_is_what_the_writers_write_now(config, cases):
+    from tools import showcase
+
+    _scorecard, examples = showcase.load_evals()
+    assert len(examples) == 2
+    record = json.loads((REPO / "showcase" / "haiku_record_holdout.json").read_text(encoding="utf-8"))
+    for example in examples:
+        case = next(c for c in cases if c["id"] == example["case"])
+        if example["writer"] == "template":
+            writer = writers.TemplateWriter()
+        else:
+            own = writers.HaikuWriter([("record", record)])
+            own_card = next(c for c in writers.write(case, own, config)["cards"] if c["point"] == example["point"])
+            assert own_card[example["field"]] == example["before"]
+            writer = writers.ServedHaiku(writers.HaikuWriter([("record", record)]), config.safety.forbidden_verbs)
+        card = next(c for c in writers.write(case, writer, config)["cards"] if c["point"] == example["point"])
+        assert card[example["field"]] == example["after"], example["title"]
+
+
+def test_the_showcase_has_an_evals_section_built_from_the_scorecard():
+    from tools import showcase
+
+    scorecard, examples = showcase.load_evals()
+    html = showcase.evals_section(scorecard, examples)
+    assert 'id="evals"' in html
+    assert "The cases are synthetic." in html
+    for name in NAMES:
+        assert showcase.GRADER_TITLES[name] in html
+    template = scorecard["writers"]["template"]["graders"]
+    for grader in template.values():
+        assert "%d of %d" % (grader["passed"], grader["applicable"]) in html
+    assert "Claude Haiku, own words" in html and "Claude Haiku, as served" in html

@@ -102,6 +102,26 @@ SHOWCASE_STYLE = """
 .compare .agent td { font-weight: 600; background: var(--accent-wash); }
 .compare .what { display: block; font-weight: 400; font-size: 12.5px; color: var(--muted); }
 .bad { color: var(--alarm); }
+.compare .cnt { display: block; font-weight: 400; font-size: 12px; color: var(--muted); }
+.ev-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
+.ev-card { background: var(--sheet); border: 1px solid var(--rule); border-radius: 4px; padding: 14px 16px;
+  display: flex; flex-direction: column; gap: 8px; min-width: 0; }
+.ev-card h3 { font-size: 18px; }
+.ev-card p { font-size: 14px; }
+.ev-tag { font-family: var(--font-data); font-size: 12px; color: var(--muted); overflow-wrap: anywhere; }
+.ev-text { border-left: 3px solid var(--rule); padding: 8px 10px; border-radius: 2px; font-size: 14px;
+  overflow-wrap: anywhere; }
+.ev-before { border-left-color: var(--alarm); background: var(--alarm-wash); }
+.ev-after { border-left-color: var(--calm); background: var(--calm-wash); }
+.ev-label { display: block; font-size: 11px; letter-spacing: 0.06em; text-transform: uppercase; font-weight: 600;
+  color: var(--muted); margin-bottom: 2px; }
+.ev-graders { margin: 0; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; }
+.ev-graders div { background: var(--sheet); border: 1px solid var(--rule); border-radius: 4px; padding: 12px 14px; }
+.ev-graders dt { font-family: var(--font-display); font-weight: 600; font-size: 16px; }
+.ev-graders dd { margin: 4px 0 0; font-size: 13.5px; color: var(--muted); }
+@media (max-width: 900px) {
+  .ev-graders { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
 @media (max-width: 900px) {
   .steps { grid-template-columns: repeat(3, minmax(0, 1fr)); }
   .steps li { border-bottom: 1px solid var(--rule); }
@@ -110,6 +130,8 @@ SHOWCASE_STYLE = """
   .steps { grid-template-columns: minmax(0, 1fr); }
   .steps li { border-right: 0; }
   .score { grid-template-columns: minmax(0, 1fr); }
+  .ev-grid, .ev-graders { grid-template-columns: minmax(0, 1fr); }
+  .compare th, .compare td { padding: 8px 8px; }
 }
 """
 
@@ -386,6 +408,122 @@ def scorecard(pooled: dict[str, metrics.Result], ceiling: float, split: str) -> 
     ) % (esc(split), cells, table)
 
 
+EVAL_EXAMPLES = REPO_ROOT / "evals" / "showcase_examples.json"
+GRADER_TITLES = {
+    "grounding": "Grounding",
+    "root_cause": "Root cause",
+    "escalation": "Escalation",
+    "uncertainty": "Uncertainty",
+    "next_step": "Next step",
+    "format": "Format",
+}
+WRITER_TITLES = {"template": "Template", "haiku": "Claude Haiku"}
+
+
+def _cell(entry: dict | None) -> str:
+    if not entry or entry.get("rate") is None:
+        return "<td>--</td>"
+    return '<td>%s<span class="cnt">%d of %d</span></td>' % (
+        _pct(entry["rate"]), entry["passed"], entry["applicable"])
+
+
+def evals_section(scorecard: dict, examples: list[dict]) -> str:
+    """How the write-ups are graded: the scorecard per writer, the graders, two fixes."""
+    writers = scorecard.get("writers", {})
+    template = writers.get("template")
+    haiku = writers.get("haiku")
+    columns = []
+    if template:
+        columns.append(("Template", template["graders"]))
+    if haiku:
+        columns.append(("Claude Haiku, own words", haiku["graders"]))
+        if haiku.get("as_served"):
+            columns.append(("Claude Haiku, as served", haiku["as_served"]["graders"]))
+    rows = "".join(
+        "<tr><td>%s</td>%s</tr>" % (esc(GRADER_TITLES.get(name, name)), "".join(_cell(c.get(name)) for _t, c in columns))
+        for name in scorecard.get("graders", {})
+    )
+    table = (
+        '<div class="table-wrap"><table class="compare"><thead><tr><th>Grader</th>%s</tr></thead>'
+        "<tbody>%s</tbody></table></div>"
+    ) % ("".join("<th>%s</th>" % esc(title) for title, _c in columns), rows)
+
+    notes = []
+    if template:
+        notes.append("The template was graded on all %d cases on %s; %d passed every grader." % (
+            template["cases_total"], template["date"], template["cases_passed"]))
+        pipeline_only = template.get("cases_failing_pipeline_only", 0)
+        failing = template["cases_run"] - template["cases_passed"]
+        if failing and pipeline_only == failing:
+            notes.append(
+                "Every failure left is the pipeline's, in %d hard case%s: the words are right, and the set of "
+                "cards is not." % (failing, "" if failing == 1 else "s"))
+    if haiku:
+        if haiku.get("partial"):
+            notes.append(
+                "Claude Haiku was graded on the %d cases its saved replies cover; the other %d need an API key "
+                "and have not been run." % (haiku["cases_run"], haiku["cases_total"] - haiku["cases_run"]))
+        if haiku.get("as_served"):
+            notes.append(
+                "As served means through the service's guardrails, which held back %d of its replies and had "
+                "the template write those cards." % haiku["as_served"]["held_back"])
+    graders = "".join(
+        "<div><dt>%s</dt><dd>%s</dd></div>" % (esc(GRADER_TITLES.get(name, name)), esc(what))
+        for name, what in scorecard.get("graders", {}).items()
+    )
+    cards = []
+    for example in examples:
+        who = "Claude Haiku" if example["writer"] == "haiku" else "Template"
+        after_who = "Served instead" if example["writer"] == "haiku" else "After the fix"
+        cards.append(
+            '<article class="ev-card"><h3>%s</h3>'
+            '<span class="ev-tag">%s, %s %s. Case %s</span>'
+            '<div class="ev-text ev-before"><span class="ev-label">%s wrote</span>%s</div>'
+            '<div class="ev-text ev-after"><span class="ev-label">%s</span>%s</div>'
+            "<p>%s</p></article>"
+            % (esc(example["title"]), esc(who), esc(GRADER_TITLES.get(example["grader"], example["grader"])),
+               esc(example["check"]), esc(example["case"]), esc(who), esc(example["before"]),
+               esc(after_who), esc(example["after"]), esc(example["why"]))
+        )
+    return (
+        '<section class="block" aria-labelledby="evals">'
+        '<div class="section-head"><p class="eyebrow">Grading what the writers say</p>'
+        '<h2 id="evals">Evals</h2>'
+        '<p class="muted">The ranking above is checked against labeled faults. This checks the words on each '
+        "card. Each case is a frozen triage result with its right answer: the root cause, what is a "
+        "consequence, what should escalate, what should stay unresolved, and the key evidence. Each writer is "
+        "given the same prompts, its replies are accepted the way the agent accepts them, and six fixed "
+        "graders score the result. No grader is a model.</p></div>"
+        "%s"
+        '<p class="muted small">%s</p>'
+        '<h3>What each grader checks</h3><dl class="ev-graders">%s</dl>'
+        "<h3>Two failures the eval found, and the fixes</h3>"
+        '<div class="ev-grid">%s</div>'
+        '<p class="notice"><b>The cases are synthetic.</b> They come from the generated HVAC holdout and the '
+        "hand-sequenced electrical journals, plus composites built from the same plant model, and the right "
+        "answers were written for them. A high score shows the writers handle these shapes. It is not "
+        "evidence about a real building's alarms. Clarity to an operator is the one optional check a model "
+        "grades, with a written rubric, and it is kept out of these numbers.</p>"
+        "</section>"
+    ) % (table, " ".join(esc(n) for n in notes), graders, "".join(cards))
+
+
+def load_evals():
+    """The packaged scorecard and the two worked examples, or None without them."""
+    import json
+
+    try:
+        from bms_triage_service import eval_scorecard
+
+        scorecard = eval_scorecard()
+    except (ImportError, FileNotFoundError):
+        return None
+    examples = []
+    if EVAL_EXAMPLES.exists():
+        examples = json.loads(EVAL_EXAMPLES.read_text(encoding="utf-8"))["examples"]
+    return scorecard, examples
+
+
 def pipeline() -> str:
     items = []
     for sid, name, desc in STEPS:
@@ -488,7 +626,7 @@ def no_scorecard() -> str:
 
 def build_page(
     split, config, views, pooled, arm, fonts, standalone, data_note=None, repo_url=None,
-    haiku=None,
+    haiku=None, evals=None,
 ) -> str:
     events_in = sum(int(v.summary.get("alarm_events_in", 0)) for v in views)
     total_conditions = sum(int(v.summary.get("distinct_conditions", 0)) for v in views)
@@ -565,13 +703,15 @@ def build_page(
             '<p class="foot">Source code, tests, and the build guide: '
             '<a href="%s">%s</a></p>' % (esc(repo_url), esc(repo_url.split("://", 1)[-1]))
         )
-    body = "<style>%s</style>%s%s%s%s%s%s%s" % (
+    evals_html = evals_section(*evals) if evals and pooled is not None else ""
+    body = "<style>%s</style>%s%s%s%s%s%s%s%s" % (
         SHOWCASE_STYLE,
         header,
         notice,
         before_after,
         pipeline(),
         score,
+        evals_html,
         windows_html,
         foot,
     )
@@ -641,6 +781,7 @@ def main(argv: list[str] | None = None) -> int:
         data_note="%s, not labeled" % args.alarms.name if custom else None,
         repo_url=args.repo_url,
         haiku=haiku,
+        evals=load_evals(),
     )
     args.out.parent.mkdir(parents=True, exist_ok=True)
     with args.out.open("w", encoding="utf-8", newline="\n") as handle:
