@@ -1,0 +1,67 @@
+{
+ "id": "hvac-chiller-ch-61-b-oil-press",
+ "type": "missing_trend",
+ "tags": [
+  "hvac",
+  "single_condition"
+ ],
+ "title": "holdout_chiller, SYN1/CH-61-B/OIL_PRESS (holdout_chiller-C10)",
+ "synthetic": true,
+ "source": {
+  "corpus": "holdout",
+  "window": "holdout_chiller",
+  "slice": "SYN1/CH-61-B/OIL_PRESS",
+  "case_id": "holdout_chiller-C10"
+ },
+ "expected": {
+  "root_causes": [],
+  "consequences": [],
+  "escalate": [],
+  "do_not_escalate": [],
+  "unresolved": [
+   {
+    "point": "SYN1/CH-61-B/OIL_PRESS",
+    "names": [
+     "oil pressure",
+     "OIL_PRESS"
+    ]
+   }
+  ],
+  "limited_evidence": [],
+  "note": "The point has no trend series in the export, so nothing can confirm or dismiss it. It stays unresolved.",
+  "evidence_facts": []
+ },
+ "frozen": {
+  "time_zone": {
+   "name": "UTC",
+   "label": "UTC"
+  },
+  "window": {
+   "start": "2026-07-29T00:00:00-07:00",
+   "end": "2026-07-29T23:59:00-07:00"
+  },
+  "counts": {
+   "ranked_items": 0,
+   "consequences_collapsed": 0,
+   "nuisance": 0,
+   "unresolved": 1,
+   "slice_of_window": {
+    "alarm_events": 194,
+    "distinct_conditions": 11,
+    "ranked_items": 5,
+    "consequences_collapsed": 0,
+    "nuisance": 5,
+    "unresolved": 1
+   }
+  },
+  "items": [],
+  "nuisance": [],
+  "unresolved": [
+   {
+    "point": "SYN1/CH-61-B/OIL_PRESS",
+    "signal": "CriticalAlarmClass",
+    "reason": "no trend series for this point in the trend export"
+   }
+  ]
+ }
+}

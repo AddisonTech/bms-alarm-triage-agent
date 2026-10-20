@@ -1,0 +1,279 @@
+{
+ "id": "power-outage-utc",
+ "type": "cause_and_consequences",
+ "tags": [
+  "power"
+ ],
+ "title": "utility_outage fixture, times in UTC",
+ "synthetic": true,
+ "source": {
+  "fixture": "tests/fixtures/electrical/utility_outage.json"
+ },
+ "expected": {
+  "root_causes": [
+   {
+    "point": "SYN1/UTIL-1/FAIL",
+    "names": [
+     "utility power failure",
+     "utility failure",
+     "utility outage",
+     "utility power outage",
+     "utility power loss",
+     "loss of utility",
+     "utility power was lost",
+     "utility source failed"
+    ],
+    "equipment": "UTIL-1"
+   }
+  ],
+  "consequences": [
+   {
+    "point": "SYN1/UPS-A/ONBATT",
+    "names": [
+     "UPS-A",
+     "UPS A",
+     "on battery"
+    ],
+    "of": "SYN1/UTIL-1/FAIL"
+   },
+   {
+    "point": "SYN1/UPS-B/ONBATT",
+    "names": [
+     "UPS-B",
+     "UPS B",
+     "on battery"
+    ],
+    "of": "SYN1/UTIL-1/FAIL"
+   },
+   {
+    "point": "SYN1/GEN-1/RUN",
+    "names": [
+     "generator start",
+     "generator run",
+     "generator running",
+     "generator started"
+    ],
+    "of": "SYN1/UTIL-1/FAIL"
+   },
+   {
+    "point": "SYN1/ATS-1/EMERG",
+    "names": [
+     "ATS transfer",
+     "transfer to the emergency source",
+     "emergency source",
+     "transfer"
+    ],
+    "of": "SYN1/UTIL-1/FAIL"
+   },
+   {
+    "point": "SYN1/GEN-1/F_LO",
+    "names": [
+     "frequency dip",
+     "frequency"
+    ],
+    "of": "SYN1/UTIL-1/FAIL"
+   }
+  ],
+  "escalate": [
+   {
+    "point": "SYN1/UTIL-1/FAIL",
+    "names": [
+     "utility power failure",
+     "utility failure",
+     "utility outage",
+     "utility power outage",
+     "utility power loss",
+     "loss of utility",
+     "utility power was lost",
+     "utility source failed"
+    ]
+   }
+  ],
+  "do_not_escalate": [
+   {
+    "point": "SYN1/UPS-A/ONBATT",
+    "names": [
+     "UPS-A",
+     "UPS A",
+     "on battery"
+    ]
+   },
+   {
+    "point": "SYN1/UPS-B/ONBATT",
+    "names": [
+     "UPS-B",
+     "UPS B",
+     "on battery"
+    ]
+   },
+   {
+    "point": "SYN1/GEN-1/RUN",
+    "names": [
+     "generator start",
+     "generator run",
+     "generator running",
+     "generator started"
+    ]
+   },
+   {
+    "point": "SYN1/ATS-1/EMERG",
+    "names": [
+     "ATS transfer",
+     "transfer to the emergency source",
+     "emergency source",
+     "transfer"
+    ]
+   },
+   {
+    "point": "SYN1/GEN-1/F_LO",
+    "names": [
+     "frequency dip",
+     "frequency"
+    ]
+   }
+  ],
+  "unresolved": [],
+  "limited_evidence": [],
+  "note": "The utility failed; both UPS systems went to battery, the generator started, the ATS transferred and the frequency dipped as the load landed. One event, one item.",
+  "evidence_facts": [
+   {
+    "point": "SYN1/UTIL-1/FAIL",
+    "times": [
+     "10:08:00 UTC",
+     "10:09:48 UTC"
+    ],
+    "values": [
+     "1",
+     "108"
+    ]
+   }
+  ]
+ },
+ "frozen": {
+  "time_zone": {
+   "name": "UTC",
+   "label": "UTC"
+  },
+  "window": {
+   "start": "2026-07-14T10:00:00+00:00",
+   "end": "2026-07-14T10:20:00+00:00"
+  },
+  "counts": {
+   "alarm_events": 12,
+   "distinct_conditions": 6,
+   "ranked_items": 1,
+   "consequences_collapsed": 5,
+   "nuisance": 0,
+   "unresolved": 0,
+   "journal_entries": 24
+  },
+  "items": [
+   {
+    "point": "SYN1/UTIL-1/FAIL",
+    "equipment": "UTIL-1",
+    "signal": "utility_failure",
+    "label": "utility power failure",
+    "domain": "electrical",
+    "priority": 2,
+    "start": "2026-07-14T10:08:00+00:00",
+    "end": "2026-07-14T10:09:52+00:00",
+    "events": 2,
+    "alarms": 1,
+    "returns": 1,
+    "seconds_in_alarm": 112.0,
+    "band": "PROMOTED",
+    "rule": "E-P1",
+    "rule_name": "CAUSE_CONFIRMED_BY_TREND",
+    "finding": "the trend shows it past its limit in 55 of 67 samples around the alarm, 10:08:00 UTC to 10:09:48 UTC, worst value 1, confirming the utility power failure; it ranks as the cause",
+    "preliminary_score": 0.088148,
+    "evidence": {
+     "kind": "discrete",
+     "limit": 0.5,
+     "deadband": 0.5,
+     "direction": "HIGH",
+     "units": "",
+     "samples": 67,
+     "samples_past_limit": 55,
+     "first_past_limit": "2026-07-14T10:08:00+00:00",
+     "last_past_limit": "2026-07-14T10:09:48+00:00",
+     "seconds_past_limit": 108.0,
+     "worst_value": 1.0,
+     "dip": null
+    },
+    "rank": 1,
+    "consequences": [
+     {
+      "point": "SYN1/UPS-A/ONBATT",
+      "equipment": "UPS-A",
+      "signal": "ups_on_battery",
+      "label": "UPS on battery",
+      "priority": 1,
+      "start": "2026-07-14T10:08:00+00:00",
+      "end": "2026-07-14T10:08:18+00:00",
+      "band": "EXPLAINED",
+      "rule": "E-C1",
+      "finding": "starts at 10:08:00 UTC, inside the UTILITY_FAILURE window on SYN1/UTIL-1/FAIL, so it is a consequence of that cause and collapses under it"
+     },
+     {
+      "point": "SYN1/UPS-B/ONBATT",
+      "equipment": "UPS-B",
+      "signal": "ups_on_battery",
+      "label": "UPS on battery",
+      "priority": 1,
+      "start": "2026-07-14T10:08:00+00:00",
+      "end": "2026-07-14T10:08:18+00:00",
+      "band": "EXPLAINED",
+      "rule": "E-C1",
+      "finding": "starts at 10:08:00 UTC, inside the UTILITY_FAILURE window on SYN1/UTIL-1/FAIL, so it is a consequence of that cause and collapses under it"
+     },
+     {
+      "point": "SYN1/GEN-1/RUN",
+      "equipment": "GEN-1",
+      "signal": "generator_start",
+      "label": "generator start",
+      "priority": 4,
+      "start": "2026-07-14T10:08:08+00:00",
+      "end": "2026-07-14T10:10:22+00:00",
+      "band": "EXPLAINED",
+      "rule": "E-C1",
+      "finding": "starts at 10:08:08 UTC, inside the UTILITY_FAILURE window on SYN1/UTIL-1/FAIL, so it is a consequence of that cause and collapses under it"
+     },
+     {
+      "point": "SYN1/ATS-1/EMERG",
+      "equipment": "ATS-1",
+      "signal": "ats_transfer",
+      "label": "ATS transfer to the emergency source",
+      "priority": 3,
+      "start": "2026-07-14T10:08:12+00:00",
+      "end": "2026-07-14T10:10:22+00:00",
+      "band": "EXPLAINED",
+      "rule": "E-C1",
+      "finding": "starts at 10:08:12 UTC, inside the UTILITY_FAILURE window on SYN1/UTIL-1/FAIL, so it is a consequence of that cause and collapses under it"
+     },
+     {
+      "point": "SYN1/GEN-1/F_LO",
+      "equipment": "GEN-1",
+      "signal": "frequency_low",
+      "label": "generator frequency dip",
+      "priority": 3,
+      "start": "2026-07-14T10:08:12+00:00",
+      "end": "2026-07-14T10:08:16+00:00",
+      "band": "EXPLAINED",
+      "rule": "E-C1",
+      "finding": "starts at 10:08:12 UTC, inside the UTILITY_FAILURE window on SYN1/UTIL-1/FAIL, so it is a consequence of that cause and collapses under it; load step at 10:08:12 UTC (the transfer to the emergency source): worst 58.76 Hz at 10:08:12 UTC, 1.24 Hz below the 60 Hz nominal, back within 0.5 Hz at 10:08:14 UTC, 2 s after the step"
+     }
+    ],
+    "writer_input": {
+     "prompt": "You are helping a controls engineer triage power system alarms.\n\nGiven one alarm condition and its trend evidence, return four fields:\n  reason: one sentence on why this condition matters, stated only from the\n          evidence below. Do not claim anything the evidence does not show.\n  verb:   the diagnostic action, chosen from exactly this list and written\n          in lower case: inspect, verify, check, compare, review, measure, confirm. Nothing else is accepted. You\n          must NOT recommend any change to the building system: no\n          setpoint change, no override, no schedule change, no breaker\n          operation, and no starting or stopping of equipment.\n  target: what to look at. Must be copied exactly from this list and\n          nothing else: SYN1/UTIL-1/FAIL, UTIL-1\n  detail: one sentence on what to look for, from the evidence below.\n\nThis is an electrical power condition. Do not describe it as a heating or\ncooling fault.\n\nEvery time below is in UTC and ends with its label (UTC).\nWrite any time exactly as it appears here, label included. Do not convert it.\n\nAnswer with JSON only, exactly:\n{\"reason\": \"...\", \"verb\": \"...\", \"target\": \"...\", \"detail\": \"...\"}\n\nCondition\n  point: SYN1/UTIL-1/FAIL\n  equipment: UTIL-1 (utility_failure, reported priority 2)\n  signal: utility power failure\n  alarm limit: status point, 1 in the alarm state and 0 normal\n  window: 2026-07-14 10:08:00 UTC to 2026-07-14 10:09:52 UTC\n  alarm transitions: 1 alarms, 0 repeats, 1 returns to normal\n  time in alarm: 112 seconds\n  preliminary score: 0.088\n\nTrend evidence\n  samples: 67\n  samples past the limit: 55\n  first past the limit: 2026-07-14 10:08:00 UTC\n  last past the limit: 2026-07-14 10:09:48 UTC\n  seconds past the limit: 108\n  worst value: 1 (1 is the alarm state)\n\nReassessment\n  band: PROMOTED, set by E-P1\n  finding: the trend shows it past its limit in 55 of 67 samples around the alarm, 10:08:00 UTC to 10:09:48 UTC, worst value 1, confirming the utility power failure; it ranks as the cause\n\nConditions this one explains: 5\n  - UPS on battery on SYN1/UPS-A/ONBATT (UPS-A, priority 1), 2026-07-14 10:08:00 UTC to 2026-07-14 10:08:18 UTC\n  - UPS on battery on SYN1/UPS-B/ONBATT (UPS-B, priority 1), 2026-07-14 10:08:00 UTC to 2026-07-14 10:08:18 UTC\n  - generator start on SYN1/GEN-1/RUN (GEN-1, priority 4), 2026-07-14 10:08:08 UTC to 2026-07-14 10:10:22 UTC\n  - ATS transfer to the emergency source on SYN1/ATS-1/EMERG (ATS-1, priority 3), 2026-07-14 10:08:12 UTC to 2026-07-14 10:10:22 UTC\n  - generator frequency dip on SYN1/GEN-1/F_LO (GEN-1, priority 3), 2026-07-14 10:08:12 UTC to 2026-07-14 10:08:16 UTC\n",
+     "allowed_targets": [
+      "SYN1/UTIL-1/FAIL",
+      "UTIL-1"
+     ],
+     "domains": []
+    }
+   }
+  ],
+  "nuisance": [],
+  "unresolved": []
+ }
+}

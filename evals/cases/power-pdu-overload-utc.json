@@ -1,0 +1,182 @@
+{
+ "id": "power-pdu-overload-utc",
+ "type": "cause_and_consequences",
+ "tags": [
+  "power"
+ ],
+ "title": "pdu_overload fixture, times in UTC",
+ "synthetic": true,
+ "source": {
+  "fixture": "tests/fixtures/electrical/pdu_overload.json"
+ },
+ "expected": {
+  "root_causes": [
+   {
+    "point": "SYN1/PDU-A1/LOAD_HIHI",
+    "names": [
+     "PDU overload",
+     "overload",
+     "load very high",
+     "high load",
+     "load high"
+    ],
+    "equipment": "PDU-A1"
+   }
+  ],
+  "consequences": [
+   {
+    "point": "SYN1/PDU-A1/LOAD_HI",
+    "names": [
+     "PDU-A1 load high",
+     "lower stage",
+     "LOAD_HI"
+    ],
+    "of": "SYN1/PDU-A1/LOAD_HIHI"
+   },
+   {
+    "point": "SYN1/UPS-A/LOAD_HI",
+    "names": [
+     "UPS-A",
+     "UPS load"
+    ],
+    "of": "SYN1/PDU-A1/LOAD_HIHI"
+   }
+  ],
+  "escalate": [
+   {
+    "point": "SYN1/PDU-A1/LOAD_HIHI",
+    "names": [
+     "PDU overload",
+     "overload",
+     "load very high",
+     "high load",
+     "load high"
+    ]
+   }
+  ],
+  "do_not_escalate": [
+   {
+    "point": "SYN1/PDU-A1/LOAD_HI",
+    "names": [
+     "PDU-A1 load high",
+     "lower stage",
+     "LOAD_HI"
+    ]
+   },
+   {
+    "point": "SYN1/UPS-A/LOAD_HI",
+    "names": [
+     "UPS-A",
+     "UPS load"
+    ]
+   }
+  ],
+  "unresolved": [],
+  "limited_evidence": [],
+  "note": "PDU-A1 ramped past both load stages; its lower stage and the UPS-A load alarm that feeds it follow from the same load.",
+  "evidence_facts": [
+   {
+    "point": "SYN1/PDU-A1/LOAD_HIHI",
+    "times": [
+     "10:08:40 UTC",
+     "10:09:56 UTC"
+    ],
+    "values": [
+     "92.4",
+     "76"
+    ]
+   }
+  ]
+ },
+ "frozen": {
+  "time_zone": {
+   "name": "UTC",
+   "label": "UTC"
+  },
+  "window": {
+   "start": "2026-07-14T10:00:00+00:00",
+   "end": "2026-07-14T10:20:00+00:00"
+  },
+  "counts": {
+   "alarm_events": 6,
+   "distinct_conditions": 3,
+   "ranked_items": 1,
+   "consequences_collapsed": 2,
+   "nuisance": 0,
+   "unresolved": 0,
+   "journal_entries": 9
+  },
+  "items": [
+   {
+    "point": "SYN1/PDU-A1/LOAD_HIHI",
+    "equipment": "PDU-A1",
+    "signal": "pdu_overload",
+    "label": "PDU overload",
+    "domain": "electrical",
+    "priority": 2,
+    "start": "2026-07-14T10:08:40+00:00",
+    "end": "2026-07-14T10:10:02+00:00",
+    "events": 2,
+    "alarms": 1,
+    "returns": 1,
+    "seconds_in_alarm": 82.0,
+    "band": "PROMOTED",
+    "rule": "E-P1",
+    "rule_name": "CAUSE_CONFIRMED_BY_TREND",
+    "finding": "the trend shows it past its limit in 39 of 52 samples around the alarm, 10:08:40 UTC to 10:09:56 UTC, worst value 92.4 %, confirming the PDU overload; it ranks as the cause",
+    "preliminary_score": 0.087974,
+    "evidence": {
+     "kind": "high",
+     "limit": 90.0,
+     "deadband": 3.0,
+     "direction": "HIGH",
+     "units": "%",
+     "samples": 52,
+     "samples_past_limit": 39,
+     "first_past_limit": "2026-07-14T10:08:40+00:00",
+     "last_past_limit": "2026-07-14T10:09:56+00:00",
+     "seconds_past_limit": 76.0,
+     "worst_value": 92.4,
+     "dip": null
+    },
+    "rank": 1,
+    "consequences": [
+     {
+      "point": "SYN1/PDU-A1/LOAD_HI",
+      "equipment": "PDU-A1",
+      "signal": "pdu_overload",
+      "label": "PDU overload",
+      "priority": 3,
+      "start": "2026-07-14T10:08:32+00:00",
+      "end": "2026-07-14T10:10:12+00:00",
+      "band": "EXPLAINED",
+      "rule": "E-C1",
+      "finding": "starts at 10:08:32 UTC, inside the PDU_OVERLOAD window on SYN1/PDU-A1/LOAD_HIHI, so it is a consequence of that cause and collapses under it"
+     },
+     {
+      "point": "SYN1/UPS-A/LOAD_HI",
+      "equipment": "UPS-A",
+      "signal": "ups_load_high",
+      "label": "UPS load above its limit",
+      "priority": 2,
+      "start": "2026-07-14T10:08:36+00:00",
+      "end": "2026-07-14T10:10:08+00:00",
+      "band": "EXPLAINED",
+      "rule": "E-C1",
+      "finding": "starts at 10:08:36 UTC, inside the PDU_OVERLOAD window on SYN1/PDU-A1/LOAD_HIHI, so it is a consequence of that cause and collapses under it"
+     }
+    ],
+    "writer_input": {
+     "prompt": "You are helping a controls engineer triage power system alarms.\n\nGiven one alarm condition and its trend evidence, return four fields:\n  reason: one sentence on why this condition matters, stated only from the\n          evidence below. Do not claim anything the evidence does not show.\n  verb:   the diagnostic action, chosen from exactly this list and written\n          in lower case: inspect, verify, check, compare, review, measure, confirm. Nothing else is accepted. You\n          must NOT recommend any change to the building system: no\n          setpoint change, no override, no schedule change, no breaker\n          operation, and no starting or stopping of equipment.\n  target: what to look at. Must be copied exactly from this list and\n          nothing else: SYN1/PDU-A1/LOAD_HIHI, PDU-A1\n  detail: one sentence on what to look for, from the evidence below.\n\nThis is an electrical power condition. Do not describe it as a heating or\ncooling fault.\n\nEvery time below is in UTC and ends with its label (UTC).\nWrite any time exactly as it appears here, label included. Do not convert it.\n\nAnswer with JSON only, exactly:\n{\"reason\": \"...\", \"verb\": \"...\", \"target\": \"...\", \"detail\": \"...\"}\n\nCondition\n  point: SYN1/PDU-A1/LOAD_HIHI\n  equipment: PDU-A1 (pdu_overload, reported priority 2)\n  signal: PDU overload\n  alarm limit: 90 %, deadband 3 %, direction HIGH\n  window: 2026-07-14 10:08:40 UTC to 2026-07-14 10:10:02 UTC\n  alarm transitions: 1 alarms, 0 repeats, 1 returns to normal\n  time in alarm: 82 seconds\n  preliminary score: 0.088\n\nTrend evidence\n  samples: 52\n  samples past the limit: 39\n  first past the limit: 2026-07-14 10:08:40 UTC\n  last past the limit: 2026-07-14 10:09:56 UTC\n  seconds past the limit: 76\n  worst value: 92.4 %\n\nReassessment\n  band: PROMOTED, set by E-P1\n  finding: the trend shows it past its limit in 39 of 52 samples around the alarm, 10:08:40 UTC to 10:09:56 UTC, worst value 92.4 %, confirming the PDU overload; it ranks as the cause\n\nConditions this one explains: 2\n  - PDU overload on SYN1/PDU-A1/LOAD_HI (PDU-A1, priority 3), 2026-07-14 10:08:32 UTC to 2026-07-14 10:10:12 UTC\n  - UPS load above its limit on SYN1/UPS-A/LOAD_HI (UPS-A, priority 2), 2026-07-14 10:08:36 UTC to 2026-07-14 10:10:08 UTC\n",
+     "allowed_targets": [
+      "SYN1/PDU-A1/LOAD_HIHI",
+      "PDU-A1"
+     ],
+     "domains": []
+    }
+   }
+  ],
+  "nuisance": [],
+  "unresolved": []
+ }
+}

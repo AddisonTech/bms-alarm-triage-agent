@@ -1,0 +1,131 @@
+{
+ "id": "hvac-ahu-dual-duct-ahu-21-clg-duct-temp",
+ "type": "sustained_fault",
+ "tags": [
+  "hvac",
+  "single_condition"
+ ],
+ "title": "holdout_ahu_dual_duct, SYN1/AHU-21/CLG_DUCT_TEMP (holdout_ahu_dual_duct-C01)",
+ "synthetic": true,
+ "source": {
+  "corpus": "holdout",
+  "window": "holdout_ahu_dual_duct",
+  "slice": "SYN1/AHU-21/CLG_DUCT_TEMP",
+  "case_id": "holdout_ahu_dual_duct-C01"
+ },
+ "expected": {
+  "root_causes": [
+   {
+    "point": "SYN1/AHU-21/CLG_DUCT_TEMP",
+    "names": [
+     "cooling duct",
+     "cold duct",
+     "cold deck",
+     "CLG_DUCT_TEMP"
+    ],
+    "equipment": "AHU-21"
+   }
+  ],
+  "consequences": [],
+  "escalate": [
+   {
+    "point": "SYN1/AHU-21/CLG_DUCT_TEMP",
+    "names": [
+     "cooling duct",
+     "cold duct",
+     "cold deck",
+     "CLG_DUCT_TEMP"
+    ]
+   }
+  ],
+  "do_not_escalate": [],
+  "unresolved": [],
+  "limited_evidence": [],
+  "note": "Labeled fault (heating_coil_valve_stuck). The trend confirms it.",
+  "evidence_facts": [
+   {
+    "point": "SYN1/AHU-21/CLG_DUCT_TEMP",
+    "times": [],
+    "values": [
+     "60.0",
+     "5.17",
+     "85.4",
+     "20.0"
+    ]
+   }
+  ]
+ },
+ "frozen": {
+  "time_zone": {
+   "name": "UTC",
+   "label": "UTC"
+  },
+  "window": {
+   "start": "2026-07-28T00:00:00-07:00",
+   "end": "2026-07-28T23:59:00-07:00"
+  },
+  "counts": {
+   "ranked_items": 1,
+   "consequences_collapsed": 0,
+   "nuisance": 0,
+   "unresolved": 0,
+   "slice_of_window": {
+    "alarm_events": 142,
+    "distinct_conditions": 10,
+    "ranked_items": 5,
+    "consequences_collapsed": 0,
+    "nuisance": 4,
+    "unresolved": 1
+   }
+  },
+  "items": [
+   {
+    "point": "SYN1/AHU-21/CLG_DUCT_TEMP",
+    "equipment": "AHU-21",
+    "signal": "CriticalAlarmClass",
+    "label": "CriticalAlarmClass",
+    "domain": "hvac",
+    "priority": 2,
+    "start": "2026-07-28T03:31:00-07:00",
+    "end": "2026-07-28T23:31:00-07:00",
+    "events": 21,
+    "alarms": 1,
+    "returns": 0,
+    "seconds_in_alarm": 72000.0,
+    "band": "PROMOTED",
+    "rule": "R-P1",
+    "rule_name": "SUSTAINED_EXCURSION",
+    "finding": "beyond the limit for 85.4 percent of the segment and still beyond it at the end, a standing condition",
+    "preliminary_score": 0.4875,
+    "evidence": {
+     "kind": "analog",
+     "limit": 60.0,
+     "deadband": 1.5,
+     "direction": "HIGH",
+     "units": "degF",
+     "samples": 1440,
+     "samples_past_limit": 1230,
+     "first_past_limit": "2026-07-28T03:30:00-07:00",
+     "last_past_limit": "2026-07-28T23:59:00-07:00",
+     "seconds_past_limit": 73740.0,
+     "worst_value": 67.75,
+     "dip": null
+    },
+    "rank": 3,
+    "consequences": [],
+    "writer_input": {
+     "prompt": "You are helping a controls engineer triage building automation alarms.\n\nGiven one alarm condition and its trend evidence, return four fields:\n  reason: one sentence on why this condition matters, stated only from the\n          evidence below. Do not claim anything the evidence does not show.\n  verb:   the diagnostic action, chosen from exactly this list and written\n          in lower case: inspect, verify, check, compare, review, measure, confirm. Nothing else is accepted. You\n          must NOT recommend any change to the building system: no\n          setpoint change, no override, no schedule change, and no\n          starting or stopping of equipment.\n  target: what to look at. Must be copied exactly from this list and\n          nothing else: SYN1/AHU-21/CLG_DUCT_TEMP, AHU-21\n  detail: one sentence on what to look for, from the evidence below.\n\nDo not describe this equipment as a kind of system it is not. The point\npath and equipment tag above tell you whether this is a heating or a\ncooling condition; do not call one the other.\n\nAnswer with JSON only, exactly:\n{\"reason\": \"...\", \"verb\": \"...\", \"target\": \"...\", \"detail\": \"...\"}\n\nCondition\n  point: SYN1/AHU-21/CLG_DUCT_TEMP\n  equipment: AHU-21 (CriticalAlarmClass, reported priority 2)\n  alarm limit: 60.0 degF, deadband 1.5 degF, direction HIGH\n  window: 2026-07-28T03:31:00-07:00 to 2026-07-28T23:31:00-07:00\n  alarm transitions: 1 alarms, 20 repeats, 0 returns to normal\n  time in alarm: 20.0 hours\n  alarm-side classification: stale\n  preliminary score: 0.487\n\nTrend evidence\n  samples: 1440\n  peak deviation past the limit: 5.17 deadbands\n  proportion of the window past the limit: 85.4%\n  still past the limit at the end of the window: yes\n\nReassessment\n  band: PROMOTED, set by R-P1\n  finding: beyond the limit for 85.4 percent of the segment and still beyond it at the end, a standing condition\n",
+     "allowed_targets": [
+      "SYN1/AHU-21/CLG_DUCT_TEMP",
+      "AHU-21"
+     ],
+     "domains": [
+      "cooling"
+     ]
+    }
+   }
+  ],
+  "nuisance": [],
+  "unresolved": []
+ }
+}

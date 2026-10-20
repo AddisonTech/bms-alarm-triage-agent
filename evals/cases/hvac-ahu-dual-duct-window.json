@@ -1,0 +1,490 @@
+{
+ "id": "hvac-ahu-dual-duct-window",
+ "type": "flood_with_real_faults",
+ "tags": [
+  "hvac",
+  "flood",
+  "multiple_causes"
+ ],
+ "title": "holdout_ahu_dual_duct window: 142 alarm events, 5 labeled faults",
+ "synthetic": true,
+ "source": {
+  "corpus": "holdout",
+  "window": "holdout_ahu_dual_duct",
+  "slice": null
+ },
+ "expected": {
+  "root_causes": [
+   {
+    "point": "SYN1/AHU-21/CLG_DUCT_TEMP",
+    "names": [
+     "cooling duct",
+     "cold duct",
+     "cold deck",
+     "CLG_DUCT_TEMP"
+    ],
+    "equipment": "AHU-21"
+   },
+   {
+    "point": "SYN1/AHU-21/HTG_DUCT_TEMP",
+    "names": [
+     "heating duct",
+     "hot duct",
+     "hot deck",
+     "HTG_DUCT_TEMP"
+    ],
+    "equipment": "AHU-21"
+   },
+   {
+    "point": "SYN1/AHU-21/MIXED_AIR_TEMP",
+    "names": [
+     "mixed air",
+     "MIXED_AIR_TEMP"
+    ],
+    "equipment": "AHU-21"
+   },
+   {
+    "point": "SYN1/AHU-21/CLG_SP",
+    "names": [
+     "static pressure",
+     "duct static",
+     "CLG_SP"
+    ],
+    "equipment": "AHU-21"
+   },
+   {
+    "point": "SYN1/AHU-21-B/CLG_DUCT_TEMP",
+    "names": [
+     "cooling duct",
+     "cold duct",
+     "cold deck",
+     "CLG_DUCT_TEMP"
+    ],
+    "equipment": "AHU-21-B"
+   }
+  ],
+  "consequences": [],
+  "escalate": [
+   {
+    "point": "SYN1/AHU-21/CLG_DUCT_TEMP",
+    "names": [
+     "cooling duct",
+     "cold duct",
+     "cold deck",
+     "CLG_DUCT_TEMP"
+    ]
+   },
+   {
+    "point": "SYN1/AHU-21/HTG_DUCT_TEMP",
+    "names": [
+     "heating duct",
+     "hot duct",
+     "hot deck",
+     "HTG_DUCT_TEMP"
+    ]
+   },
+   {
+    "point": "SYN1/AHU-21/MIXED_AIR_TEMP",
+    "names": [
+     "mixed air",
+     "MIXED_AIR_TEMP"
+    ]
+   },
+   {
+    "point": "SYN1/AHU-21/CLG_SP",
+    "names": [
+     "static pressure",
+     "duct static",
+     "CLG_SP"
+    ]
+   },
+   {
+    "point": "SYN1/AHU-21-B/CLG_DUCT_TEMP",
+    "names": [
+     "cooling duct",
+     "cold duct",
+     "cold deck",
+     "CLG_DUCT_TEMP"
+    ]
+   }
+  ],
+  "do_not_escalate": [
+   {
+    "point": "SYN1/AHU-21-B/HTG_DUCT_TEMP",
+    "names": [
+     "heating duct",
+     "hot duct",
+     "hot deck",
+     "HTG_DUCT_TEMP"
+    ]
+   },
+   {
+    "point": "SYN1/AHU-21-B/MIXED_AIR_TEMP",
+    "names": [
+     "mixed air",
+     "MIXED_AIR_TEMP"
+    ]
+   },
+   {
+    "point": "SYN1/AHU-21-B/CLG_SP",
+    "names": [
+     "static pressure",
+     "duct static",
+     "CLG_SP"
+    ]
+   }
+  ],
+  "unresolved": [
+   {
+    "point": "SYN1/AHU-21-B/HTG_DMPR_POS",
+    "names": [
+     "damper",
+     "HTG_DMPR_POS"
+    ]
+   }
+  ],
+  "limited_evidence": [
+   {
+    "point": "SYN1/AHU-21/CLG_SP",
+    "names": [
+     "static pressure",
+     "duct static",
+     "CLG_SP"
+    ]
+   }
+  ],
+  "note": "Every labeled fault in the window is its own cause; HVAC conditions explain nothing else. Chattering, fleeting, repeating and self-recovered alarms are nuisance, and a point with no trend series stays unresolved.",
+  "evidence_facts": [
+   {
+    "point": "SYN1/AHU-21/HTG_DUCT_TEMP",
+    "times": [],
+    "values": [
+     "88.0",
+     "9.20",
+     "53.3",
+     "12.3"
+    ]
+   },
+   {
+    "point": "SYN1/AHU-21-B/CLG_DUCT_TEMP",
+    "times": [],
+    "values": [
+     "60.0",
+     "9.17",
+     "53.3",
+     "12.3"
+    ]
+   },
+   {
+    "point": "SYN1/AHU-21/CLG_DUCT_TEMP",
+    "times": [],
+    "values": [
+     "60.0",
+     "5.17",
+     "85.4",
+     "20.0"
+    ]
+   },
+   {
+    "point": "SYN1/AHU-21/MIXED_AIR_TEMP",
+    "times": [],
+    "values": [
+     "72.0",
+     "3.24",
+     "34.8",
+     "7.9"
+    ]
+   },
+   {
+    "point": "SYN1/AHU-21/CLG_SP",
+    "times": [],
+    "values": [
+     "1.5",
+     "2.25",
+     "50.0",
+     "11.5"
+    ]
+   }
+  ]
+ },
+ "frozen": {
+  "time_zone": {
+   "name": "UTC",
+   "label": "UTC"
+  },
+  "window": {
+   "start": "2026-07-28T00:00:00-07:00",
+   "end": "2026-07-28T23:59:00-07:00"
+  },
+  "counts": {
+   "alarm_events": 142,
+   "distinct_conditions": 10,
+   "ranked_items": 5,
+   "consequences_collapsed": 0,
+   "nuisance": 4,
+   "unresolved": 1
+  },
+  "items": [
+   {
+    "point": "SYN1/AHU-21/HTG_DUCT_TEMP",
+    "equipment": "AHU-21",
+    "signal": "DefaultAlarmClass",
+    "label": "DefaultAlarmClass",
+    "domain": "hvac",
+    "priority": 2,
+    "start": "2026-07-28T04:00:00-07:00",
+    "end": "2026-07-28T22:00:00-07:00",
+    "events": 14,
+    "alarms": 5,
+    "returns": 4,
+    "seconds_in_alarm": 44340.0,
+    "band": "PROMOTED",
+    "rule": "R-P3",
+    "rule_name": "EXCURSION_MAGNITUDE",
+    "finding": "peak deviation 9.20 deadbands past the limit reaches the 4.00 required",
+    "preliminary_score": 0.7875,
+    "evidence": {
+     "kind": "analog",
+     "limit": 88.0,
+     "deadband": 1.5,
+     "direction": "LOW",
+     "units": "degF",
+     "samples": 1440,
+     "samples_past_limit": 768,
+     "first_past_limit": "2026-07-28T04:00:00-07:00",
+     "last_past_limit": "2026-07-28T23:59:00-07:00",
+     "seconds_past_limit": 71940.0,
+     "worst_value": 74.2,
+     "dip": null
+    },
+    "rank": 1,
+    "consequences": [],
+    "writer_input": {
+     "prompt": "You are helping a controls engineer triage building automation alarms.\n\nGiven one alarm condition and its trend evidence, return four fields:\n  reason: one sentence on why this condition matters, stated only from the\n          evidence below. Do not claim anything the evidence does not show.\n  verb:   the diagnostic action, chosen from exactly this list and written\n          in lower case: inspect, verify, check, compare, review, measure, confirm. Nothing else is accepted. You\n          must NOT recommend any change to the building system: no\n          setpoint change, no override, no schedule change, and no\n          starting or stopping of equipment.\n  target: what to look at. Must be copied exactly from this list and\n          nothing else: SYN1/AHU-21/HTG_DUCT_TEMP, AHU-21\n  detail: one sentence on what to look for, from the evidence below.\n\nDo not describe this equipment as a kind of system it is not. The point\npath and equipment tag above tell you whether this is a heating or a\ncooling condition; do not call one the other.\n\nAnswer with JSON only, exactly:\n{\"reason\": \"...\", \"verb\": \"...\", \"target\": \"...\", \"detail\": \"...\"}\n\nCondition\n  point: SYN1/AHU-21/HTG_DUCT_TEMP\n  equipment: AHU-21 (DefaultAlarmClass, reported priority 2)\n  alarm limit: 88.0 degF, deadband 1.5 degF, direction LOW\n  window: 2026-07-28T04:00:00-07:00 to 2026-07-28T22:00:00-07:00\n  alarm transitions: 5 alarms, 5 repeats, 4 returns to normal\n  time in alarm: 12.3 hours\n  alarm-side classification: none\n  preliminary score: 0.787\n\nTrend evidence\n  samples: 1440\n  peak deviation past the limit: 9.20 deadbands\n  proportion of the window past the limit: 53.3%\n  still past the limit at the end of the window: yes\n\nReassessment\n  band: PROMOTED, set by R-P3\n  finding: peak deviation 9.20 deadbands past the limit reaches the 4.00 required\n",
+     "allowed_targets": [
+      "SYN1/AHU-21/HTG_DUCT_TEMP",
+      "AHU-21"
+     ],
+     "domains": [
+      "heating"
+     ]
+    }
+   },
+   {
+    "point": "SYN1/AHU-21-B/CLG_DUCT_TEMP",
+    "equipment": "AHU-21-B",
+    "signal": "CriticalAlarmClass",
+    "label": "CriticalAlarmClass",
+    "domain": "hvac",
+    "priority": 2,
+    "start": "2026-07-28T04:01:00-07:00",
+    "end": "2026-07-28T23:01:00-07:00",
+    "events": 20,
+    "alarms": 5,
+    "returns": 4,
+    "seconds_in_alarm": 44280.0,
+    "band": "PROMOTED",
+    "rule": "R-P3",
+    "rule_name": "EXCURSION_MAGNITUDE",
+    "finding": "peak deviation 9.17 deadbands past the limit reaches the 4.00 required",
+    "preliminary_score": 0.7875,
+    "evidence": {
+     "kind": "analog",
+     "limit": 60.0,
+     "deadband": 1.5,
+     "direction": "HIGH",
+     "units": "degF",
+     "samples": 1440,
+     "samples_past_limit": 768,
+     "first_past_limit": "2026-07-28T04:00:00-07:00",
+     "last_past_limit": "2026-07-28T23:59:00-07:00",
+     "seconds_past_limit": 71940.0,
+     "worst_value": 73.748,
+     "dip": null
+    },
+    "rank": 2,
+    "consequences": [],
+    "writer_input": {
+     "prompt": "You are helping a controls engineer triage building automation alarms.\n\nGiven one alarm condition and its trend evidence, return four fields:\n  reason: one sentence on why this condition matters, stated only from the\n          evidence below. Do not claim anything the evidence does not show.\n  verb:   the diagnostic action, chosen from exactly this list and written\n          in lower case: inspect, verify, check, compare, review, measure, confirm. Nothing else is accepted. You\n          must NOT recommend any change to the building system: no\n          setpoint change, no override, no schedule change, and no\n          starting or stopping of equipment.\n  target: what to look at. Must be copied exactly from this list and\n          nothing else: SYN1/AHU-21-B/CLG_DUCT_TEMP, AHU-21-B\n  detail: one sentence on what to look for, from the evidence below.\n\nDo not describe this equipment as a kind of system it is not. The point\npath and equipment tag above tell you whether this is a heating or a\ncooling condition; do not call one the other.\n\nAnswer with JSON only, exactly:\n{\"reason\": \"...\", \"verb\": \"...\", \"target\": \"...\", \"detail\": \"...\"}\n\nCondition\n  point: SYN1/AHU-21-B/CLG_DUCT_TEMP\n  equipment: AHU-21-B (CriticalAlarmClass, reported priority 2)\n  alarm limit: 60.0 degF, deadband 1.5 degF, direction HIGH\n  window: 2026-07-28T04:01:00-07:00 to 2026-07-28T23:01:00-07:00\n  alarm transitions: 5 alarms, 11 repeats, 4 returns to normal\n  time in alarm: 12.3 hours\n  alarm-side classification: none\n  preliminary score: 0.787\n\nTrend evidence\n  samples: 1440\n  peak deviation past the limit: 9.17 deadbands\n  proportion of the window past the limit: 53.3%\n  still past the limit at the end of the window: yes\n\nReassessment\n  band: PROMOTED, set by R-P3\n  finding: peak deviation 9.17 deadbands past the limit reaches the 4.00 required\n",
+     "allowed_targets": [
+      "SYN1/AHU-21-B/CLG_DUCT_TEMP",
+      "AHU-21-B"
+     ],
+     "domains": [
+      "cooling"
+     ]
+    }
+   },
+   {
+    "point": "SYN1/AHU-21/CLG_DUCT_TEMP",
+    "equipment": "AHU-21",
+    "signal": "CriticalAlarmClass",
+    "label": "CriticalAlarmClass",
+    "domain": "hvac",
+    "priority": 2,
+    "start": "2026-07-28T03:31:00-07:00",
+    "end": "2026-07-28T23:31:00-07:00",
+    "events": 21,
+    "alarms": 1,
+    "returns": 0,
+    "seconds_in_alarm": 72000.0,
+    "band": "PROMOTED",
+    "rule": "R-P1",
+    "rule_name": "SUSTAINED_EXCURSION",
+    "finding": "beyond the limit for 85.4 percent of the segment and still beyond it at the end, a standing condition",
+    "preliminary_score": 0.4875,
+    "evidence": {
+     "kind": "analog",
+     "limit": 60.0,
+     "deadband": 1.5,
+     "direction": "HIGH",
+     "units": "degF",
+     "samples": 1440,
+     "samples_past_limit": 1230,
+     "first_past_limit": "2026-07-28T03:30:00-07:00",
+     "last_past_limit": "2026-07-28T23:59:00-07:00",
+     "seconds_past_limit": 73740.0,
+     "worst_value": 67.75,
+     "dip": null
+    },
+    "rank": 3,
+    "consequences": [],
+    "writer_input": {
+     "prompt": "You are helping a controls engineer triage building automation alarms.\n\nGiven one alarm condition and its trend evidence, return four fields:\n  reason: one sentence on why this condition matters, stated only from the\n          evidence below. Do not claim anything the evidence does not show.\n  verb:   the diagnostic action, chosen from exactly this list and written\n          in lower case: inspect, verify, check, compare, review, measure, confirm. Nothing else is accepted. You\n          must NOT recommend any change to the building system: no\n          setpoint change, no override, no schedule change, and no\n          starting or stopping of equipment.\n  target: what to look at. Must be copied exactly from this list and\n          nothing else: SYN1/AHU-21/CLG_DUCT_TEMP, AHU-21\n  detail: one sentence on what to look for, from the evidence below.\n\nDo not describe this equipment as a kind of system it is not. The point\npath and equipment tag above tell you whether this is a heating or a\ncooling condition; do not call one the other.\n\nAnswer with JSON only, exactly:\n{\"reason\": \"...\", \"verb\": \"...\", \"target\": \"...\", \"detail\": \"...\"}\n\nCondition\n  point: SYN1/AHU-21/CLG_DUCT_TEMP\n  equipment: AHU-21 (CriticalAlarmClass, reported priority 2)\n  alarm limit: 60.0 degF, deadband 1.5 degF, direction HIGH\n  window: 2026-07-28T03:31:00-07:00 to 2026-07-28T23:31:00-07:00\n  alarm transitions: 1 alarms, 20 repeats, 0 returns to normal\n  time in alarm: 20.0 hours\n  alarm-side classification: stale\n  preliminary score: 0.487\n\nTrend evidence\n  samples: 1440\n  peak deviation past the limit: 5.17 deadbands\n  proportion of the window past the limit: 85.4%\n  still past the limit at the end of the window: yes\n\nReassessment\n  band: PROMOTED, set by R-P1\n  finding: beyond the limit for 85.4 percent of the segment and still beyond it at the end, a standing condition\n",
+     "allowed_targets": [
+      "SYN1/AHU-21/CLG_DUCT_TEMP",
+      "AHU-21"
+     ],
+     "domains": [
+      "cooling"
+     ]
+    }
+   },
+   {
+    "point": "SYN1/AHU-21/MIXED_AIR_TEMP",
+    "equipment": "AHU-21",
+    "signal": "DefaultAlarmClass",
+    "label": "DefaultAlarmClass",
+    "domain": "hvac",
+    "priority": 3,
+    "start": "2026-07-28T15:35:00-07:00",
+    "end": "2026-07-28T15:35:00-07:00",
+    "events": 1,
+    "alarms": 1,
+    "returns": 0,
+    "seconds_in_alarm": 28560.0,
+    "band": "PROMOTED",
+    "rule": "R-P2",
+    "rule_name": "MONOTONIC_DRIFT",
+    "finding": "moves away from the limit at 0.381 deadbands per hour and never reverses by more than 0.09 deadbands, so it is degrading rather than holding a fixed offset",
+    "preliminary_score": 0.365278,
+    "evidence": {
+     "kind": "analog",
+     "limit": 72.0,
+     "deadband": 1.0,
+     "direction": "HIGH",
+     "units": "degF",
+     "samples": 1440,
+     "samples_past_limit": 501,
+     "first_past_limit": "2026-07-28T15:35:00-07:00",
+     "last_past_limit": "2026-07-28T23:59:00-07:00",
+     "seconds_past_limit": 30240.0,
+     "worst_value": 75.238,
+     "dip": null
+    },
+    "rank": 4,
+    "consequences": [],
+    "writer_input": {
+     "prompt": "You are helping a controls engineer triage building automation alarms.\n\nGiven one alarm condition and its trend evidence, return four fields:\n  reason: one sentence on why this condition matters, stated only from the\n          evidence below. Do not claim anything the evidence does not show.\n  verb:   the diagnostic action, chosen from exactly this list and written\n          in lower case: inspect, verify, check, compare, review, measure, confirm. Nothing else is accepted. You\n          must NOT recommend any change to the building system: no\n          setpoint change, no override, no schedule change, and no\n          starting or stopping of equipment.\n  target: what to look at. Must be copied exactly from this list and\n          nothing else: SYN1/AHU-21/MIXED_AIR_TEMP, AHU-21\n  detail: one sentence on what to look for, from the evidence below.\n\nDo not describe this equipment as a kind of system it is not. The point\npath and equipment tag above tell you whether this is a heating or a\ncooling condition; do not call one the other.\n\nAnswer with JSON only, exactly:\n{\"reason\": \"...\", \"verb\": \"...\", \"target\": \"...\", \"detail\": \"...\"}\n\nCondition\n  point: SYN1/AHU-21/MIXED_AIR_TEMP\n  equipment: AHU-21 (DefaultAlarmClass, reported priority 3)\n  alarm limit: 72.0 degF, deadband 1.0 degF, direction HIGH\n  window: 2026-07-28T15:35:00-07:00 to 2026-07-28T15:35:00-07:00\n  alarm transitions: 1 alarms, 0 repeats, 0 returns to normal\n  time in alarm: 7.9 hours\n  alarm-side classification: none\n  preliminary score: 0.365\n\nTrend evidence\n  samples: 1440\n  peak deviation past the limit: 3.24 deadbands\n  proportion of the window past the limit: 34.8%\n  still past the limit at the end of the window: yes\n\nReassessment\n  band: PROMOTED, set by R-P2\n  finding: moves away from the limit at 0.381 deadbands per hour and never reverses by more than 0.09 deadbands, so it is degrading rather than holding a fixed offset\n",
+     "allowed_targets": [
+      "SYN1/AHU-21/MIXED_AIR_TEMP",
+      "AHU-21"
+     ],
+     "domains": []
+    }
+   },
+   {
+    "point": "SYN1/AHU-21/CLG_SP",
+    "equipment": "AHU-21",
+    "signal": "DefaultAlarmClass",
+    "label": "DefaultAlarmClass",
+    "domain": "hvac",
+    "priority": 3,
+    "start": "2026-07-28T07:00:00-07:00",
+    "end": "2026-07-28T21:00:00-07:00",
+    "events": 7,
+    "alarms": 4,
+    "returns": 3,
+    "seconds_in_alarm": 41460.0,
+    "band": "UNCHANGED",
+    "rule": "",
+    "rule_name": "",
+    "finding": "no rule fired; the alarm-side classification none carried through",
+    "preliminary_score": 0.51493,
+    "evidence": {
+     "kind": "analog",
+     "limit": 1.5,
+     "deadband": 0.04,
+     "direction": "HIGH",
+     "units": "inH2O",
+     "samples": 1440,
+     "samples_past_limit": 720,
+     "first_past_limit": "2026-07-28T07:00:00-07:00",
+     "last_past_limit": "2026-07-28T23:59:00-07:00",
+     "seconds_past_limit": 61140.0,
+     "worst_value": 1.59,
+     "dip": null
+    },
+    "rank": 5,
+    "consequences": [],
+    "writer_input": {
+     "prompt": "You are helping a controls engineer triage building automation alarms.\n\nGiven one alarm condition and its trend evidence, return four fields:\n  reason: one sentence on why this condition matters, stated only from the\n          evidence below. Do not claim anything the evidence does not show.\n  verb:   the diagnostic action, chosen from exactly this list and written\n          in lower case: inspect, verify, check, compare, review, measure, confirm. Nothing else is accepted. You\n          must NOT recommend any change to the building system: no\n          setpoint change, no override, no schedule change, and no\n          starting or stopping of equipment.\n  target: what to look at. Must be copied exactly from this list and\n          nothing else: SYN1/AHU-21/CLG_SP, AHU-21\n  detail: one sentence on what to look for, from the evidence below.\n\nDo not describe this equipment as a kind of system it is not. The point\npath and equipment tag above tell you whether this is a heating or a\ncooling condition; do not call one the other.\n\nAnswer with JSON only, exactly:\n{\"reason\": \"...\", \"verb\": \"...\", \"target\": \"...\", \"detail\": \"...\"}\n\nCondition\n  point: SYN1/AHU-21/CLG_SP\n  equipment: AHU-21 (DefaultAlarmClass, reported priority 3)\n  alarm limit: 1.5 inH2O, deadband 0.04 inH2O, direction HIGH\n  window: 2026-07-28T07:00:00-07:00 to 2026-07-28T21:00:00-07:00\n  alarm transitions: 4 alarms, 0 repeats, 3 returns to normal\n  time in alarm: 11.5 hours\n  alarm-side classification: none\n  preliminary score: 0.515\n\nTrend evidence\n  samples: 1440\n  peak deviation past the limit: 2.25 deadbands\n  proportion of the window past the limit: 50.0%\n  still past the limit at the end of the window: yes\n\nReassessment\n  band: UNCHANGED, set by no rule fired\n  finding: no rule fired\n",
+     "allowed_targets": [
+      "SYN1/AHU-21/CLG_SP",
+      "AHU-21"
+     ],
+     "domains": [
+      "cooling"
+     ]
+    }
+   }
+  ],
+  "nuisance": [
+   {
+    "point": "SYN1/AHU-21-B/CLG_SP",
+    "signal": "DefaultAlarmClass",
+    "label": "DefaultAlarmClass",
+    "rule": "",
+    "finding": "no rule fired; the alarm-side classification repeating carried through"
+   },
+   {
+    "point": "SYN1/AHU-21-B/MIXED_AIR_TEMP",
+    "signal": "DefaultAlarmClass",
+    "label": "DefaultAlarmClass",
+    "rule": "R-D3",
+    "finding": "returned to normal and held 57600 s at no closer than 5.75 deadbands inside the limit, so the condition cleared itself and stayed clear"
+   },
+   {
+    "point": "SYN1/AHU-21-B/MIXED_AIR_TEMP",
+    "signal": "DefaultAlarmClass",
+    "label": "DefaultAlarmClass",
+    "rule": "R-D3",
+    "finding": "returned to normal and held 57600 s at no closer than 5.75 deadbands inside the limit, so the condition cleared itself and stayed clear"
+   },
+   {
+    "point": "SYN1/AHU-21-B/HTG_DUCT_TEMP",
+    "signal": "DefaultAlarmClass",
+    "label": "DefaultAlarmClass",
+    "rule": "R-D2",
+    "finding": "total 180 s beyond the limit is under the 600 s minimum, a fleeting excursion with no dwell behind it"
+   }
+  ],
+  "unresolved": [
+   {
+    "point": "SYN1/AHU-21-B/HTG_DMPR_POS",
+    "signal": "DefaultAlarmClass",
+    "reason": "no trend series for this point in the trend export"
+   }
+  ]
+ }
+}

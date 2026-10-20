@@ -1,0 +1,134 @@
+{
+ "id": "power-lone-battery-trend-missing",
+ "type": "not_enough_evidence",
+ "tags": [
+  "power"
+ ],
+ "title": "UPS-B on battery with no trend, and a power factor drop five minutes later",
+ "synthetic": true,
+ "source": {
+  "scenario": "power-lone-battery-trend-missing",
+  "events": {
+   "ups_on_battery_unexplained": 480,
+   "power_factor_low": 780
+  }
+ },
+ "expected": {
+  "root_causes": [
+   {
+    "point": "SYN1/MECH-1/PF_LO",
+    "names": [
+     "power factor"
+    ],
+    "equipment": "MECH-1"
+   }
+  ],
+  "consequences": [],
+  "escalate": [
+   {
+    "point": "SYN1/MECH-1/PF_LO",
+    "names": [
+     "power factor"
+    ]
+   }
+  ],
+  "do_not_escalate": [],
+  "unresolved": [
+   {
+    "point": "SYN1/UPS-B/ONBATT",
+    "names": [
+     "UPS-B",
+     "UPS B",
+     "on battery"
+    ]
+   }
+  ],
+  "limited_evidence": [],
+  "note": "The power factor drop is confirmed and stands alone. The UPS-B battery alarm has no trend at all, so there is not enough evidence to say anything about it; it stays unresolved.",
+  "evidence_facts": [
+   {
+    "point": "SYN1/MECH-1/PF_LO",
+    "times": [
+     "10:13:06 UTC",
+     "10:14:34 UTC"
+    ],
+    "values": [
+     "0.794",
+     "88"
+    ]
+   }
+  ]
+ },
+ "frozen": {
+  "time_zone": {
+   "name": "UTC",
+   "label": "UTC"
+  },
+  "window": {
+   "start": "2026-07-14T10:00:00+00:00",
+   "end": "2026-07-14T10:20:00+00:00"
+  },
+  "counts": {
+   "alarm_events": 4,
+   "distinct_conditions": 2,
+   "ranked_items": 1,
+   "consequences_collapsed": 0,
+   "nuisance": 0,
+   "unresolved": 1,
+   "journal_entries": 6
+  },
+  "items": [
+   {
+    "point": "SYN1/MECH-1/PF_LO",
+    "equipment": "MECH-1",
+    "signal": "power_factor_low",
+    "label": "low power factor",
+    "domain": "electrical",
+    "priority": 4,
+    "start": "2026-07-14T10:13:08+00:00",
+    "end": "2026-07-14T10:14:38+00:00",
+    "events": 2,
+    "alarms": 1,
+    "returns": 1,
+    "seconds_in_alarm": 90.0,
+    "band": "PROMOTED",
+    "rule": "E-P1",
+    "rule_name": "CAUSE_CONFIRMED_BY_TREND",
+    "finding": "the trend shows it past its limit in 45 of 56 samples around the alarm, 10:13:06 UTC to 10:14:34 UTC, worst value 0.794, confirming the low power factor; it ranks as the cause",
+    "preliminary_score": -0.086979,
+    "evidence": {
+     "kind": "low",
+     "limit": 0.85,
+     "deadband": 0.01,
+     "direction": "LOW",
+     "units": "",
+     "samples": 56,
+     "samples_past_limit": 45,
+     "first_past_limit": "2026-07-14T10:13:06+00:00",
+     "last_past_limit": "2026-07-14T10:14:34+00:00",
+     "seconds_past_limit": 88.0,
+     "worst_value": 0.794,
+     "dip": null
+    },
+    "rank": 1,
+    "consequences": [],
+    "writer_input": {
+     "prompt": "You are helping a controls engineer triage power system alarms.\n\nGiven one alarm condition and its trend evidence, return four fields:\n  reason: one sentence on why this condition matters, stated only from the\n          evidence below. Do not claim anything the evidence does not show.\n  verb:   the diagnostic action, chosen from exactly this list and written\n          in lower case: inspect, verify, check, compare, review, measure, confirm. Nothing else is accepted. You\n          must NOT recommend any change to the building system: no\n          setpoint change, no override, no schedule change, no breaker\n          operation, and no starting or stopping of equipment.\n  target: what to look at. Must be copied exactly from this list and\n          nothing else: SYN1/MECH-1/PF_LO, MECH-1\n  detail: one sentence on what to look for, from the evidence below.\n\nThis is an electrical power condition. Do not describe it as a heating or\ncooling fault.\n\nEvery time below is in UTC and ends with its label (UTC).\nWrite any time exactly as it appears here, label included. Do not convert it.\n\nAnswer with JSON only, exactly:\n{\"reason\": \"...\", \"verb\": \"...\", \"target\": \"...\", \"detail\": \"...\"}\n\nCondition\n  point: SYN1/MECH-1/PF_LO\n  equipment: MECH-1 (power_factor_low, reported priority 4)\n  signal: low power factor\n  alarm limit: 0.85, deadband 0.01, direction LOW\n  window: 2026-07-14 10:13:08 UTC to 2026-07-14 10:14:38 UTC\n  alarm transitions: 1 alarms, 0 repeats, 1 returns to normal\n  time in alarm: 90 seconds\n  preliminary score: -0.087\n\nTrend evidence\n  samples: 56\n  samples past the limit: 45\n  first past the limit: 2026-07-14 10:13:06 UTC\n  last past the limit: 2026-07-14 10:14:34 UTC\n  seconds past the limit: 88\n  worst value: 0.794\n\nReassessment\n  band: PROMOTED, set by E-P1\n  finding: the trend shows it past its limit in 45 of 56 samples around the alarm, 10:13:06 UTC to 10:14:34 UTC, worst value 0.794, confirming the low power factor; it ranks as the cause\n\nConditions this one explains: 0\n  none\n",
+     "allowed_targets": [
+      "SYN1/MECH-1/PF_LO",
+      "MECH-1"
+     ],
+     "domains": []
+    }
+   }
+  ],
+  "nuisance": [],
+  "unresolved": [
+   {
+    "point": "SYN1/UPS-B/ONBATT",
+    "signal": "ups_on_battery",
+    "reason": "no trend series for this point in the trend export"
+   }
+  ]
+ }
+}
