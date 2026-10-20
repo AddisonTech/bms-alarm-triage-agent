@@ -229,3 +229,26 @@ def test_the_service_opens_no_socket_of_its_own():
     for path in sorted((SRC / "bms_triage_service").rglob("*.py")):
         for name, _top in _imports(path):
             assert name.split(".")[0] not in banned, (path.name, name)
+
+
+# ------------------------------------------------- the evidence guardrail
+
+_NO_RULE_PROMPT = """Condition
+  point: SYN1/CH-61/EVAP_PRESS
+
+Reassessment
+  band: UNCHANGED, set by no rule fired
+  finding: no rule fired
+"""
+
+
+def test_a_reply_on_an_alarm_log_only_card_must_say_so():
+    silent = "CH-61's evaporator pressure stayed below its limit for half the window. Check the gauge."
+    honest = "No trend rule moved it, so it ranks on the alarm log alone. Check the gauge."
+    assert haiku_writer.evidence_problem(silent, _NO_RULE_PROMPT)
+    assert haiku_writer.evidence_problem(honest, _NO_RULE_PROMPT) is None
+
+
+def test_the_evidence_guardrail_leaves_a_trend_confirmed_card_alone():
+    prompt = _NO_RULE_PROMPT.replace("set by no rule fired", "set by R-P1")
+    assert haiku_writer.evidence_problem("It stayed out for most of the window.", prompt) is None

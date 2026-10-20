@@ -68,6 +68,8 @@ def instrument(point_name: str, units: str) -> str:
         return "the pan itself"
     if "SPD" in name:
         return "the speed shown on the drive's own display"
+    if "FIRING" in name:
+        return "the firing rate shown on the boiler's burner controller"
     if units == "degF" or "TEMP" in name:
         return "a handheld thermometer at the sensor"
     if units == "psi":
@@ -127,8 +129,8 @@ def compose(prompt: str) -> dict:
     if rule == "R-P1":
         tail = ", and it was still out when the export ended" if ends_beyond else ""
         reason = (
-            "%s stayed %s its %s for %s of the window%s. A reading that holds "
-            "out that long is a standing problem, not control noise."
+            "%s stayed %s its %s for %s of the window%s, which makes it a standing "
+            "problem rather than control noise."
             % (subject, side, limit_desc, fraction, tail)
         )
         verb = "verify"
@@ -137,12 +139,12 @@ def compose(prompt: str) -> dict:
             "then review what the equipment was doing while it stayed out." % against
         )
     elif rule == "R-P2":
-        raised = "The single alarm it raised understates" if alarms == 1 else (
-            "The %d alarms it raised understate" % alarms
+        raised = "the single alarm it raised understates" if alarms == 1 else (
+            "the %d alarms it raised understate" % alarms
         )
         reason = (
             "%s moved steadily toward and past its %s without reversing, "
-            "peaking %.1f deadbands out. %s a condition that is getting worse."
+            "peaking %.1f deadbands out, and %s a condition that is getting worse."
             % (subject, limit_desc, peak, raised)
         )
         verb = "review"
@@ -168,8 +170,8 @@ def compose(prompt: str) -> dict:
         if repeats:
             raised += " and %s" % _plural(repeats, "repeat")
         reason = (
-            "No trend rule moved this one; it ranks on the alarm log. %s raised "
-            "%s at priority %d over %.1f hours in alarm%s."
+            "No trend rule moved this one, so it ranks on the alarm log alone: %s "
+            "raised %s at priority %d over %.1f hours in alarm%s."
             % (subject, raised, priority, hours, tail)
         )
         verb = "check"
@@ -206,7 +208,7 @@ _ELECTRICAL_STEPS = {
     "ups_on_battery": (
         "inspect",
         "the UPS input breaker status and rectifier alarms at the unit, since nothing "
-        "upstream in this export explains the time on battery.",
+        "confirmed upstream in this export explains the time on battery.",
     ),
     "ups_load_high": (
         "compare",
@@ -216,17 +218,17 @@ _ELECTRICAL_STEPS = {
     "frequency_low": (
         "check",
         "the generator governor response in the frequency trend around the load step, since "
-        "no utility failure in this export accounts for the dip.",
+        "no confirmed utility failure in this export accounts for the dip.",
     ),
     "generator_start": (
         "confirm",
-        "what called for the generator, since no utility failure in this export accounts "
-        "for it running.",
+        "what called for the generator, since no confirmed utility failure in this export "
+        "accounts for it running.",
     ),
     "ats_transfer": (
         "confirm",
-        "the ATS source position and the utility voltage at that time, since no utility "
-        "failure in this export accounts for the transfer.",
+        "the ATS source position and the utility voltage at that time, since no confirmed "
+        "utility failure in this export accounts for the transfer.",
     ),
 }
 
@@ -244,15 +246,18 @@ def _clock(stamp: str) -> str:
 
 
 def _duration(seconds_text: str) -> str:
+    """The time past the limit in the seconds the evidence states it in.
+
+    Never converted to minutes: "about 2 minutes" for 126 seconds is a
+    number the evidence does not hold, and the reader cannot check it.
+    """
     try:
         seconds = float(seconds_text)
     except ValueError:
         return ""
     if seconds < 1:
         return "a single sample"
-    if seconds < 120:
-        return "about %d seconds" % round(seconds)
-    return "about %d minutes" % round(seconds / 60.0)
+    return "about %d seconds" % round(seconds)
 
 
 def _explained(prompt: str) -> list[str]:
@@ -301,8 +306,8 @@ def compose_electrical(prompt: str) -> dict:
         )
     elif rule == "E-P2":
         reason = (
-            "%s is confirmed in the trend %s, and no utility failure, sag, or overload in this "
-            "export explains it, so it needs its own look." % (subject, when)
+            "%s is confirmed in the trend %s, and no confirmed utility failure, sag, or overload "
+            "in this export explains it, so it needs its own look." % (subject, when)
         )
     else:
         reason = "%s alarmed %s; it ranks on the alarm log." % (subject, when)

@@ -16,8 +16,10 @@ How a build uses it:
      sent, word for word, and asks for the same four-field JSON.
   3. Every reply is checked with N8's own checks: parse_explanation (the
      allowed verbs, the point as the target, the thermal-domain guard) and
-     the forbidden-verb list. A card whose reply fails, or that got no reply,
-     is written by the template instead, and the build says which.
+     the forbidden-verb list, then the service's evidence check (a condition
+     no trend rule moved has to be called alarm-log only). A card whose
+     reply fails, or that got no reply, is written by the template instead,
+     and the build says which.
   4. The pipeline runs again with this client in N8's place, so the replies
      that passed are checked a second time by N8 itself.
 
@@ -47,6 +49,7 @@ from pathlib import Path
 from bms_alarm_triage.errors import ModelUnavailableError
 from bms_alarm_triage.model import ForbiddenVerbCheck, parse_explanation
 from bms_alarm_triage.schema import DiagnosticVerb
+from bms_triage_service import haiku_writer as service_haiku
 
 from . import template_writer
 
@@ -136,7 +139,7 @@ def check(raw: str, card: Card, verb_check: ForbiddenVerbCheck) -> str | None:
     found = verb_check.find(candidate.detail)
     if found:
         return "recommendation contains the control action verb(s) %s" % ", ".join(found)
-    return None
+    return service_haiku.evidence_problem("%s %s" % (candidate.reason, candidate.detail), card.prompt)
 
 
 def batch_cost(usage: dict) -> float:

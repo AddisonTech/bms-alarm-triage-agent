@@ -1,0 +1,65 @@
+{
+ "id": "power-fleeting-sag",
+ "type": "fleeting",
+ "tags": [
+  "power"
+ ],
+ "title": "A one second low voltage alarm that no trend sample shows",
+ "synthetic": true,
+ "source": {
+  "scenario": "power-fleeting-sag",
+  "events": {}
+ },
+ "expected": {
+  "root_causes": [],
+  "consequences": [],
+  "escalate": [],
+  "do_not_escalate": [
+   {
+    "point": "SYN1/UTIL-1/V_LO",
+    "names": [
+     "voltage sag",
+     "utility sag",
+     "low voltage",
+     "undervoltage",
+     "voltage dip",
+     "sag"
+    ]
+   }
+  ],
+  "unresolved": [],
+  "limited_evidence": [],
+  "note": "A fleeting alarm the trend never corroborates, with no UPS response. Nuisance.",
+  "evidence_facts": []
+ },
+ "frozen": {
+  "time_zone": {
+   "name": "UTC",
+   "label": "UTC"
+  },
+  "window": {
+   "start": "2026-07-14T10:00:00+00:00",
+   "end": "2026-07-14T10:20:00+00:00"
+  },
+  "counts": {
+   "alarm_events": 2,
+   "distinct_conditions": 1,
+   "ranked_items": 0,
+   "consequences_collapsed": 0,
+   "nuisance": 1,
+   "unresolved": 0,
+   "journal_entries": 3
+  },
+  "items": [],
+  "nuisance": [
+   {
+    "point": "SYN1/UTIL-1/V_LO",
+    "signal": "voltage_sag",
+    "label": "utility voltage sag",
+    "rule": "E-D1",
+    "finding": "the journal reports it but none of the 2 trend samples around it is past the limit, so the alarm is not corroborated"
+   }
+  ],
+  "unresolved": []
+ }
+}

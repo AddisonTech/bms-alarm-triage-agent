@@ -1,0 +1,69 @@
+{
+ "id": "hvac-chiller-chw-ret-temp-trend-removed",
+ "type": "not_enough_evidence",
+ "tags": [
+  "hvac",
+  "single_condition",
+  "missing_trend"
+ ],
+ "title": "holdout_chiller with the trend for SYN1/CH-61/CHW_RET_TEMP removed",
+ "synthetic": true,
+ "source": {
+  "corpus": "holdout",
+  "window": "holdout_chiller",
+  "slice": "SYN1/CH-61/CHW_RET_TEMP",
+  "trend_removed": "SYN1/CH-61/CHW_RET_TEMP"
+ },
+ "expected": {
+  "root_causes": [],
+  "consequences": [],
+  "escalate": [],
+  "do_not_escalate": [],
+  "unresolved": [
+   {
+    "point": "SYN1/CH-61/CHW_RET_TEMP",
+    "names": [
+     "chilled water return",
+     "return water",
+     "CHW_RET_TEMP"
+    ]
+   }
+  ],
+  "limited_evidence": [],
+  "note": "A labeled fault, but its trend series was removed from the export. With no evidence the agent must not label it; it stays unresolved.",
+  "evidence_facts": []
+ },
+ "frozen": {
+  "time_zone": {
+   "name": "UTC",
+   "label": "UTC"
+  },
+  "window": {
+   "start": "2026-07-29T00:00:00-07:00",
+   "end": "2026-07-29T23:59:00-07:00"
+  },
+  "counts": {
+   "ranked_items": 0,
+   "consequences_collapsed": 0,
+   "nuisance": 0,
+   "unresolved": 1,
+   "slice_of_window": {
+    "alarm_events": 194,
+    "distinct_conditions": 11,
+    "ranked_items": 4,
+    "consequences_collapsed": 0,
+    "nuisance": 5,
+    "unresolved": 2
+   }
+  },
+  "items": [],
+  "nuisance": [],
+  "unresolved": [
+   {
+    "point": "SYN1/CH-61/CHW_RET_TEMP",
+    "signal": "DefaultAlarmClass",
+    "reason": "no trend series for this point in the trend export"
+   }
+  ]
+ }
+}

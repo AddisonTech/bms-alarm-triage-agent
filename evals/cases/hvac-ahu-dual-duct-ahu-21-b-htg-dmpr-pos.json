@@ -1,0 +1,67 @@
+{
+ "id": "hvac-ahu-dual-duct-ahu-21-b-htg-dmpr-pos",
+ "type": "missing_trend",
+ "tags": [
+  "hvac",
+  "single_condition"
+ ],
+ "title": "holdout_ahu_dual_duct, SYN1/AHU-21-B/HTG_DMPR_POS (holdout_ahu_dual_duct-C10)",
+ "synthetic": true,
+ "source": {
+  "corpus": "holdout",
+  "window": "holdout_ahu_dual_duct",
+  "slice": "SYN1/AHU-21-B/HTG_DMPR_POS",
+  "case_id": "holdout_ahu_dual_duct-C10"
+ },
+ "expected": {
+  "root_causes": [],
+  "consequences": [],
+  "escalate": [],
+  "do_not_escalate": [],
+  "unresolved": [
+   {
+    "point": "SYN1/AHU-21-B/HTG_DMPR_POS",
+    "names": [
+     "damper",
+     "HTG_DMPR_POS"
+    ]
+   }
+  ],
+  "limited_evidence": [],
+  "note": "The point has no trend series in the export, so nothing can confirm or dismiss it. It stays unresolved.",
+  "evidence_facts": []
+ },
+ "frozen": {
+  "time_zone": {
+   "name": "UTC",
+   "label": "UTC"
+  },
+  "window": {
+   "start": "2026-07-28T00:00:00-07:00",
+   "end": "2026-07-28T23:59:00-07:00"
+  },
+  "counts": {
+   "ranked_items": 0,
+   "consequences_collapsed": 0,
+   "nuisance": 0,
+   "unresolved": 1,
+   "slice_of_window": {
+    "alarm_events": 142,
+    "distinct_conditions": 10,
+    "ranked_items": 5,
+    "consequences_collapsed": 0,
+    "nuisance": 4,
+    "unresolved": 1
+   }
+  },
+  "items": [],
+  "nuisance": [],
+  "unresolved": [
+   {
+    "point": "SYN1/AHU-21-B/HTG_DMPR_POS",
+    "signal": "DefaultAlarmClass",
+    "reason": "no trend series for this point in the trend export"
+   }
+  ]
+ }
+}

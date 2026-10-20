@@ -517,6 +517,88 @@ items. The showcase page is byte-identical to one built from 0.2.1.
 
 ---
 
+## 2026-10-20 - 0.3.0: an eval suite for what the writers say
+
+The nine nodes were well tested, but nothing graded the words on a card.
+`evals/` now does, for the template writer and for Claude Haiku.
+
+- **Cases.** 58 in `evals/cases/`, drawn from the HVAC holdout and the
+  electrical fixtures. Each is a frozen triage result, with the exact
+  prompt N8 hands a writer for every ranked item, and the right answer:
+  the root cause, its consequences, what should escalate, what should stay
+  unresolved, and the key evidence facts. The answers come from the
+  corpus labels and the scenario designs, never from the pipeline. Hard
+  cases on purpose: chattering and fleeting alarms, real faults in a
+  flood, two unrelated events at once, missing trend data, a consequence
+  that looks like the cause, and not enough evidence to name one.
+  `python -m evals.build_cases` rebuilds them and a test holds the
+  committed files to it. Composite journals come from `evals/scenarios.py`,
+  which reuses the electrical fixture plant.
+- **Graders.** Six deterministic ones in `evals/graders/`: grounding,
+  root cause, escalation, uncertainty, next step, and format. Each is
+  tested against a known bad write-up it must fail. Clarity to an operator
+  is one optional model-graded check, rubric in
+  `evals/rubrics/clarity.md`, reported apart from the six.
+- **Runner.** `python -m evals.run --writer template|haiku` writes
+  `evals/results/<writer>-<date>.json` and a summary table. Each reply is
+  accepted the way N8 accepts it. Haiku replies are replayed from saved
+  records first and come from the API only with `TRIAGE_ANTHROPIC_KEY`
+  set and inside a dollar budget; new replies are saved so a run can be
+  regraded with no calls. Haiku is reported in its own words and as the
+  service serves it, through its guardrails.
+- **Scorecard in the package.** `bms_triage_service.eval_scorecard()`
+  returns the latest pass rates per writer and per grader, so a program
+  that installs the agent can show how it is graded.
+- **Showcase.** An Evals section: the scorecard per writer, what each
+  grader checks, two failures the eval found and their fixes, and a note
+  that the cases are synthetic.
+
+Fixed because of what the eval found, one at a time, each logged in
+`evals/FINDINGS.md` with its before and after scores:
+
+1. The template turned 126 seconds past the limit into "about 2 minutes".
+   It now states the seconds the evidence gives.
+2. The template wrote "no utility failure in this export explains it" when
+   the export held a utility failure alarm it could not confirm. It now
+   says "no confirmed", as the evidence does.
+3. The template sent a boiler firing rate to "the equipment's local
+   display". It now names the burner controller.
+4. The template wrote two-sentence reasons where the prompt asks every
+   writer for one. They are one sentence now.
+5. Haiku's replies on conditions no trend rule moved never said they rank
+   on the alarm log alone. A guardrail in the service's and the showcase's
+   Haiku checks now holds such a reply back, and the template writes that
+   card. The HVAC prompt is unchanged, byte for byte.
+
+Two pipeline findings are logged and left for a decision: a frequency
+dip at a transfer with no utility failure gets its own card, and a second
+UPS battery event after an outage is lost under the outage. Both need a
+rule or N4 change.
+
+Template, all 58 cases: grounding 100.0%, root cause 95.0%, escalation
+94.8%, uncertainty 100.0%, next step 100.0%, format 100.0%; the three
+cases still failing fail for the two pipeline reasons above. Claude Haiku
+was graded on the 34 cases its saved showcase replies cover, since no key
+was set; `evals/FINDINGS.md` gives the command for the full pass.
+
+Dependency note per Rule 10: none. The eval uses the agent's own Pydantic
+schema and the `anthropic` package already in the `showcase` extra.
+
+Verification, run in the build session:
+
+    python -m pytest -q
+    python -m evals.build_cases --check
+    python -m evals.run --writer template
+    python -m evals.run --writer haiku
+    python -m tools.evaluate.benchmark --split holdout
+    python -m tools.showcase --split holdout --model haiku-replay
+
+648 tests pass, 73 of them new in `tests/test_eval_graders.py`,
+`tests/test_eval_suite.py`, `tests/test_triage_service.py` and
+`tests/test_haiku_writer.py`. Holdout still 548 events to 18 items.
+
+---
+
 ## Out-of-guide tooling
 
 Recorded because Rules 1 and 2 expect work to trace to a Student
@@ -552,6 +634,10 @@ by the showcase build. The operator CLI and the demo never call it.
 described in the 2026-10-16 0.2.0 entry. A fixture, never product: it
 imports nothing from the agent, and a test holds the committed files to
 what it builds.
+
+`evals/` - the write-up eval suite described in the 2026-10-20 0.3.0
+entry. Outside the packaged wheel, like the evaluation harness, because
+the agent never grades its own output. Only its scorecard ships, as data.
 
 `src/bms_triage_service/` - packaged, but outside the agent package. It runs
 the agent on a journal for another program and is the only packaged code

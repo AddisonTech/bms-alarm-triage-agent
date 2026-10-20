@@ -1,0 +1,69 @@
+{
+ "id": "hvac-boiler-blr-71-comb-air-dp",
+ "type": "chattering",
+ "tags": [
+  "hvac",
+  "single_condition"
+ ],
+ "title": "holdout_boiler, SYN1/BLR-71/COMB_AIR_DP (holdout_boiler-C06)",
+ "synthetic": true,
+ "source": {
+  "corpus": "holdout",
+  "window": "holdout_boiler",
+  "slice": "SYN1/BLR-71/COMB_AIR_DP",
+  "case_id": "holdout_boiler-C06"
+ },
+ "expected": {
+  "root_causes": [],
+  "consequences": [],
+  "escalate": [],
+  "do_not_escalate": [
+   {
+    "point": "SYN1/BLR-71/COMB_AIR_DP",
+    "names": [
+     "combustion air",
+     "COMB_AIR_DP"
+    ]
+   }
+  ],
+  "unresolved": [],
+  "limited_evidence": [],
+  "note": "Not a fault: the alarm behavior is chattering, so it belongs on the nuisance list.",
+  "evidence_facts": []
+ },
+ "frozen": {
+  "time_zone": {
+   "name": "UTC",
+   "label": "UTC"
+  },
+  "window": {
+   "start": "2026-07-30T00:00:00-07:00",
+   "end": "2026-07-30T23:59:00-07:00"
+  },
+  "counts": {
+   "ranked_items": 0,
+   "consequences_collapsed": 0,
+   "nuisance": 1,
+   "unresolved": 0,
+   "slice_of_window": {
+    "alarm_events": 212,
+    "distinct_conditions": 11,
+    "ranked_items": 5,
+    "consequences_collapsed": 0,
+    "nuisance": 5,
+    "unresolved": 1
+   }
+  },
+  "items": [],
+  "nuisance": [
+   {
+    "point": "SYN1/BLR-71/COMB_AIR_DP",
+    "signal": "DefaultAlarmClass",
+    "label": "DefaultAlarmClass",
+    "rule": "R-D1",
+    "finding": "peak overshoot 0.67 deadbands, at or under the 1.00 allowed, so the alarm sat on its limit rather than departing from it"
+   }
+  ],
+  "unresolved": []
+ }
+}

@@ -98,7 +98,7 @@ is removed before it returns.
 Install it from a release tag:
 
 ```
-pip install "bms-alarm-triage-agent @ git+https://github.com/AddisonTech/bms-alarm-triage-agent@v0.2.2"
+pip install "bms-alarm-triage-agent @ git+https://github.com/AddisonTech/bms-alarm-triage-agent@v0.3.0"
 ```
 
 **Time zones.** Every time the agent keeps is UTC with an explicit offset,
@@ -187,11 +187,59 @@ used only when its key is set. The agent also runs on CPU alone.
 Every weight and threshold lives in `config/triage.json` and is changed by
 a person. The agent never tunes itself.
 
+## Evals
+
+The pipeline is scored against labeled faults above. `evals/` scores the
+words: what the template writer and Claude Haiku actually put on each card.
+
+```
+python -m evals.run --writer template
+python -m evals.run --writer haiku
+```
+
+There are 58 cases in `evals/cases/`, drawn from the HVAC holdout and the
+electrical fixtures. Each is a frozen triage result, with the exact prompt
+each writer is handed, plus the right answer: the root cause, which alarms
+are its consequences, what should escalate, what should stay unresolved,
+and the key evidence facts. They include the hard cases on purpose:
+chattering and fleeting alarms, real faults in a flood, two unrelated
+events at once, missing trend data, a consequence that looks like the
+cause, and cases where the right answer is that there is not enough
+evidence.
+
+Six deterministic graders score every write-up:
+
+| Grader | Checks |
+|---|---|
+| grounding | every point name, number and time on a card is in the evidence the writer was given |
+| root cause | the right cause is named, from the evidence, and no consequence is promoted to cause |
+| escalation | what should escalate has a card and nothing else does |
+| uncertainty | missing or thin evidence is said, not guessed past |
+| next step | present, specific to the equipment, and read only |
+| format | passes the Pydantic schema first time, one sentence per field |
+
+Clarity to an operator is one optional model-graded check, with its rubric
+in `evals/rubrics/clarity.md` (`--clarity`), kept apart from those six.
+
+Each run writes `evals/results/<writer>-<date>.json` and a summary table
+of the pass rate per grader, per case type, and every failing case with its
+reason. Haiku replies are replayed from saved records first, so
+`--writer haiku` costs nothing without a key; with `TRIAGE_ANTHROPIC_KEY`
+set it calls the API for the rest inside `--budget` (default $1) and saves
+every new reply so the run can be regraded later for free. What the eval
+found, what was fixed, and the scores before and after each fix are in
+`evals/FINDINGS.md`. The latest scores ship in the package as
+`bms_triage_service.eval_scorecard()` and appear on the showcase page.
+
+The cases are synthetic, like the corpus. A pass says the writers handle
+these shapes, not that they are right on a real building.
+
 ## Status
 
 Built to the build guide, Phase 0 through Phase 5, plus the electrical rule
 set and the alarm journal adapter in 0.2.0, and display time zones in
-0.2.1, and the frequency dip measured from its load step in 0.2.2. 575 tests pass.
+0.2.1, the frequency dip measured from its load step in 0.2.2, and the
+write-up eval suite in 0.3.0. 648 tests pass.
 
 Against the held-out labeled corpus, which was set aside before any tuning
 and opened once: top-five capture 15 of 15, volume reduction 30.4x, false
@@ -235,6 +283,8 @@ distributions against a real anonymized export.
 - `tools/alarmgen/` the alarm-log generator. A test fixture, never
   product, kept outside the agent package so it cannot be imported by
   accident
+- `evals/` the write-up eval suite: cases, graders, rubric, runner,
+  results, and FINDINGS.md
 - `tools/evaluate/` the evaluation harness. Outside the agent too, because
   the agent never scores its own output
 - `tools/demo.py` the one-command walkthrough described in `DEMO.md`

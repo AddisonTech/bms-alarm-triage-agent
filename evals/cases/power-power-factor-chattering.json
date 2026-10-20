@@ -1,0 +1,60 @@
+{
+ "id": "power-power-factor-chattering",
+ "type": "chattering",
+ "tags": [
+  "power"
+ ],
+ "title": "Five power factor alarm and return pairs in 84 s, trend above the limit throughout",
+ "synthetic": true,
+ "source": {
+  "scenario": "power-power-factor-chattering",
+  "events": {}
+ },
+ "expected": {
+  "root_causes": [],
+  "consequences": [],
+  "escalate": [],
+  "do_not_escalate": [
+   {
+    "point": "SYN1/MECH-1/PF_LO",
+    "names": [
+     "power factor"
+    ]
+   }
+  ],
+  "unresolved": [],
+  "limited_evidence": [],
+  "note": "The alarm chatters at the limit and the trend never crosses it. Nuisance.",
+  "evidence_facts": []
+ },
+ "frozen": {
+  "time_zone": {
+   "name": "UTC",
+   "label": "UTC"
+  },
+  "window": {
+   "start": "2026-07-14T10:00:00+00:00",
+   "end": "2026-07-14T10:20:00+00:00"
+  },
+  "counts": {
+   "alarm_events": 10,
+   "distinct_conditions": 1,
+   "ranked_items": 0,
+   "consequences_collapsed": 0,
+   "nuisance": 1,
+   "unresolved": 0,
+   "journal_entries": 10
+  },
+  "items": [],
+  "nuisance": [
+   {
+    "point": "SYN1/MECH-1/PF_LO",
+    "signal": "power_factor_low",
+    "label": "low power factor",
+    "rule": "E-D1",
+    "finding": "the journal reports it but none of the 11 trend samples around it is past the limit, so the alarm is not corroborated"
+   }
+  ],
+  "unresolved": []
+ }
+}

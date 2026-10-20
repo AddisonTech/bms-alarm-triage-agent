@@ -1,0 +1,135 @@
+{
+ "id": "hvac-chiller-ch-61-evap-press",
+ "type": "alarm_log_only",
+ "tags": [
+  "hvac",
+  "single_condition"
+ ],
+ "title": "holdout_chiller, SYN1/CH-61/EVAP_PRESS (holdout_chiller-C04)",
+ "synthetic": true,
+ "source": {
+  "corpus": "holdout",
+  "window": "holdout_chiller",
+  "slice": "SYN1/CH-61/EVAP_PRESS",
+  "case_id": "holdout_chiller-C04"
+ },
+ "expected": {
+  "root_causes": [
+   {
+    "point": "SYN1/CH-61/EVAP_PRESS",
+    "names": [
+     "evaporator pressure",
+     "EVAP_PRESS"
+    ],
+    "equipment": "CH-61"
+   }
+  ],
+  "consequences": [],
+  "escalate": [
+   {
+    "point": "SYN1/CH-61/EVAP_PRESS",
+    "names": [
+     "evaporator pressure",
+     "EVAP_PRESS"
+    ]
+   }
+  ],
+  "do_not_escalate": [],
+  "unresolved": [],
+  "limited_evidence": [
+   {
+    "point": "SYN1/CH-61/EVAP_PRESS",
+    "names": [
+     "evaporator pressure",
+     "EVAP_PRESS"
+    ]
+   }
+  ],
+  "note": "Labeled fault (oil_pressure_sensor_drift). No trend rule confirms it, so the write-up has to say it ranks on the alarm log.",
+  "evidence_facts": [
+   {
+    "point": "SYN1/CH-61/EVAP_PRESS",
+    "times": [],
+    "values": [
+     "58.0",
+     "2.40",
+     "50.0",
+     "11.5"
+    ]
+   }
+  ]
+ },
+ "frozen": {
+  "time_zone": {
+   "name": "UTC",
+   "label": "UTC"
+  },
+  "window": {
+   "start": "2026-07-29T00:00:00-07:00",
+   "end": "2026-07-29T23:59:00-07:00"
+  },
+  "counts": {
+   "ranked_items": 1,
+   "consequences_collapsed": 0,
+   "nuisance": 0,
+   "unresolved": 0,
+   "slice_of_window": {
+    "alarm_events": 194,
+    "distinct_conditions": 11,
+    "ranked_items": 5,
+    "consequences_collapsed": 0,
+    "nuisance": 5,
+    "unresolved": 1
+   }
+  },
+  "items": [
+   {
+    "point": "SYN1/CH-61/EVAP_PRESS",
+    "equipment": "CH-61",
+    "signal": "DefaultAlarmClass",
+    "label": "DefaultAlarmClass",
+    "domain": "hvac",
+    "priority": 3,
+    "start": "2026-07-29T07:00:00-07:00",
+    "end": "2026-07-29T21:00:00-07:00",
+    "events": 7,
+    "alarms": 4,
+    "returns": 3,
+    "seconds_in_alarm": 41460.0,
+    "band": "UNCHANGED",
+    "rule": "",
+    "rule_name": "",
+    "finding": "no rule fired; the alarm-side classification none carried through",
+    "preliminary_score": 0.51493,
+    "evidence": {
+     "kind": "analog",
+     "limit": 58.0,
+     "deadband": 2.5,
+     "direction": "LOW",
+     "units": "psi",
+     "samples": 1440,
+     "samples_past_limit": 720,
+     "first_past_limit": "2026-07-29T07:00:00-07:00",
+     "last_past_limit": "2026-07-29T23:59:00-07:00",
+     "seconds_past_limit": 61140.0,
+     "worst_value": 52.001,
+     "dip": null
+    },
+    "rank": 5,
+    "consequences": [],
+    "writer_input": {
+     "prompt": "You are helping a controls engineer triage building automation alarms.\n\nGiven one alarm condition and its trend evidence, return four fields:\n  reason: one sentence on why this condition matters, stated only from the\n          evidence below. Do not claim anything the evidence does not show.\n  verb:   the diagnostic action, chosen from exactly this list and written\n          in lower case: inspect, verify, check, compare, review, measure, confirm. Nothing else is accepted. You\n          must NOT recommend any change to the building system: no\n          setpoint change, no override, no schedule change, and no\n          starting or stopping of equipment.\n  target: what to look at. Must be copied exactly from this list and\n          nothing else: SYN1/CH-61/EVAP_PRESS, CH-61\n  detail: one sentence on what to look for, from the evidence below.\n\nDo not describe this equipment as a kind of system it is not. The point\npath and equipment tag above tell you whether this is a heating or a\ncooling condition; do not call one the other.\n\nAnswer with JSON only, exactly:\n{\"reason\": \"...\", \"verb\": \"...\", \"target\": \"...\", \"detail\": \"...\"}\n\nCondition\n  point: SYN1/CH-61/EVAP_PRESS\n  equipment: CH-61 (DefaultAlarmClass, reported priority 3)\n  alarm limit: 58.0 psi, deadband 2.5 psi, direction LOW\n  window: 2026-07-29T07:00:00-07:00 to 2026-07-29T21:00:00-07:00\n  alarm transitions: 4 alarms, 0 repeats, 3 returns to normal\n  time in alarm: 11.5 hours\n  alarm-side classification: none\n  preliminary score: 0.515\n\nTrend evidence\n  samples: 1440\n  peak deviation past the limit: 2.40 deadbands\n  proportion of the window past the limit: 50.0%\n  still past the limit at the end of the window: yes\n\nReassessment\n  band: UNCHANGED, set by no rule fired\n  finding: no rule fired\n",
+     "allowed_targets": [
+      "SYN1/CH-61/EVAP_PRESS",
+      "CH-61"
+     ],
+     "domains": [
+      "cooling"
+     ]
+    }
+   }
+  ],
+  "nuisance": [],
+  "unresolved": []
+ }
+}

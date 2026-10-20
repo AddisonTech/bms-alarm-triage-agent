@@ -9,4 +9,4 @@ It recommends. It has no write path to any building system, under any
 configuration.
 """
 
-__version__ = "0.2.2"
+__version__ = "0.3.0"

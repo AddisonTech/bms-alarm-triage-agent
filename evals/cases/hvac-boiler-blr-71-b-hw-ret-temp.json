@@ -1,0 +1,77 @@
+{
+ "id": "hvac-boiler-blr-71-b-hw-ret-temp",
+ "type": "self_recovered",
+ "tags": [
+  "hvac",
+  "single_condition"
+ ],
+ "title": "holdout_boiler, SYN1/BLR-71-B/HW_RET_TEMP (holdout_boiler-C08)",
+ "synthetic": true,
+ "source": {
+  "corpus": "holdout",
+  "window": "holdout_boiler",
+  "slice": "SYN1/BLR-71-B/HW_RET_TEMP",
+  "case_id": "holdout_boiler-C08"
+ },
+ "expected": {
+  "root_causes": [],
+  "consequences": [],
+  "escalate": [],
+  "do_not_escalate": [
+   {
+    "point": "SYN1/BLR-71-B/HW_RET_TEMP",
+    "names": [
+     "hot water return",
+     "return water",
+     "HW_RET_TEMP"
+    ]
+   }
+  ],
+  "unresolved": [],
+  "limited_evidence": [],
+  "note": "Not a fault: the alarm behavior is R-D3, so it belongs on the nuisance list.",
+  "evidence_facts": []
+ },
+ "frozen": {
+  "time_zone": {
+   "name": "UTC",
+   "label": "UTC"
+  },
+  "window": {
+   "start": "2026-07-30T00:00:00-07:00",
+   "end": "2026-07-30T23:59:00-07:00"
+  },
+  "counts": {
+   "ranked_items": 0,
+   "consequences_collapsed": 0,
+   "nuisance": 2,
+   "unresolved": 0,
+   "slice_of_window": {
+    "alarm_events": 212,
+    "distinct_conditions": 11,
+    "ranked_items": 5,
+    "consequences_collapsed": 0,
+    "nuisance": 5,
+    "unresolved": 1
+   }
+  },
+  "items": [],
+  "nuisance": [
+   {
+    "point": "SYN1/BLR-71-B/HW_RET_TEMP",
+    "signal": "DefaultAlarmClass",
+    "label": "DefaultAlarmClass",
+    "rule": "R-D3",
+    "finding": "returned to normal and held 57600 s at no closer than 5.80 deadbands inside the limit, so the condition cleared itself and stayed clear"
+   },
+   {
+    "point": "SYN1/BLR-71-B/HW_RET_TEMP",
+    "signal": "DefaultAlarmClass",
+    "label": "DefaultAlarmClass",
+    "rule": "R-D3",
+    "finding": "returned to normal and held 57600 s at no closer than 5.80 deadbands inside the limit, so the condition cleared itself and stayed clear"
+   }
+  ],
+  "unresolved": []
+ }
+}

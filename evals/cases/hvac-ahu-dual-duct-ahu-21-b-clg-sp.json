@@ -1,0 +1,70 @@
+{
+ "id": "hvac-ahu-dual-duct-ahu-21-b-clg-sp",
+ "type": "repeating",
+ "tags": [
+  "hvac",
+  "single_condition"
+ ],
+ "title": "holdout_ahu_dual_duct, SYN1/AHU-21-B/CLG_SP (holdout_ahu_dual_duct-C09)",
+ "synthetic": true,
+ "source": {
+  "corpus": "holdout",
+  "window": "holdout_ahu_dual_duct",
+  "slice": "SYN1/AHU-21-B/CLG_SP",
+  "case_id": "holdout_ahu_dual_duct-C09"
+ },
+ "expected": {
+  "root_causes": [],
+  "consequences": [],
+  "escalate": [],
+  "do_not_escalate": [
+   {
+    "point": "SYN1/AHU-21-B/CLG_SP",
+    "names": [
+     "static pressure",
+     "duct static",
+     "CLG_SP"
+    ]
+   }
+  ],
+  "unresolved": [],
+  "limited_evidence": [],
+  "note": "Not a fault: the alarm behavior is repeating, so it belongs on the nuisance list.",
+  "evidence_facts": []
+ },
+ "frozen": {
+  "time_zone": {
+   "name": "UTC",
+   "label": "UTC"
+  },
+  "window": {
+   "start": "2026-07-28T00:00:00-07:00",
+   "end": "2026-07-28T23:59:00-07:00"
+  },
+  "counts": {
+   "ranked_items": 0,
+   "consequences_collapsed": 0,
+   "nuisance": 1,
+   "unresolved": 0,
+   "slice_of_window": {
+    "alarm_events": 142,
+    "distinct_conditions": 10,
+    "ranked_items": 5,
+    "consequences_collapsed": 0,
+    "nuisance": 4,
+    "unresolved": 1
+   }
+  },
+  "items": [],
+  "nuisance": [
+   {
+    "point": "SYN1/AHU-21-B/CLG_SP",
+    "signal": "DefaultAlarmClass",
+    "label": "DefaultAlarmClass",
+    "rule": "",
+    "finding": "no rule fired; the alarm-side classification repeating carried through"
+   }
+  ],
+  "unresolved": []
+ }
+}

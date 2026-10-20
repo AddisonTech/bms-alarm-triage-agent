@@ -1,0 +1,186 @@
+{
+ "id": "power-sag-utc",
+ "type": "cause_and_consequences",
+ "tags": [
+  "power"
+ ],
+ "title": "voltage_sag fixture, times in UTC",
+ "synthetic": true,
+ "source": {
+  "fixture": "tests/fixtures/electrical/voltage_sag.json"
+ },
+ "expected": {
+  "root_causes": [
+   {
+    "point": "SYN1/UTIL-1/V_LO",
+    "names": [
+     "voltage sag",
+     "utility sag",
+     "low voltage",
+     "undervoltage",
+     "voltage dip",
+     "sag"
+    ],
+    "equipment": "UTIL-1"
+   }
+  ],
+  "consequences": [
+   {
+    "point": "SYN1/UPS-A/ONBATT",
+    "names": [
+     "UPS-A",
+     "UPS A",
+     "on battery"
+    ],
+    "of": "SYN1/UTIL-1/V_LO"
+   },
+   {
+    "point": "SYN1/UPS-B/ONBATT",
+    "names": [
+     "UPS-B",
+     "UPS B",
+     "on battery"
+    ],
+    "of": "SYN1/UTIL-1/V_LO"
+   }
+  ],
+  "escalate": [
+   {
+    "point": "SYN1/UTIL-1/V_LO",
+    "names": [
+     "voltage sag",
+     "utility sag",
+     "low voltage",
+     "undervoltage",
+     "voltage dip",
+     "sag"
+    ]
+   }
+  ],
+  "do_not_escalate": [
+   {
+    "point": "SYN1/UPS-A/ONBATT",
+    "names": [
+     "UPS-A",
+     "UPS A",
+     "on battery"
+    ]
+   },
+   {
+    "point": "SYN1/UPS-B/ONBATT",
+    "names": [
+     "UPS-B",
+     "UPS B",
+     "on battery"
+    ]
+   }
+  ],
+  "unresolved": [],
+  "limited_evidence": [],
+  "note": "A 6 s sag; both UPS systems rode through on battery because of it.",
+  "evidence_facts": [
+   {
+    "point": "SYN1/UTIL-1/V_LO",
+    "times": [
+     "10:08:00 UTC",
+     "10:08:04 UTC"
+    ],
+    "values": [
+     "409.3",
+     "4"
+    ]
+   }
+  ]
+ },
+ "frozen": {
+  "time_zone": {
+   "name": "UTC",
+   "label": "UTC"
+  },
+  "window": {
+   "start": "2026-07-14T10:00:00+00:00",
+   "end": "2026-07-14T10:20:00+00:00"
+  },
+  "counts": {
+   "alarm_events": 6,
+   "distinct_conditions": 3,
+   "ranked_items": 1,
+   "consequences_collapsed": 2,
+   "nuisance": 0,
+   "unresolved": 0,
+   "journal_entries": 9
+  },
+  "items": [
+   {
+    "point": "SYN1/UTIL-1/V_LO",
+    "equipment": "UTIL-1",
+    "signal": "voltage_sag",
+    "label": "utility voltage sag",
+    "domain": "electrical",
+    "priority": 3,
+    "start": "2026-07-14T10:08:00+00:00",
+    "end": "2026-07-14T10:08:08+00:00",
+    "events": 2,
+    "alarms": 1,
+    "returns": 1,
+    "seconds_in_alarm": 8.0,
+    "band": "PROMOTED",
+    "rule": "E-P1",
+    "rule_name": "CAUSE_CONFIRMED_BY_TREND",
+    "finding": "the trend shows it past its limit in 3 of 15 samples around the alarm, 10:08:00 UTC to 10:08:04 UTC, worst value 409.3 V, confirming the utility voltage sag; it ranks as the cause",
+    "preliminary_score": 4.6e-05,
+    "evidence": {
+     "kind": "low",
+     "limit": 432.0,
+     "deadband": 4.8,
+     "direction": "LOW",
+     "units": "V",
+     "samples": 15,
+     "samples_past_limit": 3,
+     "first_past_limit": "2026-07-14T10:08:00+00:00",
+     "last_past_limit": "2026-07-14T10:08:04+00:00",
+     "seconds_past_limit": 4.0,
+     "worst_value": 409.3,
+     "dip": null
+    },
+    "rank": 1,
+    "consequences": [
+     {
+      "point": "SYN1/UPS-A/ONBATT",
+      "equipment": "UPS-A",
+      "signal": "ups_on_battery",
+      "label": "UPS on battery",
+      "priority": 1,
+      "start": "2026-07-14T10:08:00+00:00",
+      "end": "2026-07-14T10:08:11+00:00",
+      "band": "EXPLAINED",
+      "rule": "E-C1",
+      "finding": "starts at 10:08:00 UTC, inside the VOLTAGE_SAG window on SYN1/UTIL-1/V_LO, so it is a consequence of that cause and collapses under it"
+     },
+     {
+      "point": "SYN1/UPS-B/ONBATT",
+      "equipment": "UPS-B",
+      "signal": "ups_on_battery",
+      "label": "UPS on battery",
+      "priority": 1,
+      "start": "2026-07-14T10:08:00+00:00",
+      "end": "2026-07-14T10:08:11+00:00",
+      "band": "EXPLAINED",
+      "rule": "E-C1",
+      "finding": "starts at 10:08:00 UTC, inside the VOLTAGE_SAG window on SYN1/UTIL-1/V_LO, so it is a consequence of that cause and collapses under it"
+     }
+    ],
+    "writer_input": {
+     "prompt": "You are helping a controls engineer triage power system alarms.\n\nGiven one alarm condition and its trend evidence, return four fields:\n  reason: one sentence on why this condition matters, stated only from the\n          evidence below. Do not claim anything the evidence does not show.\n  verb:   the diagnostic action, chosen from exactly this list and written\n          in lower case: inspect, verify, check, compare, review, measure, confirm. Nothing else is accepted. You\n          must NOT recommend any change to the building system: no\n          setpoint change, no override, no schedule change, no breaker\n          operation, and no starting or stopping of equipment.\n  target: what to look at. Must be copied exactly from this list and\n          nothing else: SYN1/UTIL-1/V_LO, UTIL-1\n  detail: one sentence on what to look for, from the evidence below.\n\nThis is an electrical power condition. Do not describe it as a heating or\ncooling fault.\n\nEvery time below is in UTC and ends with its label (UTC).\nWrite any time exactly as it appears here, label included. Do not convert it.\n\nAnswer with JSON only, exactly:\n{\"reason\": \"...\", \"verb\": \"...\", \"target\": \"...\", \"detail\": \"...\"}\n\nCondition\n  point: SYN1/UTIL-1/V_LO\n  equipment: UTIL-1 (voltage_sag, reported priority 3)\n  signal: utility voltage sag\n  alarm limit: 432 V, deadband 4.8 V, direction LOW\n  window: 2026-07-14 10:08:00 UTC to 2026-07-14 10:08:08 UTC\n  alarm transitions: 1 alarms, 0 repeats, 1 returns to normal\n  time in alarm: 8 seconds\n  preliminary score: 0.000\n\nTrend evidence\n  samples: 15\n  samples past the limit: 3\n  first past the limit: 2026-07-14 10:08:00 UTC\n  last past the limit: 2026-07-14 10:08:04 UTC\n  seconds past the limit: 4\n  worst value: 409.3 V\n\nReassessment\n  band: PROMOTED, set by E-P1\n  finding: the trend shows it past its limit in 3 of 15 samples around the alarm, 10:08:00 UTC to 10:08:04 UTC, worst value 409.3 V, confirming the utility voltage sag; it ranks as the cause\n\nConditions this one explains: 2\n  - UPS on battery on SYN1/UPS-A/ONBATT (UPS-A, priority 1), 2026-07-14 10:08:00 UTC to 2026-07-14 10:08:11 UTC\n  - UPS on battery on SYN1/UPS-B/ONBATT (UPS-B, priority 1), 2026-07-14 10:08:00 UTC to 2026-07-14 10:08:11 UTC\n",
+     "allowed_targets": [
+      "SYN1/UTIL-1/V_LO",
+      "UTIL-1"
+     ],
+     "domains": []
+    }
+   }
+  ],
+  "nuisance": [],
+  "unresolved": []
+ }
+}
