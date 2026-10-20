@@ -66,3 +66,20 @@ grader behavior.
   evidence gives, always ("about 126 seconds").
 - **Scores.** Template grounding 38 of 40 (95.0%) to 40 of 40 (100.0%).
   Every other grader unchanged. Haiku not affected.
+
+### 2. The template ruled out a cause it could not check
+
+- **What failed.** uncertainty, U5, on power-outage-utility-trend-missing,
+  all five cards: "no utility failure, sag, or overload in this export
+  explains it". That export holds a utility failure alarm. Its trend is
+  missing, so it sits unresolved: not confirmed, and not ruled out either.
+- **Why.** The evidence handed to the writer says "no confirmed cause in
+  this export explains it". The template dropped "confirmed" and turned
+  "not confirmed" into "did not happen", which tells an operator to stop
+  looking at the utility when the utility is the likeliest cause.
+- **What changed.** Every place the electrical composer says nothing
+  explains an alarm now says "confirmed": the E-P2 reason, and the next
+  steps for an unexplained frequency dip, generator start, ATS transfer and
+  UPS on battery.
+- **Scores.** Template uncertainty 44 of 45 (97.8%) to 45 of 45 (100.0%).
+  Every other grader unchanged. Haiku not affected.

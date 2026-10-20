@@ -206,7 +206,7 @@ _ELECTRICAL_STEPS = {
     "ups_on_battery": (
         "inspect",
         "the UPS input breaker status and rectifier alarms at the unit, since nothing "
-        "upstream in this export explains the time on battery.",
+        "confirmed upstream in this export explains the time on battery.",
     ),
     "ups_load_high": (
         "compare",
@@ -216,17 +216,17 @@ _ELECTRICAL_STEPS = {
     "frequency_low": (
         "check",
         "the generator governor response in the frequency trend around the load step, since "
-        "no utility failure in this export accounts for the dip.",
+        "no confirmed utility failure in this export accounts for the dip.",
     ),
     "generator_start": (
         "confirm",
-        "what called for the generator, since no utility failure in this export accounts "
-        "for it running.",
+        "what called for the generator, since no confirmed utility failure in this export "
+        "accounts for it running.",
     ),
     "ats_transfer": (
         "confirm",
-        "the ATS source position and the utility voltage at that time, since no utility "
-        "failure in this export accounts for the transfer.",
+        "the ATS source position and the utility voltage at that time, since no confirmed "
+        "utility failure in this export accounts for the transfer.",
     ),
 }
 
@@ -304,8 +304,8 @@ def compose_electrical(prompt: str) -> dict:
         )
     elif rule == "E-P2":
         reason = (
-            "%s is confirmed in the trend %s, and no utility failure, sag, or overload in this "
-            "export explains it, so it needs its own look." % (subject, when)
+            "%s is confirmed in the trend %s, and no confirmed utility failure, sag, or overload "
+            "in this export explains it, so it needs its own look." % (subject, when)
         )
     else:
         reason = "%s alarmed %s; it ranks on the alarm log." % (subject, when)
