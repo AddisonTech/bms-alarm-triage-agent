@@ -55,6 +55,23 @@ def response_schema(targets) -> dict:
     }
 
 
+def request(prompt: str) -> dict:
+    """The messages.create arguments for one card: the same for every caller."""
+    return {
+        "model": MODEL,
+        "max_tokens": MAX_TOKENS,
+        "output_config": {
+            "effort": "low",
+            "format": {"type": "json_schema", "schema": response_schema(targets_in(prompt))},
+        },
+        "messages": [{"role": "user", "content": prompt}],
+    }
+
+
+def text_of(message) -> str:
+    return "".join(getattr(block, "text", "") for block in message.content if block.type == "text")
+
+
 def targets_in(prompt: str) -> tuple[str, ...]:
     """The allowed targets N8 wrote into the prompt."""
     match = re.search(r"nothing else:\s*(.+)$", prompt, re.MULTILINE)
@@ -129,18 +146,7 @@ class HaikuLiveClient:
         self.fallbacks: list[str] = []
 
     def _ask(self, prompt: str) -> str:
-        message = self._client.messages.create(
-            model=MODEL,
-            max_tokens=MAX_TOKENS,
-            output_config={
-                "effort": "low",
-                "format": {"type": "json_schema", "schema": response_schema(targets_in(prompt))},
-            },
-            messages=[{"role": "user", "content": prompt}],
-        )
-        return "".join(
-            getattr(block, "text", "") for block in message.content if block.type == "text"
-        )
+        return text_of(self._client.messages.create(**request(prompt)))
 
     def generate(self, prompt: str) -> str:
         if time.monotonic() > self._deadline:
