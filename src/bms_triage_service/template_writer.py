@@ -244,15 +244,18 @@ def _clock(stamp: str) -> str:
 
 
 def _duration(seconds_text: str) -> str:
+    """The time past the limit in the seconds the evidence states it in.
+
+    Never converted to minutes: "about 2 minutes" for 126 seconds is a
+    number the evidence does not hold, and the reader cannot check it.
+    """
     try:
         seconds = float(seconds_text)
     except ValueError:
         return ""
     if seconds < 1:
         return "a single sample"
-    if seconds < 120:
-        return "about %d seconds" % round(seconds)
-    return "about %d minutes" % round(seconds / 60.0)
+    return "about %d seconds" % round(seconds)
 
 
 def _explained(prompt: str) -> list[str]:

@@ -21,9 +21,9 @@
    "partial": false,
    "graders": {
     "grounding": {
-     "passed": 38,
+     "passed": 40,
      "applicable": 40,
-     "rate": 0.95
+     "rate": 1.0
     },
     "root_cause": {
      "passed": 38,
