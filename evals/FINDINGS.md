@@ -191,6 +191,45 @@ the same way: the cards were the wrong set whatever wrote the words.
   escalation 55 of 58 (94.8%) to 57 of 58 (98.3%), cases passing every
   grader 55 of 58 to 57 of 58. Every other grader unchanged.
 
+### 7. A second UPS battery event was lost under an earlier outage (0.3.1)
+
+- **What failed.** escalation X1 on power-outage-then-lone-battery: the
+  SYN1/UPS-B/ONBATT episode starting 2026-07-14T10:15:00+00:00 should
+  escalate and had no card.
+- **Why.** N4 grouped every alarm on a point into one condition unless the
+  next one came more than `clustering.condition_gap_s` later, and that gap
+  is 21600 s, sized for HVAC conditions that run for hours. UPS-B returned
+  to normal at 10:05:18 and went to battery again at 10:15:00, 582 s later,
+  so both episodes became one condition starting at 10:05:00. That start is
+  inside the outage's window, so E-C1 filed the whole condition, second
+  event included, as a consequence of the utility failure.
+- **What changed.** `electrical.episode_gap_s`, 300 s in
+  config/triage.json. An electrical point that alarms again after standing
+  back at normal that long starts a new condition in N4, and the electrical
+  rules judge it on its own. The gap counts from the return to normal, so a
+  point that chatters or stays in alarm through a long outage is still one
+  condition. HVAC points keep the clustering gap alone, and without the
+  setting the clustering is what it was. The UPS-B episode at 10:15:00 now
+  stands unexplained (E-P2) and escalates; the one at 10:05:00 stays under
+  the outage.
+- **Cases.** The builder regenerated the frozen half of
+  power-outage-then-lone-battery; its right answer is unchanged. No other
+  case moved.
+- **Scores.** Template escalation 57 of 58 (98.3%) to 58 of 58 (100.0%).
+  root_cause 40 of 40 (100.0%) to 39 of 40 (97.5%): see below. Cases
+  passing every grader stay at 57 of 58, now failing on root cause instead
+  of escalation.
+- **What it uncovered.** With the second episode back, its card ranks
+  first, above the utility failure, and root_cause R1 ("the first card is a
+  cause when the case has one") fails. N7 orders escalations by the highest
+  preliminary score in each group, then by start time. The lone UPS-B
+  episode scores 0.175127 and the outage group's highest, the first UPS-B
+  episode under it, scores 0.175104: the same alarm, the same priority,
+  and 22 s on battery against 18 s. The order is decided by four seconds.
+  Before this fix the card did not exist, so the question never came up.
+  This is a ranking decision, not part of the absorbed episode, and is left
+  open below.
+
 ## Where the scores stand
 
 Run on 2026-10-20 against the fixed writers.

@@ -130,6 +130,9 @@ class ElectricalConfig:
     signals: dict = field(default_factory=dict)
     relations: tuple[Relation, ...] = ()
     frequency_dip: FrequencyDipConfig | None = None
+    # A point that alarms again after this long back at normal starts a new
+    # condition. None keeps the clustering gap alone, as before 0.3.1.
+    episode_gap_s: float | None = None
 
     def is_electrical(self, alarm_class: str) -> bool:
         return alarm_class in self.signals
@@ -231,7 +234,7 @@ def _electrical(payload: dict) -> ElectricalConfig:
         return ElectricalConfig()
     section = _section(payload, "electrical")
     expected = {"min_samples_past_limit", "evidence_margin_s", "signals", "relations"}
-    optional = {"frequency_dip"}
+    optional = {"frequency_dip", "episode_gap_s"}
     missing = sorted(expected - set(section))
     if missing:
         raise ConfigError(
@@ -315,8 +318,14 @@ def _electrical(payload: dict) -> ElectricalConfig:
             raise ConfigError("electrical.frequency_dip values must not be negative")
         dip = FrequencyDipConfig(signal=raw["signal"], load_step_signal=raw["load_step_signal"], **numbers)
 
+    episode_gap = None
+    if "episode_gap_s" in section:
+        episode_gap = float(section["episode_gap_s"])
+        if episode_gap <= 0:
+            raise ConfigError("electrical.episode_gap_s must be positive")
     return ElectricalConfig(
         frequency_dip=dip,
+        episode_gap_s=episode_gap,
         min_samples_past_limit=min_samples,
         evidence_margin_s=margin,
         signals={str(k): str(v) for k, v in signals.items()},

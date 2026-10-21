@@ -28,15 +28,15 @@
      "writer_layer_rate": 1.0
     },
     "root_cause": {
-     "passed": 40,
+     "passed": 39,
      "applicable": 40,
-     "rate": 1.0,
+     "rate": 0.975,
      "writer_layer_rate": 1.0
     },
     "escalation": {
-     "passed": 57,
+     "passed": 58,
      "applicable": 58,
-     "rate": 0.9828,
+     "rate": 1.0,
      "writer_layer_rate": 1.0
     },
     "uncertainty": {

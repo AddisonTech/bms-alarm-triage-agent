@@ -79,10 +79,14 @@
       "consequence and never ranks as a cause: it explains the listed",
       "conditions only when it is confirmed and nothing explains it. LOAD_STEP",
       "puts a generator frequency dip that starts while the load is on the",
-      "emergency source under an ATS transfer no utility failure accounts for."
+      "emergency source under an ATS transfer no utility failure accounts for.",
+      "An electrical point that alarms again after episode_gap_s back at",
+      "normal starts a new condition, judged on its own, rather than joining",
+      "an earlier one that a cause may already explain."
     ],
     "min_samples_past_limit": 1,
     "evidence_margin_s": 10,
+    "episode_gap_s": 300,
     "frequency_dip": {
       "_note": [
         "How a generator frequency dip is measured. The dip is the load step,",
