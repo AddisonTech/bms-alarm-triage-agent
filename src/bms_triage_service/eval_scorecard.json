@@ -11,14 +11,14 @@
  },
  "writers": {
   "template": {
-   "date": "2026-10-20",
-   "results_file": "evals/results/template-2026-10-20.json",
+   "date": "2026-10-21",
+   "results_file": "evals/results/template-2026-10-21.json",
    "writer_name": "template, no model",
    "model": null,
    "cases_run": 58,
    "cases_total": 58,
-   "cases_passed": 55,
-   "cases_failing_pipeline_only": 3,
+   "cases_passed": 58,
+   "cases_failing_pipeline_only": 0,
    "partial": false,
    "graders": {
     "grounding": {
@@ -28,15 +28,15 @@
      "writer_layer_rate": 1.0
     },
     "root_cause": {
-     "passed": 38,
+     "passed": 40,
      "applicable": 40,
-     "rate": 0.95,
+     "rate": 1.0,
      "writer_layer_rate": 1.0
     },
     "escalation": {
-     "passed": 55,
+     "passed": 58,
      "applicable": 58,
-     "rate": 0.9483,
+     "rate": 1.0,
      "writer_layer_rate": 1.0
     },
     "uncertainty": {

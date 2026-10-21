@@ -73,6 +73,14 @@ The relations live in the `electrical` section of `config/triage.json`:
 - a PDU overload explains its own lower alarm stage and the load alarm on
   the UPS that feeds it (topology, not name matching)
 - a low power factor stands on its own
+- an ATS transfer that no utility failure explains still explains the
+  generator frequency dip at its own load step, without ever ranking as a
+  cause itself (`"root_cause": false`)
+
+An electrical point that alarms again after five minutes back at normal
+(`episode_gap_s`) starts a new condition, so a UPS that goes to battery
+again after an outage has cleared is judged on its own rather than filed
+under the outage.
 
 On the synthetic utility outage fixture, 24 journal entries (12 alarm
 transitions on 6 points) come back as one ranked item, the utility failure,
@@ -98,7 +106,7 @@ is removed before it returns.
 Install it from a release tag:
 
 ```
-pip install "bms-alarm-triage-agent @ git+https://github.com/AddisonTech/bms-alarm-triage-agent@v0.3.0"
+pip install "bms-alarm-triage-agent @ git+https://github.com/AddisonTech/bms-alarm-triage-agent@v0.3.1"
 ```
 
 **Time zones.** Every time the agent keeps is UTC with an explicit offset,
@@ -239,7 +247,8 @@ these shapes, not that they are right on a real building.
 Built to the build guide, Phase 0 through Phase 5, plus the electrical rule
 set and the alarm journal adapter in 0.2.0, and display time zones in
 0.2.1, the frequency dip measured from its load step in 0.2.2, and the
-write-up eval suite in 0.3.0. 648 tests pass.
+write-up eval suite in 0.3.0, and in 0.3.1 two pipeline fixes the eval
+found. 667 tests pass.
 
 Against the held-out labeled corpus, which was set aside before any tuning
 and opened once: top-five capture 15 of 15, volume reduction 30.4x, false

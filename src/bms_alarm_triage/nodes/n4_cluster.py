@@ -9,7 +9,14 @@ exists for actually happens: fifty-two chattering transitions on one point
 become one condition an engineer can read in a line.
 
 Grouping rule: events on the same point separated by less than the
-configured gap belong to the same condition. The nuisance categories are
+configured gap belong to the same condition. An electrical point also
+starts a new condition when it alarms again after standing back at normal
+for electrical.episode_gap_s: a UPS that returns to normal when an outage
+clears and goes to battery again ten minutes later has had two events, and
+the second must be judged on its own rather than filed under the outage.
+The gap is measured from the return to normal, so a point that chatters or
+stays in alarm stays one condition. HVAC points keep the clustering gap
+alone. The nuisance categories are
 the ISA-18.2 definitions recorded in docs/02_research_delta.md 2.2, and
 they are evaluated in a fixed order with the first match applied, so the
 classification of a condition is reproducible and explainable:
@@ -149,14 +156,25 @@ def n4_cluster(state: TriageState) -> dict:
         by_point.setdefault(event.point_path, []).append(event)
 
     gap = config.clustering.condition_gap_s
+    electrical = config.electrical
     conditions: list[DistinctCondition] = []
 
     for point_path in sorted(by_point):
         point_events = sorted(by_point[point_path], key=lambda e: e.timestamp)
+        episode_gap = (
+            electrical.episode_gap_s if electrical.is_electrical(point_events[0].alarm_class) else None
+        )
         groups: list[list[CanonicalAlarmEvent]] = [[point_events[0]]]
         for event in point_events[1:]:
             previous = groups[-1][-1]
-            if (event.timestamp - previous.timestamp).total_seconds() < gap:
+            since = (event.timestamp - previous.timestamp).total_seconds()
+            new_episode = (
+                episode_gap is not None
+                and event.transition == ALARM
+                and previous.transition == RETURN_TO_NORMAL
+                and since >= episode_gap
+            )
+            if since < gap and not new_episode:
                 groups[-1].append(event)
             else:
                 groups.append([event])

@@ -80,6 +80,10 @@ class ReassessmentConfig:
     r_p2_min_drift_deadbands_per_hour: float
     r_p2_max_reversal_deadbands: float
     r_p3_min_peak_deadbands: float
+    # Group scores are compared in steps of this size, so two escalations
+    # whose scores round to the same step rank as equal and the earlier one
+    # goes first. 0 compares scores exactly.
+    rank_tie_score: float = 0.0
 
 
 @dataclass(frozen=True)
@@ -92,13 +96,21 @@ class Explains:
 
 @dataclass(frozen=True)
 class Relation:
-    """A cause and the consequences that collapse under it."""
+    """A cause and the consequences that collapse under it.
+
+    root is False for a relation whose cause signal is itself a consequence,
+    such as an ATS transfer explaining the frequency dip at its own load
+    step. That signal never ranks as a cause. It can explain the conditions
+    listed only when it is confirmed and nothing explains it, so a dip goes
+    under an unexplained transfer rather than standing as a separate fault.
+    """
 
     name: str
     cause: str
     explains: tuple[Explains, ...]
     before_s: float
     after_s: float
+    root: bool = True
 
 
 @dataclass(frozen=True)
@@ -122,6 +134,9 @@ class ElectricalConfig:
     signals: dict = field(default_factory=dict)
     relations: tuple[Relation, ...] = ()
     frequency_dip: FrequencyDipConfig | None = None
+    # A point that alarms again after this long back at normal starts a new
+    # condition. None keeps the clustering gap alone, as before 0.3.1.
+    episode_gap_s: float | None = None
 
     def is_electrical(self, alarm_class: str) -> bool:
         return alarm_class in self.signals
@@ -131,7 +146,13 @@ class ElectricalConfig:
 
     @property
     def cause_signals(self) -> tuple[str, ...]:
-        return tuple(relation.cause for relation in self.relations)
+        """The signals that rank as a cause, in relation order."""
+        return tuple(relation.cause for relation in self.relations if relation.root)
+
+    @property
+    def assessment_order(self) -> tuple[str, ...]:
+        """Root causes first, then the signals that explain only as consequences."""
+        return self.cause_signals + tuple(r.cause for r in self.relations if not r.root)
 
 
 @dataclass(frozen=True)
@@ -217,7 +238,7 @@ def _electrical(payload: dict) -> ElectricalConfig:
         return ElectricalConfig()
     section = _section(payload, "electrical")
     expected = {"min_samples_past_limit", "evidence_margin_s", "signals", "relations"}
-    optional = {"frequency_dip"}
+    optional = {"frequency_dip", "episode_gap_s"}
     missing = sorted(expected - set(section))
     if missing:
         raise ConfigError(
@@ -246,8 +267,13 @@ def _electrical(payload: dict) -> ElectricalConfig:
         if not isinstance(entry, dict):
             raise ConfigError("%s is not an object" % where)
         keys = {"name", "cause", "explains", "before_s", "after_s"}
-        if set(entry) != keys:
-            raise ConfigError("%s must have exactly %s" % (where, ", ".join(sorted(keys))))
+        if not keys <= set(entry) <= keys | {"root_cause"}:
+            raise ConfigError(
+                "%s must have exactly %s, and may have root_cause" % (where, ", ".join(sorted(keys)))
+            )
+        root = entry.get("root_cause", True)
+        if not isinstance(root, bool):
+            raise ConfigError("%s root_cause must be true or false" % where)
         if entry["cause"] not in signals:
             raise ConfigError("%s names the undeclared signal %r" % (where, entry["cause"]))
         if entry["cause"] in seen:
@@ -273,6 +299,7 @@ def _electrical(payload: dict) -> ElectricalConfig:
                 explains=tuple(explains),
                 before_s=before,
                 after_s=after,
+                root=root,
             )
         )
     dip = None
@@ -295,8 +322,14 @@ def _electrical(payload: dict) -> ElectricalConfig:
             raise ConfigError("electrical.frequency_dip values must not be negative")
         dip = FrequencyDipConfig(signal=raw["signal"], load_step_signal=raw["load_step_signal"], **numbers)
 
+    episode_gap = None
+    if "episode_gap_s" in section:
+        episode_gap = float(section["episode_gap_s"])
+        if episode_gap <= 0:
+            raise ConfigError("electrical.episode_gap_s must be positive")
     return ElectricalConfig(
         frequency_dip=dip,
+        episode_gap_s=episode_gap,
         min_samples_past_limit=min_samples,
         evidence_margin_s=margin,
         signals={str(k): str(v) for k, v in signals.items()},

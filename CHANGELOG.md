@@ -599,6 +599,58 @@ Verification, run in the build session:
 
 ---
 
+## 2026-10-21 - 0.3.1: two pipeline fixes the eval found
+
+A full Haiku run of the 0.3.0 eval failed three hard cases the same way
+the template did, which put the fault in the pipeline rather than the
+writers: the set of cards was wrong whatever wrote the words. Each fix is
+logged in `evals/FINDINGS.md` (fixes 6 to 8) with its before and after
+scores.
+
+- **A frequency dip collapses under the transfer that caused it.** Only a
+  confirmed cause could explain another condition, and only a utility
+  failure explained a frequency dip, so with the generator run and the
+  ATS transfer and no confirmed utility failure (a generator test, or an
+  outage whose utility trend is missing) the dip escalated as its own card.
+  A relation can now be marked `"root_cause": false`: its signal never
+  ranks as a cause, but when it is confirmed and unexplained it explains
+  what the relation lists. The new LOAD_STEP relation puts a dip that
+  starts while the load is on the emergency source under that transfer.
+  In a real outage the dip stays under the utility failure, as before.
+- **A later episode on an electrical point is its own condition.** N4
+  grouped every alarm on a point within the six hour clustering gap, so a
+  UPS that went to battery again seven minutes after an outage cleared was
+  filed under the outage and never got a card. An electrical point that
+  alarms again after `electrical.episode_gap_s` (300 s) back at normal now
+  starts a new condition. Chatter and a point that stays in alarm are
+  still one condition, and HVAC points are untouched.
+- **Near-equal scores rank by time.** With that episode back, it ranked
+  above the outage on a group score 0.00002 higher, from four seconds more
+  on battery. Group scores are compared in steps of
+  `reassessment.rank_tie_score` (0.001), and a tie goes to the earlier
+  event, as an exact tie always did.
+
+The frozen halves of the three affected eval cases were rebuilt by
+`python -m evals.build_cases`; their right answers did not change, and no
+other case moved. The template now passes all six graders on all 58 cases:
+root cause 95.0% to 100.0%, escalation 94.8% to 100.0%, every other grader
+already at 100.0%. The packaged scorecard and the showcase carry the new
+template run. Claude Haiku was not rerun here.
+
+Verification, run in the build session:
+
+    python -m pytest -q
+    python -m evals.build_cases --check
+    python -m evals.run --writer template
+    python -m tools.evaluate.benchmark --split holdout
+    python -m tools.showcase --split holdout --model haiku-replay
+
+667 tests pass, 19 of them new in `tests/test_load_step.py` and
+`tests/test_episodes.py`. Holdout still 548 events to 18 items, 15 of 15
+in the top five, 30.4x, 0.0% false escalation.
+
+---
+
 ## Out-of-guide tooling
 
 Recorded because Rules 1 and 2 expect work to trace to a Student

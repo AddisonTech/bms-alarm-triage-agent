@@ -59,7 +59,9 @@
     "r_p1_sustained_fraction": 0.6,
     "r_p2_min_drift_deadbands_per_hour": 0.1,
     "r_p2_max_reversal_deadbands": 1.0,
-    "r_p3_min_peak_deadbands": 4.0
+    "r_p3_min_peak_deadbands": 4.0,
+    "_rank_tie_score": "Escalations are ordered by group preliminary score compared in steps of this size; scores that round to the same step tie, and a tie goes to the earlier event.",
+    "rank_tie_score": 0.001
   },
 
   "electrical": {
@@ -74,10 +76,19 @@
       "from the journal's fed_from topology). Times are seconds before the",
       "cause starts and after it ends. Trend evidence is read from the",
       "condition's own span widened by evidence_margin_s on each side, since a",
-      "standby generator reads 0 Hz all day and that is not a frequency alarm."
+      "standby generator reads 0 Hz all day and that is not a frequency alarm.",
+      "A relation with root_cause false names a signal that is itself a",
+      "consequence and never ranks as a cause: it explains the listed",
+      "conditions only when it is confirmed and nothing explains it. LOAD_STEP",
+      "puts a generator frequency dip that starts while the load is on the",
+      "emergency source under an ATS transfer no utility failure accounts for.",
+      "An electrical point that alarms again after episode_gap_s back at",
+      "normal starts a new condition, judged on its own, rather than joining",
+      "an earlier one that a cause may already explain."
     ],
     "min_samples_past_limit": 1,
     "evidence_margin_s": 10,
+    "episode_gap_s": 300,
     "frequency_dip": {
       "_note": [
         "How a generator frequency dip is measured. The dip is the load step,",
@@ -144,6 +155,16 @@
         "cause": "power_factor_low",
         "explains": [],
         "before_s": 0,
+        "after_s": 0
+      },
+      {
+        "name": "LOAD_STEP",
+        "cause": "ats_transfer",
+        "root_cause": false,
+        "explains": [
+          {"signal": "frequency_low", "scope": "any"}
+        ],
+        "before_s": 5,
         "after_s": 0
       }
     ]
