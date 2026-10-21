@@ -60,84 +60,84 @@
    }
   },
   "haiku": {
-   "date": "2026-10-20",
-   "results_file": "evals/results/haiku-2026-10-20.json",
+   "date": "2026-10-21",
+   "results_file": "evals/results/haiku-2026-10-21.json",
    "writer_name": "Claude Haiku",
    "model": "claude-haiku-5-5",
-   "cases_run": 34,
+   "cases_run": 58,
    "cases_total": 58,
-   "cases_passed": 29,
+   "cases_passed": 35,
    "cases_failing_pipeline_only": 0,
-   "partial": true,
+   "partial": false,
    "graders": {
     "grounding": {
-     "passed": 16,
-     "applicable": 16,
-     "rate": 1.0,
-     "writer_layer_rate": 1.0
+     "passed": 34,
+     "applicable": 40,
+     "rate": 0.85,
+     "writer_layer_rate": 0.85
     },
     "root_cause": {
-     "passed": 16,
-     "applicable": 16,
-     "rate": 1.0,
-     "writer_layer_rate": 1.0
+     "passed": 36,
+     "applicable": 40,
+     "rate": 0.9,
+     "writer_layer_rate": 0.9
     },
     "escalation": {
-     "passed": 34,
-     "applicable": 34,
+     "passed": 58,
+     "applicable": 58,
      "rate": 1.0,
      "writer_layer_rate": 1.0
     },
     "uncertainty": {
-     "passed": 16,
-     "applicable": 21,
-     "rate": 0.7619,
-     "writer_layer_rate": 0.7619
+     "passed": 38,
+     "applicable": 45,
+     "rate": 0.8444,
+     "writer_layer_rate": 0.8444
     },
     "next_step": {
-     "passed": 13,
-     "applicable": 16,
-     "rate": 0.8125,
-     "writer_layer_rate": 0.8125
+     "passed": 23,
+     "applicable": 40,
+     "rate": 0.575,
+     "writer_layer_rate": 0.575
     },
     "format": {
-     "passed": 16,
-     "applicable": 16,
-     "rate": 1.0,
-     "writer_layer_rate": 1.0
+     "passed": 35,
+     "applicable": 40,
+     "rate": 0.875,
+     "writer_layer_rate": 0.875
     }
    },
    "as_served": {
-    "held_back": 5,
+    "held_back": 11,
     "graders": {
      "grounding": {
-      "passed": 16,
-      "applicable": 16,
-      "rate": 1.0
+      "passed": 34,
+      "applicable": 40,
+      "rate": 0.85
      },
      "root_cause": {
-      "passed": 16,
-      "applicable": 16,
-      "rate": 1.0
+      "passed": 36,
+      "applicable": 40,
+      "rate": 0.9
      },
      "escalation": {
-      "passed": 34,
-      "applicable": 34,
+      "passed": 58,
+      "applicable": 58,
       "rate": 1.0
      },
      "uncertainty": {
-      "passed": 21,
-      "applicable": 21,
-      "rate": 1.0
+      "passed": 44,
+      "applicable": 45,
+      "rate": 0.9778
      },
      "next_step": {
-      "passed": 16,
-      "applicable": 16,
-      "rate": 1.0
+      "passed": 28,
+      "applicable": 40,
+      "rate": 0.7
      },
      "format": {
-      "passed": 16,
-      "applicable": 16,
+      "passed": 40,
+      "applicable": 40,
       "rate": 1.0
      }
     }
