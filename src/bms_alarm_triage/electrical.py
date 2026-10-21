@@ -16,7 +16,11 @@ is assessed here instead, with four deterministic rules:
                                  for it: its signal is one the cause's relation
                                  explains, its equipment is in the relation's
                                  scope, and it starts inside the cause's window.
-                                 It collapses under that cause.
+                                 It collapses under that cause. A relation
+                                 marked root_cause false explains too, but only
+                                 from a condition E-P2 left standing on its
+                                 own: an unexplained ATS transfer carries the
+                                 frequency dip at its own load step.
   E-P1 CAUSE_CONFIRMED_BY_TREND  a cause signal the trend shows past its limit.
                                  It is the ranked item.
   E-P2 UNEXPLAINED_BY_ANY_CAUSE  a consequence signal the trend confirms with
@@ -397,7 +401,7 @@ def _outcome(rule_id: str, fired: bool, detail: str, measured: dict[str, float])
 
 def _order_key(item: EvidenceCondition, cfg: ElectricalConfig):
     condition = item.scored.condition
-    causes = cfg.cause_signals
+    causes = cfg.assessment_order
     rank = causes.index(condition.alarm_class) if condition.alarm_class in causes else len(causes)
     return (rank, condition.reported_priority, condition.start_time, condition.point_path)
 
@@ -429,7 +433,8 @@ def assess(
         condition = item.scored.condition
         measured_evidence = measure_condition(item, cfg, load_steps)
         confirmed = measured_evidence.samples_past_limit >= cfg.min_samples_past_limit
-        is_cause = condition.alarm_class in relations
+        relation_of = relations.get(condition.alarm_class)
+        is_cause = relation_of is not None and relation_of.root
         label = cfg.label(condition.alarm_class)
 
         cause = next(
@@ -519,6 +524,10 @@ def assess(
             evidence=measured_evidence,
         )
         if p1_fired:
-            primaries.append((item, relations[condition.alarm_class]))
+            primaries.append((item, relation_of))
+        elif p2_fired and relation_of is not None:
+            # A consequence signal nothing explains can still explain what
+            # follows from it, such as a transfer and the dip at its load step.
+            primaries.append((item, relation_of))
 
     return results

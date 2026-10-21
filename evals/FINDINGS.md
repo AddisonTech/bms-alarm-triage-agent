@@ -154,6 +154,43 @@ grader behavior.
   than the trend the agent already read. That changes the prompt, so it
   needs a key to measure; it was not made blind.
 
+### 6. A frequency dip at a transfer with no utility failure got its own card (0.3.1)
+
+This and fix 7 are pipeline fixes, made in 0.3.1 after a full Haiku run
+showed both failures for Haiku too, and the template run below shows them
+the same way: the cards were the wrong set whatever wrote the words.
+
+- **What failed.** root_cause R3 (twice per case) and escalation X2 on
+  power-generator-test and power-outage-utility-trend-missing:
+  SYN1/GEN-1/F_LO had its own escalated card instead of sitting under
+  SYN1/ATS-1/EMERG.
+- **Why.** Not timing and not the crank. The dip alarm starts at 10:08:12,
+  the same second as the transfer, and the dip measurement already reads it
+  from that transfer, after the generator reached rated frequency. The miss
+  was in the rule set: in `electrical.assess` only a condition E-P1
+  confirms as a cause can explain another, and the only relation that
+  explains a frequency dip is UTILITY_FAILURE. With no confirmed utility
+  failure, the transfer is an unexplained consequence (E-P2), nothing could
+  explain the dip at its own load step, and E-P2 escalated it as a third
+  card that reads like a governor fault.
+- **What changed.** A relation can be marked `"root_cause": false`. Its
+  signal never ranks as a cause (it is still assessed as E-C1, E-P2 or
+  E-D1 like any consequence), but when it is confirmed and nothing explains
+  it, it explains the conditions its relation lists. The new LOAD_STEP
+  relation in the `electrical` section of config/triage.json lets an ATS
+  transfer explain a generator frequency dip that starts from 5 s before
+  the transfer until the load returns to utility. A transfer a utility
+  failure explains does not explain anything itself, so in a real outage
+  the dip stays under the utility failure exactly as before. Such relations
+  are assessed after every root cause, so a utility failure always gets
+  first claim. `cause_signals` still lists only root causes.
+- **Cases.** The builder regenerated the frozen half of the two cases,
+  which is what the pipeline now produces; their right answers are
+  unchanged. No other case moved.
+- **Scores.** Template root_cause 38 of 40 (95.0%) to 40 of 40 (100.0%),
+  escalation 55 of 58 (94.8%) to 57 of 58 (98.3%), cases passing every
+  grader 55 of 58 to 57 of 58. Every other grader unchanged.
+
 ## Where the scores stand
 
 Run on 2026-10-20 against the fixed writers.

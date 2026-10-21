@@ -92,13 +92,21 @@ class Explains:
 
 @dataclass(frozen=True)
 class Relation:
-    """A cause and the consequences that collapse under it."""
+    """A cause and the consequences that collapse under it.
+
+    root is False for a relation whose cause signal is itself a consequence,
+    such as an ATS transfer explaining the frequency dip at its own load
+    step. That signal never ranks as a cause. It can explain the conditions
+    listed only when it is confirmed and nothing explains it, so a dip goes
+    under an unexplained transfer rather than standing as a separate fault.
+    """
 
     name: str
     cause: str
     explains: tuple[Explains, ...]
     before_s: float
     after_s: float
+    root: bool = True
 
 
 @dataclass(frozen=True)
@@ -131,7 +139,13 @@ class ElectricalConfig:
 
     @property
     def cause_signals(self) -> tuple[str, ...]:
-        return tuple(relation.cause for relation in self.relations)
+        """The signals that rank as a cause, in relation order."""
+        return tuple(relation.cause for relation in self.relations if relation.root)
+
+    @property
+    def assessment_order(self) -> tuple[str, ...]:
+        """Root causes first, then the signals that explain only as consequences."""
+        return self.cause_signals + tuple(r.cause for r in self.relations if not r.root)
 
 
 @dataclass(frozen=True)
@@ -246,8 +260,13 @@ def _electrical(payload: dict) -> ElectricalConfig:
         if not isinstance(entry, dict):
             raise ConfigError("%s is not an object" % where)
         keys = {"name", "cause", "explains", "before_s", "after_s"}
-        if set(entry) != keys:
-            raise ConfigError("%s must have exactly %s" % (where, ", ".join(sorted(keys))))
+        if not keys <= set(entry) <= keys | {"root_cause"}:
+            raise ConfigError(
+                "%s must have exactly %s, and may have root_cause" % (where, ", ".join(sorted(keys)))
+            )
+        root = entry.get("root_cause", True)
+        if not isinstance(root, bool):
+            raise ConfigError("%s root_cause must be true or false" % where)
         if entry["cause"] not in signals:
             raise ConfigError("%s names the undeclared signal %r" % (where, entry["cause"]))
         if entry["cause"] in seen:
@@ -273,6 +292,7 @@ def _electrical(payload: dict) -> ElectricalConfig:
                 explains=tuple(explains),
                 before_s=before,
                 after_s=after,
+                root=root,
             )
         )
     dip = None

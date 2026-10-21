@@ -1,0 +1,4804 @@
+{
+ "suite": "write-up eval",
+ "synthetic": true,
+ "agent_version": "0.3.0",
+ "date": "2026-10-21",
+ "writer": {
+  "kind": "template",
+  "name": "template, no model",
+  "model": null
+ },
+ "summary": {
+  "cases_total": 58,
+  "cases_run": 58,
+  "cases_failing_pipeline_only": [
+   "power-outage-then-lone-battery"
+  ],
+  "cases_not_run": [],
+  "cases_passed": 57,
+  "graders": {
+   "grounding": {
+    "applicable": 40,
+    "passed": 40,
+    "rate": 1.0,
+    "writer_layer_passed": 40,
+    "writer_layer_rate": 1.0,
+    "what": "Every point name, number and time on a card has to be in the evidence the writer was given. Anything invented, converted or carried in from elsewhere fails."
+   },
+   "root_cause": {
+    "applicable": 40,
+    "passed": 40,
+    "rate": 1.0,
+    "writer_layer_passed": 40,
+    "writer_layer_rate": 1.0,
+    "what": "The write-up names the right cause, says what is wrong with it from the evidence, and never turns a consequence into the cause. With no cause in the evidence, it names none."
+   },
+   "escalation": {
+    "applicable": 58,
+    "passed": 57,
+    "rate": 0.9828,
+    "writer_layer_passed": 58,
+    "writer_layer_rate": 1.0,
+    "what": "What should escalate gets a card and nothing else does, and no card talks its own escalation down as nuisance or nothing to act on."
+   },
+   "uncertainty": {
+    "applicable": 45,
+    "passed": 45,
+    "rate": 1.0,
+    "writer_layer_passed": 45,
+    "writer_layer_rate": 1.0,
+    "what": "Where evidence is missing or thin the write-up says so: unsupported items stay unresolved, thin cards say what they rest on, and no card guesses a diagnosis, claims certainty, or rules out what it could not check."
+   },
+   "next_step": {
+    "applicable": 40,
+    "passed": 40,
+    "rate": 1.0,
+    "writer_layer_passed": 40,
+    "writer_layer_rate": 1.0,
+    "what": "Every card has a next step, it is about that equipment and what the point measures, and it is read only: it observes, and never tells anyone to change, reset, acknowledge or operate anything."
+   },
+   "format": {
+    "applicable": 40,
+    "passed": 40,
+    "rate": 1.0,
+    "writer_layer_passed": 40,
+    "writer_layer_rate": 1.0,
+    "what": "Each reply passes the agent's Pydantic schema on the first try, and the reason and the next step are one sentence each, as the prompt asks."
+   }
+  },
+  "by_type": {
+   "alarm_log_only": {
+    "cases": 3,
+    "passed": 3,
+    "rate": 1.0
+   },
+   "cause_and_consequences": {
+    "cases": 8,
+    "passed": 8,
+    "rate": 1.0
+   },
+   "chattering": {
+    "cases": 3,
+    "passed": 3,
+    "rate": 1.0
+   },
+   "consequence_looks_like_cause": {
+    "cases": 3,
+    "passed": 3,
+    "rate": 1.0
+   },
+   "drift": {
+    "cases": 3,
+    "passed": 3,
+    "rate": 1.0
+   },
+   "fleeting": {
+    "cases": 4,
+    "passed": 4,
+    "rate": 1.0
+   },
+   "flood_with_real_faults": {
+    "cases": 6,
+    "passed": 5,
+    "rate": 0.8333
+   },
+   "missing_trend": {
+    "cases": 4,
+    "passed": 4,
+    "rate": 1.0
+   },
+   "not_enough_evidence": {
+    "cases": 4,
+    "passed": 4,
+    "rate": 1.0
+   },
+   "repeating": {
+    "cases": 3,
+    "passed": 3,
+    "rate": 1.0
+   },
+   "self_recovered": {
+    "cases": 3,
+    "passed": 3,
+    "rate": 1.0
+   },
+   "severe_excursion": {
+    "cases": 6,
+    "passed": 6,
+    "rate": 1.0
+   },
+   "standalone": {
+    "cases": 2,
+    "passed": 2,
+    "rate": 1.0
+   },
+   "sustained_fault": {
+    "cases": 3,
+    "passed": 3,
+    "rate": 1.0
+   },
+   "two_events": {
+    "cases": 1,
+    "passed": 1,
+    "rate": 1.0
+   },
+   "unexplained_alarm": {
+    "cases": 2,
+    "passed": 2,
+    "rate": 1.0
+   }
+  },
+  "failures": [
+   {
+    "case": "power-outage-then-lone-battery",
+    "type": "flood_with_real_faults",
+    "grader": "escalation",
+    "code": "X1",
+    "layer": "pipeline",
+    "point": "SYN1/UPS-B/ONBATT",
+    "reason": "missed: SYN1/UPS-B/ONBATT (the episode starting 2026-07-14T10:15:00+00:00) should escalate and has no card"
+   }
+  ]
+ },
+ "cases": [
+  {
+   "id": "hvac-ahu-dual-duct-ahu-21-b-clg-duct-temp",
+   "type": "severe_excursion",
+   "tags": [
+    "hvac",
+    "single_condition"
+   ],
+   "status": "pass",
+   "graders": {
+    "grounding": {
+     "status": "pass",
+     "checks": 3,
+     "failures": []
+    },
+    "root_cause": {
+     "status": "pass",
+     "checks": 6,
+     "failures": []
+    },
+    "escalation": {
+     "status": "pass",
+     "checks": 2,
+     "failures": []
+    },
+    "uncertainty": {
+     "status": "pass",
+     "checks": 2,
+     "failures": []
+    },
+    "next_step": {
+     "status": "pass",
+     "checks": 5,
+     "failures": []
+    },
+    "format": {
+     "status": "pass",
+     "checks": 5,
+     "failures": []
+    }
+   },
+   "writeup": {
+    "cards": [
+     {
+      "point": "SYN1/AHU-21-B/CLG_DUCT_TEMP",
+      "equipment": "AHU-21-B",
+      "start": "2026-07-28T04:01:00-07:00",
+      "label": "CriticalAlarmClass",
+      "rule": "R-P3",
+      "consequences": [],
+      "consequence_starts": [],
+      "attempts": [
+       {
+        "raw": "{\"reason\": \"AHU-21-B's cooling duct temperature went 9.2 deadbands above its 60 degF limit, well past normal control error, across 5 alarms and 12.3 hours in alarm.\", \"verb\": \"inspect\", \"target\": \"SYN1/AHU-21-B/CLG_DUCT_TEMP\", \"detail\": \"look at what the equipment was doing at each excursion, and confirm the peak against a handheld thermometer at the sensor.\"}",
+        "ok": true,
+        "detail": "ok",
+        "elapsed_s": 0.0018
+       }
+      ],
+      "written_by": "template, no model",
+      "rank": 1,
+      "reason": "AHU-21-B's cooling duct temperature went 9.2 deadbands above its 60 degF limit, well past normal control error, across 5 alarms and 12.3 hours in alarm.",
+      "verb": "inspect",
+      "target": "SYN1/AHU-21-B/CLG_DUCT_TEMP",
+      "detail": "look at what the equipment was doing at each excursion, and confirm the peak against a handheld thermometer at the sensor.",
+      "next_step": "Inspect SYN1/AHU-21-B/CLG_DUCT_TEMP: look at what the equipment was doing at each excursion, and confirm the peak against a handheld thermometer at the sensor."
+     }
+    ],
+    "dropped": [],
+    "nuisance": [],
+    "unresolved": []
+   }
+  },
+  {
+   "id": "hvac-ahu-dual-duct-ahu-21-b-clg-sp",
+   "type": "repeating",
+   "tags": [
+    "hvac",
+    "single_condition"
+   ],
+   "status": "pass",
+   "graders": {
+    "grounding": {
+     "status": "n/a",
+     "checks": 0,
+     "failures": []
+    },
+    "root_cause": {
+     "status": "n/a",
+     "checks": 0,
+     "failures": []
+    },
+    "escalation": {
+     "status": "pass",
+     "checks": 0,
+     "failures": []
+    },
+    "uncertainty": {
+     "status": "n/a",
+     "checks": 0,
+     "failures": []
+    },
+    "next_step": {
+     "status": "n/a",
+     "checks": 0,
+     "failures": []
+    },
+    "format": {
+     "status": "n/a",
+     "checks": 0,
+     "failures": []
+    }
+   },
+   "writeup": {
+    "cards": [],
+    "dropped": [],
+    "nuisance": [
+     {
+      "point": "SYN1/AHU-21-B/CLG_SP",
+      "signal": "DefaultAlarmClass",
+      "label": "DefaultAlarmClass",
+      "rule": "",
+      "finding": "no rule fired; the alarm-side classification repeating carried through"
+     }
+    ],
+    "unresolved": []
+   }
+  },
+  {
+   "id": "hvac-ahu-dual-duct-ahu-21-b-htg-dmpr-pos",
+   "type": "missing_trend",
+   "tags": [
+    "hvac",
+    "single_condition"
+   ],
+   "status": "pass",
+   "graders": {
+    "grounding": {
+     "status": "n/a",
+     "checks": 0,
+     "failures": []
+    },
+    "root_cause": {
+     "status": "n/a",
+     "checks": 0,
+     "failures": []
+    },
+    "escalation": {
+     "status": "pass",
+     "checks": 0,
+     "failures": []
+    },
+    "uncertainty": {
+     "status": "pass",
+     "checks": 3,
+     "failures": []
+    },
+    "next_step": {
+     "status": "n/a",
+     "checks": 0,
+     "failures": []
+    },
+    "format": {
+     "status": "n/a",
+     "checks": 0,
+     "failures": []
+    }
+   },
+   "writeup": {
+    "cards": [],
+    "dropped": [],
+    "nuisance": [],
+    "unresolved": [
+     {
+      "point": "SYN1/AHU-21-B/HTG_DMPR_POS",
+      "signal": "DefaultAlarmClass",
+      "reason": "no trend series for this point in the trend export"
+     }
+    ]
+   }
+  },
+  {
+   "id": "hvac-ahu-dual-duct-ahu-21-b-htg-duct-temp",
+   "type": "fleeting",
+   "tags": [
+    "hvac",
+    "single_condition"
+   ],
+   "status": "pass",
+   "graders": {
+    "grounding": {
+     "status": "n/a",
+     "checks": 0,
+     "failures": []
+    },
+    "root_cause": {
+     "status": "n/a",
+     "checks": 0,
+     "failures": []
+    },
+    "escalation": {
+     "status": "pass",
+     "checks": 0,
+     "failures": []
+    },
+    "uncertainty": {
+     "status": "n/a",
+     "checks": 0,
+     "failures": []
+    },
+    "next_step": {
+     "status": "n/a",
+     "checks": 0,
+     "failures": []
+    },
+    "format": {
+     "status": "n/a",
+     "checks": 0,
+     "failures": []
+    }
+   },
+   "writeup": {
+    "cards": [],
+    "dropped": [],
+    "nuisance": [
+     {
+      "point": "SYN1/AHU-21-B/HTG_DUCT_TEMP",
+      "signal": "DefaultAlarmClass",
+      "label": "DefaultAlarmClass",
+      "rule": "R-D2",
+      "finding": "total 180 s beyond the limit is under the 600 s minimum, a fleeting excursion with no dwell behind it"
+     }
+    ],
+    "unresolved": []
+   }
+  },
+  {
+   "id": "hvac-ahu-dual-duct-ahu-21-b-mixed-air-temp",
+   "type": "self_recovered",
+   "tags": [
+    "hvac",
+    "single_condition"
+   ],
+   "status": "pass",
+   "graders": {
+    "grounding": {
+     "status": "n/a",
+     "checks": 0,
+     "failures": []
+    },
+    "root_cause": {
+     "status": "n/a",
+     "checks": 0,
+     "failures": []
+    },
+    "escalation": {
+     "status": "pass",
+     "checks": 0,
+     "failures": []
+    },
+    "uncertainty": {
+     "status": "n/a",
+     "checks": 0,
+     "failures": []
+    },
+    "next_step": {
+     "status": "n/a",
+     "checks": 0,
+     "failures": []
+    },
+    "format": {
+     "status": "n/a",
+     "checks": 0,
+     "failures": []
+    }
+   },
+   "writeup": {
+    "cards": [],
+    "dropped": [],
+    "nuisance": [
+     {
+      "point": "SYN1/AHU-21-B/MIXED_AIR_TEMP",
+      "signal": "DefaultAlarmClass",
+      "label": "DefaultAlarmClass",
+      "rule": "R-D3",
+      "finding": "returned to normal and held 57600 s at no closer than 5.75 deadbands inside the limit, so the condition cleared itself and stayed clear"
+     },
+     {
+      "point": "SYN1/AHU-21-B/MIXED_AIR_TEMP",
+      "signal": "DefaultAlarmClass",
+      "label": "DefaultAlarmClass",
+      "rule": "R-D3",
+      "finding": "returned to normal and held 57600 s at no closer than 5.75 deadbands inside the limit, so the condition cleared itself and stayed clear"
+     }
+    ],
+    "unresolved": []
+   }
+  },
+  {
+   "id": "hvac-ahu-dual-duct-ahu-21-clg-duct-temp",
+   "type": "sustained_fault",
+   "tags": [
+    "hvac",
+    "single_condition"
+   ],
+   "status": "pass",
+   "graders": {
+    "grounding": {
+     "status": "pass",
+     "checks": 3,
+     "failures": []
+    },
+    "root_cause": {
+     "status": "pass",
+     "checks": 6,
+     "failures": []
+    },
+    "escalation": {
+     "status": "pass",
+     "checks": 2,
+     "failures": []
+    },
+    "uncertainty": {
+     "status": "pass",
+     "checks": 2,
+     "failures": []
+    },
+    "next_step": {
+     "status": "pass",
+     "checks": 5,
+     "failures": []
+    },
+    "format": {
+     "status": "pass",
+     "checks": 5,
+     "failures": []
+    }
+   },
+   "writeup": {
+    "cards": [
+     {
+      "point": "SYN1/AHU-21/CLG_DUCT_TEMP",
+      "equipment": "AHU-21",
+      "start": "2026-07-28T03:31:00-07:00",
+      "label": "CriticalAlarmClass",
+      "rule": "R-P1",
+      "consequences": [],
+      "consequence_starts": [],
+      "attempts": [
+       {
+        "raw": "{\"reason\": \"AHU-21's cooling duct temperature stayed above its 60 degF limit for 85.4% of the window, and it was still out when the export ended, which makes it a standing problem rather than control noise.\", \"verb\": \"verify\", \"target\": \"SYN1/AHU-21/CLG_DUCT_TEMP\", \"detail\": \"compare the trended value with a handheld thermometer at the sensor to confirm the reading is real, then review what the equipment was doing while it stayed out.\"}",
+        "ok": true,
+        "detail": "ok",
+        "elapsed_s": 0.0004
+       }
+      ],
+      "written_by": "template, no model",
+      "rank": 1,
+      "reason": "AHU-21's cooling duct temperature stayed above its 60 degF limit for 85.4% of the window, and it was still out when the export ended, which makes it a standing problem rather than control noise.",
+      "verb": "verify",
+      "target": "SYN1/AHU-21/CLG_DUCT_TEMP",
+      "detail": "compare the trended value with a handheld thermometer at the sensor to confirm the reading is real, then review what the equipment was doing while it stayed out.",
+      "next_step": "Verify SYN1/AHU-21/CLG_DUCT_TEMP: compare the trended value with a handheld thermometer at the sensor to confirm the reading is real, then review what the equipment was doing while it stayed out."
+     }
+    ],
+    "dropped": [],
+    "nuisance": [],
+    "unresolved": []
+   }
+  },
+  {
+   "id": "hvac-ahu-dual-duct-ahu-21-clg-sp",
+   "type": "alarm_log_only",
+   "tags": [
+    "hvac",
+    "single_condition"
+   ],
+   "status": "pass",
+   "graders": {
+    "grounding": {
+     "status": "pass",
+     "checks": 3,
+     "failures": []
+    },
+    "root_cause": {
+     "status": "pass",
+     "checks": 6,
+     "failures": []
+    },
+    "escalation": {
+     "status": "pass",
+     "checks": 2,
+     "failures": []
+    },
+    "uncertainty": {
+     "status": "pass",
+     "checks": 3,
+     "failures": []
+    },
+    "next_step": {
+     "status": "pass",
+     "checks": 5,
+     "failures": []
+    },
+    "format": {
+     "status": "pass",
+     "checks": 5,
+     "failures": []
+    }
+   },
+   "writeup": {
+    "cards": [
+     {
+      "point": "SYN1/AHU-21/CLG_SP",
+      "equipment": "AHU-21",
+      "start": "2026-07-28T07:00:00-07:00",
+      "label": "DefaultAlarmClass",
+      "rule": "",
+      "consequences": [],
+      "consequence_starts": [],
+      "attempts": [
+       {
+        "raw": "{\"reason\": \"No trend rule moved this one, so it ranks on the alarm log alone: AHU-21's cooling static pressure raised 4 alarms at priority 3 over 11.5 hours in alarm, and it was still past the limit when the export ended.\", \"verb\": \"check\", \"target\": \"SYN1/AHU-21/CLG_SP\", \"detail\": \"compare the reading with a manometer at the sensor tap, and look at why it alarmed as often as it did.\"}",
+        "ok": true,
+        "detail": "ok",
+        "elapsed_s": 0.0004
+       }
+      ],
+      "written_by": "template, no model",
+      "rank": 1,
+      "reason": "No trend rule moved this one, so it ranks on the alarm log alone: AHU-21's cooling static pressure raised 4 alarms at priority 3 over 11.5 hours in alarm, and it was still past the limit when the export ended.",
+      "verb": "check",
+      "target": "SYN1/AHU-21/CLG_SP",
+      "detail": "compare the reading with a manometer at the sensor tap, and look at why it alarmed as often as it did.",
+      "next_step": "Check SYN1/AHU-21/CLG_SP: compare the reading with a manometer at the sensor tap, and look at why it alarmed as often as it did."
+     }
+    ],
+    "dropped": [],
+    "nuisance": [],
+    "unresolved": []
+   }
+  },
+  {
+   "id": "hvac-ahu-dual-duct-ahu-21-htg-duct-temp",
+   "type": "severe_excursion",
+   "tags": [
+    "hvac",
+    "single_condition"
+   ],
+   "status": "pass",
+   "graders": {
+    "grounding": {
+     "status": "pass",
+     "checks": 3,
+     "failures": []
+    },
+    "root_cause": {
+     "status": "pass",
+     "checks": 6,
+     "failures": []
+    },
+    "escalation": {
+     "status": "pass",
+     "checks": 2,
+     "failures": []
+    },
+    "uncertainty": {
+     "status": "pass",
+     "checks": 2,
+     "failures": []
+    },
+    "next_step": {
+     "status": "pass",
+     "checks": 5,
+     "failures": []
+    },
+    "format": {
+     "status": "pass",
+     "checks": 5,
+     "failures": []
+    }
+   },
+   "writeup": {
+    "cards": [
+     {
+      "point": "SYN1/AHU-21/HTG_DUCT_TEMP",
+      "equipment": "AHU-21",
+      "start": "2026-07-28T04:00:00-07:00",
+      "label": "DefaultAlarmClass",
+      "rule": "R-P3",
+      "consequences": [],
+      "consequence_starts": [],
+      "attempts": [
+       {
+        "raw": "{\"reason\": \"AHU-21's heating duct temperature went 9.2 deadbands below its 88 degF limit, well past normal control error, across 5 alarms and 12.3 hours in alarm.\", \"verb\": \"inspect\", \"target\": \"SYN1/AHU-21/HTG_DUCT_TEMP\", \"detail\": \"look at what the equipment was doing at each excursion, and confirm the peak against a handheld thermometer at the sensor.\"}",
+        "ok": true,
+        "detail": "ok",
+        "elapsed_s": 0.0004
+       }
+      ],
+      "written_by": "template, no model",
+      "rank": 1,
+      "reason": "AHU-21's heating duct temperature went 9.2 deadbands below its 88 degF limit, well past normal control error, across 5 alarms and 12.3 hours in alarm.",
+      "verb": "inspect",
+      "target": "SYN1/AHU-21/HTG_DUCT_TEMP",
+      "detail": "look at what the equipment was doing at each excursion, and confirm the peak against a handheld thermometer at the sensor.",
+      "next_step": "Inspect SYN1/AHU-21/HTG_DUCT_TEMP: look at what the equipment was doing at each excursion, and confirm the peak against a handheld thermometer at the sensor."
+     }
+    ],
+    "dropped": [],
+    "nuisance": [],
+    "unresolved": []
+   }
+  },
+  {
+   "id": "hvac-ahu-dual-duct-ahu-21-mixed-air-temp",
+   "type": "drift",
+   "tags": [
+    "hvac",
+    "single_condition"
+   ],
+   "status": "pass",
+   "graders": {
+    "grounding": {
+     "status": "pass",
+     "checks": 3,
+     "failures": []
+    },
+    "root_cause": {
+     "status": "pass",
+     "checks": 6,
+     "failures": []
+    },
+    "escalation": {
+     "status": "pass",
+     "checks": 2,
+     "failures": []
+    },
+    "uncertainty": {
+     "status": "pass",
+     "checks": 2,
+     "failures": []
+    },
+    "next_step": {
+     "status": "pass",
+     "checks": 5,
+     "failures": []
+    },
+    "format": {
+     "status": "pass",
+     "checks": 5,
+     "failures": []
+    }
+   },
+   "writeup": {
+    "cards": [
+     {
+      "point": "SYN1/AHU-21/MIXED_AIR_TEMP",
+      "equipment": "AHU-21",
+      "start": "2026-07-28T15:35:00-07:00",
+      "label": "DefaultAlarmClass",
+      "rule": "R-P2",
+      "consequences": [],
+      "consequence_starts": [],
+      "attempts": [
+       {
+        "raw": "{\"reason\": \"AHU-21's mixed air temperature moved steadily toward and past its 72 degF limit without reversing, peaking 3.2 deadbands out, and the single alarm it raised understates a condition that is getting worse.\", \"verb\": \"review\", \"target\": \"SYN1/AHU-21/MIXED_AIR_TEMP\", \"detail\": \"trace the trend back to where the drift began, then compare the value with a handheld thermometer at the sensor to separate a drifting sensor from a drifting process.\"}",
+        "ok": true,
+        "detail": "ok",
+        "elapsed_s": 0.0004
+       }
+      ],
+      "written_by": "template, no model",
+      "rank": 1,
+      "reason": "AHU-21's mixed air temperature moved steadily toward and past its 72 degF limit without reversing, peaking 3.2 deadbands out, and the single alarm it raised understates a condition that is getting worse.",
+      "verb": "review",
+      "target": "SYN1/AHU-21/MIXED_AIR_TEMP",
+      "detail": "trace the trend back to where the drift began, then compare the value with a handheld thermometer at the sensor to separate a drifting sensor from a drifting process.",
+      "next_step": "Review SYN1/AHU-21/MIXED_AIR_TEMP: trace the trend back to where the drift began, then compare the value with a handheld thermometer at the sensor to separate a drifting sensor from a drifting process."
+     }
+    ],
+    "dropped": [],
+    "nuisance": [],
+    "unresolved": []
+   }
+  },
+  {
+   "id": "hvac-ahu-dual-duct-window",
+   "type": "flood_with_real_faults",
+   "tags": [
+    "hvac",
+    "flood",
+    "multiple_causes"
+   ],
+   "status": "pass",
+   "graders": {
+    "grounding": {
+     "status": "pass",
+     "checks": 15,
+     "failures": []
+    },
+    "root_cause": {
+     "status": "pass",
+     "checks": 26,
+     "failures": []
+    },
+    "escalation": {
+     "status": "pass",
+     "checks": 10,
+     "failures": []
+    },
+    "uncertainty": {
+     "status": "pass",
+     "checks": 19,
+     "failures": []
+    },
+    "next_step": {
+     "status": "pass",
+     "checks": 25,
+     "failures": []
+    },
+    "format": {
+     "status": "pass",
+     "checks": 25,
+     "failures": []
+    }
+   },
+   "writeup": {
+    "cards": [
+     {
+      "point": "SYN1/AHU-21/HTG_DUCT_TEMP",
+      "equipment": "AHU-21",
+      "start": "2026-07-28T04:00:00-07:00",
+      "label": "DefaultAlarmClass",
+      "rule": "R-P3",
+      "consequences": [],
+      "consequence_starts": [],
+      "attempts": [
+       {
+        "raw": "{\"reason\": \"AHU-21's heating duct temperature went 9.2 deadbands below its 88 degF limit, well past normal control error, across 5 alarms and 12.3 hours in alarm.\", \"verb\": \"inspect\", \"target\": \"SYN1/AHU-21/HTG_DUCT_TEMP\", \"detail\": \"look at what the equipment was doing at each excursion, and confirm the peak against a handheld thermometer at the sensor.\"}",
+        "ok": true,
+        "detail": "ok",
+        "elapsed_s": 0.0003
+       }
+      ],
+      "written_by": "template, no model",
+      "rank": 1,
+      "reason": "AHU-21's heating duct temperature went 9.2 deadbands below its 88 degF limit, well past normal control error, across 5 alarms and 12.3 hours in alarm.",
+      "verb": "inspect",
+      "target": "SYN1/AHU-21/HTG_DUCT_TEMP",
+      "detail": "look at what the equipment was doing at each excursion, and confirm the peak against a handheld thermometer at the sensor.",
+      "next_step": "Inspect SYN1/AHU-21/HTG_DUCT_TEMP: look at what the equipment was doing at each excursion, and confirm the peak against a handheld thermometer at the sensor."
+     },
+     {
+      "point": "SYN1/AHU-21-B/CLG_DUCT_TEMP",
+      "equipment": "AHU-21-B",
+      "start": "2026-07-28T04:01:00-07:00",
+      "label": "CriticalAlarmClass",
+      "rule": "R-P3",
+      "consequences": [],
+      "consequence_starts": [],
+      "attempts": [
+       {
+        "raw": "{\"reason\": \"AHU-21-B's cooling duct temperature went 9.2 deadbands above its 60 degF limit, well past normal control error, across 5 alarms and 12.3 hours in alarm.\", \"verb\": \"inspect\", \"target\": \"SYN1/AHU-21-B/CLG_DUCT_TEMP\", \"detail\": \"look at what the equipment was doing at each excursion, and confirm the peak against a handheld thermometer at the sensor.\"}",
+        "ok": true,
+        "detail": "ok",
+        "elapsed_s": 0.0004
+       }
+      ],
+      "written_by": "template, no model",
+      "rank": 2,
+      "reason": "AHU-21-B's cooling duct temperature went 9.2 deadbands above its 60 degF limit, well past normal control error, across 5 alarms and 12.3 hours in alarm.",
+      "verb": "inspect",
+      "target": "SYN1/AHU-21-B/CLG_DUCT_TEMP",
+      "detail": "look at what the equipment was doing at each excursion, and confirm the peak against a handheld thermometer at the sensor.",
+      "next_step": "Inspect SYN1/AHU-21-B/CLG_DUCT_TEMP: look at what the equipment was doing at each excursion, and confirm the peak against a handheld thermometer at the sensor."
+     },
+     {
+      "point": "SYN1/AHU-21/CLG_DUCT_TEMP",
+      "equipment": "AHU-21",
+      "start": "2026-07-28T03:31:00-07:00",
+      "label": "CriticalAlarmClass",
+      "rule": "R-P1",
+      "consequences": [],
+      "consequence_starts": [],
+      "attempts": [
+       {
+        "raw": "{\"reason\": \"AHU-21's cooling duct temperature stayed above its 60 degF limit for 85.4% of the window, and it was still out when the export ended, which makes it a standing problem rather than control noise.\", \"verb\": \"verify\", \"target\": \"SYN1/AHU-21/CLG_DUCT_TEMP\", \"detail\": \"compare the trended value with a handheld thermometer at the sensor to confirm the reading is real, then review what the equipment was doing while it stayed out.\"}",
+        "ok": true,
+        "detail": "ok",
+        "elapsed_s": 0.0004
+       }
+      ],
+      "written_by": "template, no model",
+      "rank": 3,
+      "reason": "AHU-21's cooling duct temperature stayed above its 60 degF limit for 85.4% of the window, and it was still out when the export ended, which makes it a standing problem rather than control noise.",
+      "verb": "verify",
+      "target": "SYN1/AHU-21/CLG_DUCT_TEMP",
+      "detail": "compare the trended value with a handheld thermometer at the sensor to confirm the reading is real, then review what the equipment was doing while it stayed out.",
+      "next_step": "Verify SYN1/AHU-21/CLG_DUCT_TEMP: compare the trended value with a handheld thermometer at the sensor to confirm the reading is real, then review what the equipment was doing while it stayed out."
+     },
+     {
+      "point": "SYN1/AHU-21/MIXED_AIR_TEMP",
+      "equipment": "AHU-21",
+      "start": "2026-07-28T15:35:00-07:00",
+      "label": "DefaultAlarmClass",
+      "rule": "R-P2",
+      "consequences": [],
+      "consequence_starts": [],
+      "attempts": [
+       {
+        "raw": "{\"reason\": \"AHU-21's mixed air temperature moved steadily toward and past its 72 degF limit without reversing, peaking 3.2 deadbands out, and the single alarm it raised understates a condition that is getting worse.\", \"verb\": \"review\", \"target\": \"SYN1/AHU-21/MIXED_AIR_TEMP\", \"detail\": \"trace the trend back to where the drift began, then compare the value with a handheld thermometer at the sensor to separate a drifting sensor from a drifting process.\"}",
+        "ok": true,
+        "detail": "ok",
+        "elapsed_s": 0.0002
+       }
+      ],
+      "written_by": "template, no model",
+      "rank": 4,
+      "reason": "AHU-21's mixed air temperature moved steadily toward and past its 72 degF limit without reversing, peaking 3.2 deadbands out, and the single alarm it raised understates a condition that is getting worse.",
+      "verb": "review",
+      "target": "SYN1/AHU-21/MIXED_AIR_TEMP",
+      "detail": "trace the trend back to where the drift began, then compare the value with a handheld thermometer at the sensor to separate a drifting sensor from a drifting process.",
+      "next_step": "Review SYN1/AHU-21/MIXED_AIR_TEMP: trace the trend back to where the drift began, then compare the value with a handheld thermometer at the sensor to separate a drifting sensor from a drifting process."
+     },
+     {
+      "point": "SYN1/AHU-21/CLG_SP",
+      "equipment": "AHU-21",
+      "start": "2026-07-28T07:00:00-07:00",
+      "label": "DefaultAlarmClass",
+      "rule": "",
+      "consequences": [],
+      "consequence_starts": [],
+      "attempts": [
+       {
+        "raw": "{\"reason\": \"No trend rule moved this one, so it ranks on the alarm log alone: AHU-21's cooling static pressure raised 4 alarms at priority 3 over 11.5 hours in alarm, and it was still past the limit when the export ended.\", \"verb\": \"check\", \"target\": \"SYN1/AHU-21/CLG_SP\", \"detail\": \"compare the reading with a manometer at the sensor tap, and look at why it alarmed as often as it did.\"}",
+        "ok": true,
+        "detail": "ok",
+        "elapsed_s": 0.0004
+       }
+      ],
+      "written_by": "template, no model",
+      "rank": 5,
+      "reason": "No trend rule moved this one, so it ranks on the alarm log alone: AHU-21's cooling static pressure raised 4 alarms at priority 3 over 11.5 hours in alarm, and it was still past the limit when the export ended.",
+      "verb": "check",
+      "target": "SYN1/AHU-21/CLG_SP",
+      "detail": "compare the reading with a manometer at the sensor tap, and look at why it alarmed as often as it did.",
+      "next_step": "Check SYN1/AHU-21/CLG_SP: compare the reading with a manometer at the sensor tap, and look at why it alarmed as often as it did."
+     }
+    ],
+    "dropped": [],
+    "nuisance": [
+     {
+      "point": "SYN1/AHU-21-B/CLG_SP",
+      "signal": "DefaultAlarmClass",
+      "label": "DefaultAlarmClass",
+      "rule": "",
+      "finding": "no rule fired; the alarm-side classification repeating carried through"
+     },
+     {
+      "point": "SYN1/AHU-21-B/MIXED_AIR_TEMP",
+      "signal": "DefaultAlarmClass",
+      "label": "DefaultAlarmClass",
+      "rule": "R-D3",
+      "finding": "returned to normal and held 57600 s at no closer than 5.75 deadbands inside the limit, so the condition cleared itself and stayed clear"
+     },
+     {
+      "point": "SYN1/AHU-21-B/MIXED_AIR_TEMP",
+      "signal": "DefaultAlarmClass",
+      "label": "DefaultAlarmClass",
+      "rule": "R-D3",
+      "finding": "returned to normal and held 57600 s at no closer than 5.75 deadbands inside the limit, so the condition cleared itself and stayed clear"
+     },
+     {
+      "point": "SYN1/AHU-21-B/HTG_DUCT_TEMP",
+      "signal": "DefaultAlarmClass",
+      "label": "DefaultAlarmClass",
+      "rule": "R-D2",
+      "finding": "total 180 s beyond the limit is under the 600 s minimum, a fleeting excursion with no dwell behind it"
+     }
+    ],
+    "unresolved": [
+     {
+      "point": "SYN1/AHU-21-B/HTG_DMPR_POS",
+      "signal": "DefaultAlarmClass",
+      "reason": "no trend series for this point in the trend export"
+     }
+    ]
+   }
+  },
+  {
+   "id": "hvac-boiler-blr-71-b-comb-air-dp",
+   "type": "missing_trend",
+   "tags": [
+    "hvac",
+    "single_condition"
+   ],
+   "status": "pass",
+   "graders": {
+    "grounding": {
+     "status": "n/a",
+     "checks": 0,
+     "failures": []
+    },
+    "root_cause": {
+     "status": "n/a",
+     "checks": 0,
+     "failures": []
+    },
+    "escalation": {
+     "status": "pass",
+     "checks": 0,
+     "failures": []
+    },
+    "uncertainty": {
+     "status": "pass",
+     "checks": 3,
+     "failures": []
+    },
+    "next_step": {
+     "status": "n/a",
+     "checks": 0,
+     "failures": []
+    },
+    "format": {
+     "status": "n/a",
+     "checks": 0,
+     "failures": []
+    }
+   },
+   "writeup": {
+    "cards": [],
+    "dropped": [],
+    "nuisance": [],
+    "unresolved": [
+     {
+      "point": "SYN1/BLR-71-B/COMB_AIR_DP",
+      "signal": "DefaultAlarmClass",
+      "reason": "no trend series for this point in the trend export"
+     }
+    ]
+   }
+  },
+  {
+   "id": "hvac-boiler-blr-71-b-firing-rate",
+   "type": "repeating",
+   "tags": [
+    "hvac",
+    "single_condition"
+   ],
+   "status": "pass",
+   "graders": {
+    "grounding": {
+     "status": "n/a",
+     "checks": 0,
+     "failures": []
+    },
+    "root_cause": {
+     "status": "n/a",
+     "checks": 0,
+     "failures": []
+    },
+    "escalation": {
+     "status": "pass",
+     "checks": 0,
+     "failures": []
+    },
+    "uncertainty": {
+     "status": "n/a",
+     "checks": 0,
+     "failures": []
+    },
+    "next_step": {
+     "status": "n/a",
+     "checks": 0,
+     "failures": []
+    },
+    "format": {
+     "status": "n/a",
+     "checks": 0,
+     "failures": []
+    }
+   },
+   "writeup": {
+    "cards": [],
+    "dropped": [],
+    "nuisance": [
+     {
+      "point": "SYN1/BLR-71-B/FIRING_RATE",
+      "signal": "DefaultAlarmClass",
+      "label": "DefaultAlarmClass",
+      "rule": "",
+      "finding": "no rule fired; the alarm-side classification repeating carried through"
+     }
+    ],
+    "unresolved": []
+   }
+  },
+  {
+   "id": "hvac-boiler-blr-71-b-hw-ret-temp",
+   "type": "self_recovered",
+   "tags": [
+    "hvac",
+    "single_condition"
+   ],
+   "status": "pass",
+   "graders": {
+    "grounding": {
+     "status": "n/a",
+     "checks": 0,
+     "failures": []
+    },
+    "root_cause": {
+     "status": "n/a",
+     "checks": 0,
+     "failures": []
+    },
+    "escalation": {
+     "status": "pass",
+     "checks": 0,
+     "failures": []
+    },
+    "uncertainty": {
+     "status": "n/a",
+     "checks": 0,
+     "failures": []
+    },
+    "next_step": {
+     "status": "n/a",
+     "checks": 0,
+     "failures": []
+    },
+    "format": {
+     "status": "n/a",
+     "checks": 0,
+     "failures": []
+    }
+   },
+   "writeup": {
+    "cards": [],
+    "dropped": [],
+    "nuisance": [
+     {
+      "point": "SYN1/BLR-71-B/HW_RET_TEMP",
+      "signal": "DefaultAlarmClass",
+      "label": "DefaultAlarmClass",
+      "rule": "R-D3",
+      "finding": "returned to normal and held 57600 s at no closer than 5.80 deadbands inside the limit, so the condition cleared itself and stayed clear"
+     },
+     {
+      "point": "SYN1/BLR-71-B/HW_RET_TEMP",
+      "signal": "DefaultAlarmClass",
+      "label": "DefaultAlarmClass",
+      "rule": "R-D3",
+      "finding": "returned to normal and held 57600 s at no closer than 5.80 deadbands inside the limit, so the condition cleared itself and stayed clear"
+     }
+    ],
+    "unresolved": []
+   }
+  },
+  {
+   "id": "hvac-boiler-blr-71-b-hw-sup-temp",
+   "type": "severe_excursion",
+   "tags": [
+    "hvac",
+    "single_condition"
+   ],
+   "status": "pass",
+   "graders": {
+    "grounding": {
+     "status": "pass",
+     "checks": 3,
+     "failures": []
+    },
+    "root_cause": {
+     "status": "pass",
+     "checks": 6,
+     "failures": []
+    },
+    "escalation": {
+     "status": "pass",
+     "checks": 2,
+     "failures": []
+    },
+    "uncertainty": {
+     "status": "pass",
+     "checks": 2,
+     "failures": []
+    },
+    "next_step": {
+     "status": "pass",
+     "checks": 5,
+     "failures": []
+    },
+    "format": {
+     "status": "pass",
+     "checks": 5,
+     "failures": []
+    }
+   },
+   "writeup": {
+    "cards": [
+     {
+      "point": "SYN1/BLR-71-B/HW_SUP_TEMP",
+      "equipment": "BLR-71-B",
+      "start": "2026-07-30T04:01:00-07:00",
+      "label": "CriticalAlarmClass",
+      "rule": "R-P3",
+      "consequences": [],
+      "consequence_starts": [],
+      "attempts": [
+       {
+        "raw": "{\"reason\": \"BLR-71-B's hot water supply temperature went 9.2 deadbands below its 168 degF limit, well past normal control error, across 5 alarms and 12.3 hours in alarm.\", \"verb\": \"inspect\", \"target\": \"SYN1/BLR-71-B/HW_SUP_TEMP\", \"detail\": \"look at what the equipment was doing at each excursion, and confirm the peak against a handheld thermometer at the sensor.\"}",
+        "ok": true,
+        "detail": "ok",
+        "elapsed_s": 0.0005
+       }
+      ],
+      "written_by": "template, no model",
+      "rank": 1,
+      "reason": "BLR-71-B's hot water supply temperature went 9.2 deadbands below its 168 degF limit, well past normal control error, across 5 alarms and 12.3 hours in alarm.",
+      "verb": "inspect",
+      "target": "SYN1/BLR-71-B/HW_SUP_TEMP",
+      "detail": "look at what the equipment was doing at each excursion, and confirm the peak against a handheld thermometer at the sensor.",
+      "next_step": "Inspect SYN1/BLR-71-B/HW_SUP_TEMP: look at what the equipment was doing at each excursion, and confirm the peak against a handheld thermometer at the sensor."
+     }
+    ],
+    "dropped": [],
+    "nuisance": [],
+    "unresolved": []
+   }
+  },
+  {
+   "id": "hvac-boiler-blr-71-b-stack-temp",
+   "type": "fleeting",
+   "tags": [
+    "hvac",
+    "single_condition"
+   ],
+   "status": "pass",
+   "graders": {
+    "grounding": {
+     "status": "n/a",
+     "checks": 0,
+     "failures": []
+    },
+    "root_cause": {
+     "status": "n/a",
+     "checks": 0,
+     "failures": []
+    },
+    "escalation": {
+     "status": "pass",
+     "checks": 0,
+     "failures": []
+    },
+    "uncertainty": {
+     "status": "n/a",
+     "checks": 0,
+     "failures": []
+    },
+    "next_step": {
+     "status": "n/a",
+     "checks": 0,
+     "failures": []
+    },
+    "format": {
+     "status": "n/a",
+     "checks": 0,
+     "failures": []
+    }
+   },
+   "writeup": {
+    "cards": [],
+    "dropped": [],
+    "nuisance": [
+     {
+      "point": "SYN1/BLR-71-B/STACK_TEMP",
+      "signal": "CriticalAlarmClass",
+      "label": "CriticalAlarmClass",
+      "rule": "R-D2",
+      "finding": "total 180 s beyond the limit is under the 600 s minimum, a fleeting excursion with no dwell behind it"
+     }
+    ],
+    "unresolved": []
+   }
+  },
+  {
+   "id": "hvac-boiler-blr-71-comb-air-dp",
+   "type": "chattering",
+   "tags": [
+    "hvac",
+    "single_condition"
+   ],
+   "status": "pass",
+   "graders": {
+    "grounding": {
+     "status": "n/a",
+     "checks": 0,
+     "failures": []
+    },
+    "root_cause": {
+     "status": "n/a",
+     "checks": 0,
+     "failures": []
+    },
+    "escalation": {
+     "status": "pass",
+     "checks": 0,
+     "failures": []
+    },
+    "uncertainty": {
+     "status": "n/a",
+     "checks": 0,
+     "failures": []
+    },
+    "next_step": {
+     "status": "n/a",
+     "checks": 0,
+     "failures": []
+    },
+    "format": {
+     "status": "n/a",
+     "checks": 0,
+     "failures": []
+    }
+   },
+   "writeup": {
+    "cards": [],
+    "dropped": [],
+    "nuisance": [
+     {
+      "point": "SYN1/BLR-71/COMB_AIR_DP",
+      "signal": "DefaultAlarmClass",
+      "label": "DefaultAlarmClass",
+      "rule": "R-D1",
+      "finding": "peak overshoot 0.67 deadbands, at or under the 1.00 allowed, so the alarm sat on its limit rather than departing from it"
+     }
+    ],
+    "unresolved": []
+   }
+  },
+  {
+   "id": "hvac-boiler-blr-71-firing-rate",
+   "type": "alarm_log_only",
+   "tags": [
+    "hvac",
+    "single_condition"
+   ],
+   "status": "pass",
+   "graders": {
+    "grounding": {
+     "status": "pass",
+     "checks": 3,
+     "failures": []
+    },
+    "root_cause": {
+     "status": "pass",
+     "checks": 6,
+     "failures": []
+    },
+    "escalation": {
+     "status": "pass",
+     "checks": 2,
+     "failures": []
+    },
+    "uncertainty": {
+     "status": "pass",
+     "checks": 3,
+     "failures": []
+    },
+    "next_step": {
+     "status": "pass",
+     "checks": 5,
+     "failures": []
+    },
+    "format": {
+     "status": "pass",
+     "checks": 5,
+     "failures": []
+    }
+   },
+   "writeup": {
+    "cards": [
+     {
+      "point": "SYN1/BLR-71/FIRING_RATE",
+      "equipment": "BLR-71",
+      "start": "2026-07-30T07:02:00-07:00",
+      "label": "DefaultAlarmClass",
+      "rule": "",
+      "consequences": [],
+      "consequence_starts": [],
+      "attempts": [
+       {
+        "raw": "{\"reason\": \"No trend rule moved this one, so it ranks on the alarm log alone: BLR-71's firing rate raised 4 alarms at priority 4 over 11.5 hours in alarm, and it was still past the limit when the export ended.\", \"verb\": \"check\", \"target\": \"SYN1/BLR-71/FIRING_RATE\", \"detail\": \"compare the reading with the firing rate shown on the boiler's burner controller, and look at why it alarmed as often as it did.\"}",
+        "ok": true,
+        "detail": "ok",
+        "elapsed_s": 0.0005
+       }
+      ],
+      "written_by": "template, no model",
+      "rank": 1,
+      "reason": "No trend rule moved this one, so it ranks on the alarm log alone: BLR-71's firing rate raised 4 alarms at priority 4 over 11.5 hours in alarm, and it was still past the limit when the export ended.",
+      "verb": "check",
+      "target": "SYN1/BLR-71/FIRING_RATE",
+      "detail": "compare the reading with the firing rate shown on the boiler's burner controller, and look at why it alarmed as often as it did.",
+      "next_step": "Check SYN1/BLR-71/FIRING_RATE: compare the reading with the firing rate shown on the boiler's burner controller, and look at why it alarmed as often as it did."
+     }
+    ],
+    "dropped": [],
+    "nuisance": [],
+    "unresolved": []
+   }
+  },
+  {
+   "id": "hvac-boiler-blr-71-hw-ret-temp",
+   "type": "drift",
+   "tags": [
+    "hvac",
+    "single_condition"
+   ],
+   "status": "pass",
+   "graders": {
+    "grounding": {
+     "status": "pass",
+     "checks": 3,
+     "failures": []
+    },
+    "root_cause": {
+     "status": "pass",
+     "checks": 6,
+     "failures": []
+    },
+    "escalation": {
+     "status": "pass",
+     "checks": 2,
+     "failures": []
+    },
+    "uncertainty": {
+     "status": "pass",
+     "checks": 2,
+     "failures": []
+    },
+    "next_step": {
+     "status": "pass",
+     "checks": 5,
+     "failures": []
+    },
+    "format": {
+     "status": "pass",
+     "checks": 5,
+     "failures": []
+    }
+   },
+   "writeup": {
+    "cards": [
+     {
+      "point": "SYN1/BLR-71/HW_RET_TEMP",
+      "equipment": "BLR-71",
+      "start": "2026-07-30T15:40:00-07:00",
+      "label": "DefaultAlarmClass",
+      "rule": "R-P2",
+      "consequences": [],
+      "consequence_starts": [],
+      "attempts": [
+       {
+        "raw": "{\"reason\": \"BLR-71's hot water return temperature moved steadily toward and past its 145 degF limit without reversing, peaking 3.2 deadbands out, and the single alarm it raised understates a condition that is getting worse.\", \"verb\": \"review\", \"target\": \"SYN1/BLR-71/HW_RET_TEMP\", \"detail\": \"trace the trend back to where the drift began, then compare the value with a handheld thermometer at the sensor to separate a drifting sensor from a drifting process.\"}",
+        "ok": true,
+        "detail": "ok",
+        "elapsed_s": 0.0004
+       }
+      ],
+      "written_by": "template, no model",
+      "rank": 1,
+      "reason": "BLR-71's hot water return temperature moved steadily toward and past its 145 degF limit without reversing, peaking 3.2 deadbands out, and the single alarm it raised understates a condition that is getting worse.",
+      "verb": "review",
+      "target": "SYN1/BLR-71/HW_RET_TEMP",
+      "detail": "trace the trend back to where the drift began, then compare the value with a handheld thermometer at the sensor to separate a drifting sensor from a drifting process.",
+      "next_step": "Review SYN1/BLR-71/HW_RET_TEMP: trace the trend back to where the drift began, then compare the value with a handheld thermometer at the sensor to separate a drifting sensor from a drifting process."
+     }
+    ],
+    "dropped": [],
+    "nuisance": [],
+    "unresolved": []
+   }
+  },
+  {
+   "id": "hvac-boiler-blr-71-hw-sup-temp",
+   "type": "sustained_fault",
+   "tags": [
+    "hvac",
+    "single_condition"
+   ],
+   "status": "pass",
+   "graders": {
+    "grounding": {
+     "status": "pass",
+     "checks": 3,
+     "failures": []
+    },
+    "root_cause": {
+     "status": "pass",
+     "checks": 6,
+     "failures": []
+    },
+    "escalation": {
+     "status": "pass",
+     "checks": 2,
+     "failures": []
+    },
+    "uncertainty": {
+     "status": "pass",
+     "checks": 2,
+     "failures": []
+    },
+    "next_step": {
+     "status": "pass",
+     "checks": 5,
+     "failures": []
+    },
+    "format": {
+     "status": "pass",
+     "checks": 5,
+     "failures": []
+    }
+   },
+   "writeup": {
+    "cards": [
+     {
+      "point": "SYN1/BLR-71/HW_SUP_TEMP",
+      "equipment": "BLR-71",
+      "start": "2026-07-30T03:31:00-07:00",
+      "label": "CriticalAlarmClass",
+      "rule": "R-P1",
+      "consequences": [],
+      "consequence_starts": [],
+      "attempts": [
+       {
+        "raw": "{\"reason\": \"BLR-71's hot water supply temperature stayed below its 168 degF limit for 85.4% of the window, and it was still out when the export ended, which makes it a standing problem rather than control noise.\", \"verb\": \"verify\", \"target\": \"SYN1/BLR-71/HW_SUP_TEMP\", \"detail\": \"compare the trended value with a handheld thermometer at the sensor to confirm the reading is real, then review what the equipment was doing while it stayed out.\"}",
+        "ok": true,
+        "detail": "ok",
+        "elapsed_s": 0.0004
+       }
+      ],
+      "written_by": "template, no model",
+      "rank": 1,
+      "reason": "BLR-71's hot water supply temperature stayed below its 168 degF limit for 85.4% of the window, and it was still out when the export ended, which makes it a standing problem rather than control noise.",
+      "verb": "verify",
+      "target": "SYN1/BLR-71/HW_SUP_TEMP",
+      "detail": "compare the trended value with a handheld thermometer at the sensor to confirm the reading is real, then review what the equipment was doing while it stayed out.",
+      "next_step": "Verify SYN1/BLR-71/HW_SUP_TEMP: compare the trended value with a handheld thermometer at the sensor to confirm the reading is real, then review what the equipment was doing while it stayed out."
+     }
+    ],
+    "dropped": [],
+    "nuisance": [],
+    "unresolved": []
+   }
+  },
+  {
+   "id": "hvac-boiler-blr-71-stack-temp",
+   "type": "severe_excursion",
+   "tags": [
+    "hvac",
+    "single_condition"
+   ],
+   "status": "pass",
+   "graders": {
+    "grounding": {
+     "status": "pass",
+     "checks": 3,
+     "failures": []
+    },
+    "root_cause": {
+     "status": "pass",
+     "checks": 6,
+     "failures": []
+    },
+    "escalation": {
+     "status": "pass",
+     "checks": 2,
+     "failures": []
+    },
+    "uncertainty": {
+     "status": "pass",
+     "checks": 2,
+     "failures": []
+    },
+    "next_step": {
+     "status": "pass",
+     "checks": 5,
+     "failures": []
+    },
+    "format": {
+     "status": "pass",
+     "checks": 5,
+     "failures": []
+    }
+   },
+   "writeup": {
+    "cards": [
+     {
+      "point": "SYN1/BLR-71/STACK_TEMP",
+      "equipment": "BLR-71",
+      "start": "2026-07-30T04:00:00-07:00",
+      "label": "CriticalAlarmClass",
+      "rule": "R-P3",
+      "consequences": [],
+      "consequence_starts": [],
+      "attempts": [
+       {
+        "raw": "{\"reason\": \"BLR-71's stack temperature went 9.2 deadbands above its 420 degF limit, well past normal control error, across 5 alarms and 12.3 hours in alarm.\", \"verb\": \"inspect\", \"target\": \"SYN1/BLR-71/STACK_TEMP\", \"detail\": \"look at what the equipment was doing at each excursion, and confirm the peak against a handheld thermometer at the sensor.\"}",
+        "ok": true,
+        "detail": "ok",
+        "elapsed_s": 0.0004
+       }
+      ],
+      "written_by": "template, no model",
+      "rank": 1,
+      "reason": "BLR-71's stack temperature went 9.2 deadbands above its 420 degF limit, well past normal control error, across 5 alarms and 12.3 hours in alarm.",
+      "verb": "inspect",
+      "target": "SYN1/BLR-71/STACK_TEMP",
+      "detail": "look at what the equipment was doing at each excursion, and confirm the peak against a handheld thermometer at the sensor.",
+      "next_step": "Inspect SYN1/BLR-71/STACK_TEMP: look at what the equipment was doing at each excursion, and confirm the peak against a handheld thermometer at the sensor."
+     }
+    ],
+    "dropped": [],
+    "nuisance": [],
+    "unresolved": []
+   }
+  },
+  {
+   "id": "hvac-boiler-stack-temp-trend-removed",
+   "type": "not_enough_evidence",
+   "tags": [
+    "hvac",
+    "single_condition",
+    "missing_trend"
+   ],
+   "status": "pass",
+   "graders": {
+    "grounding": {
+     "status": "n/a",
+     "checks": 0,
+     "failures": []
+    },
+    "root_cause": {
+     "status": "n/a",
+     "checks": 0,
+     "failures": []
+    },
+    "escalation": {
+     "status": "pass",
+     "checks": 0,
+     "failures": []
+    },
+    "uncertainty": {
+     "status": "pass",
+     "checks": 3,
+     "failures": []
+    },
+    "next_step": {
+     "status": "n/a",
+     "checks": 0,
+     "failures": []
+    },
+    "format": {
+     "status": "n/a",
+     "checks": 0,
+     "failures": []
+    }
+   },
+   "writeup": {
+    "cards": [],
+    "dropped": [],
+    "nuisance": [],
+    "unresolved": [
+     {
+      "point": "SYN1/BLR-71/STACK_TEMP",
+      "signal": "CriticalAlarmClass",
+      "reason": "no trend series for this point in the trend export"
+     }
+    ]
+   }
+  },
+  {
+   "id": "hvac-boiler-window",
+   "type": "flood_with_real_faults",
+   "tags": [
+    "hvac",
+    "flood",
+    "multiple_causes"
+   ],
+   "status": "pass",
+   "graders": {
+    "grounding": {
+     "status": "pass",
+     "checks": 15,
+     "failures": []
+    },
+    "root_cause": {
+     "status": "pass",
+     "checks": 26,
+     "failures": []
+    },
+    "escalation": {
+     "status": "pass",
+     "checks": 10,
+     "failures": []
+    },
+    "uncertainty": {
+     "status": "pass",
+     "checks": 19,
+     "failures": []
+    },
+    "next_step": {
+     "status": "pass",
+     "checks": 25,
+     "failures": []
+    },
+    "format": {
+     "status": "pass",
+     "checks": 25,
+     "failures": []
+    }
+   },
+   "writeup": {
+    "cards": [
+     {
+      "point": "SYN1/BLR-71/STACK_TEMP",
+      "equipment": "BLR-71",
+      "start": "2026-07-30T04:00:00-07:00",
+      "label": "CriticalAlarmClass",
+      "rule": "R-P3",
+      "consequences": [],
+      "consequence_starts": [],
+      "attempts": [
+       {
+        "raw": "{\"reason\": \"BLR-71's stack temperature went 9.2 deadbands above its 420 degF limit, well past normal control error, across 5 alarms and 12.3 hours in alarm.\", \"verb\": \"inspect\", \"target\": \"SYN1/BLR-71/STACK_TEMP\", \"detail\": \"look at what the equipment was doing at each excursion, and confirm the peak against a handheld thermometer at the sensor.\"}",
+        "ok": true,
+        "detail": "ok",
+        "elapsed_s": 0.0004
+       }
+      ],
+      "written_by": "template, no model",
+      "rank": 1,
+      "reason": "BLR-71's stack temperature went 9.2 deadbands above its 420 degF limit, well past normal control error, across 5 alarms and 12.3 hours in alarm.",
+      "verb": "inspect",
+      "target": "SYN1/BLR-71/STACK_TEMP",
+      "detail": "look at what the equipment was doing at each excursion, and confirm the peak against a handheld thermometer at the sensor.",
+      "next_step": "Inspect SYN1/BLR-71/STACK_TEMP: look at what the equipment was doing at each excursion, and confirm the peak against a handheld thermometer at the sensor."
+     },
+     {
+      "point": "SYN1/BLR-71-B/HW_SUP_TEMP",
+      "equipment": "BLR-71-B",
+      "start": "2026-07-30T04:01:00-07:00",
+      "label": "CriticalAlarmClass",
+      "rule": "R-P3",
+      "consequences": [],
+      "consequence_starts": [],
+      "attempts": [
+       {
+        "raw": "{\"reason\": \"BLR-71-B's hot water supply temperature went 9.2 deadbands below its 168 degF limit, well past normal control error, across 5 alarms and 12.3 hours in alarm.\", \"verb\": \"inspect\", \"target\": \"SYN1/BLR-71-B/HW_SUP_TEMP\", \"detail\": \"look at what the equipment was doing at each excursion, and confirm the peak against a handheld thermometer at the sensor.\"}",
+        "ok": true,
+        "detail": "ok",
+        "elapsed_s": 0.0003
+       }
+      ],
+      "written_by": "template, no model",
+      "rank": 2,
+      "reason": "BLR-71-B's hot water supply temperature went 9.2 deadbands below its 168 degF limit, well past normal control error, across 5 alarms and 12.3 hours in alarm.",
+      "verb": "inspect",
+      "target": "SYN1/BLR-71-B/HW_SUP_TEMP",
+      "detail": "look at what the equipment was doing at each excursion, and confirm the peak against a handheld thermometer at the sensor.",
+      "next_step": "Inspect SYN1/BLR-71-B/HW_SUP_TEMP: look at what the equipment was doing at each excursion, and confirm the peak against a handheld thermometer at the sensor."
+     },
+     {
+      "point": "SYN1/BLR-71/HW_SUP_TEMP",
+      "equipment": "BLR-71",
+      "start": "2026-07-30T03:31:00-07:00",
+      "label": "CriticalAlarmClass",
+      "rule": "R-P1",
+      "consequences": [],
+      "consequence_starts": [],
+      "attempts": [
+       {
+        "raw": "{\"reason\": \"BLR-71's hot water supply temperature stayed below its 168 degF limit for 85.4% of the window, and it was still out when the export ended, which makes it a standing problem rather than control noise.\", \"verb\": \"verify\", \"target\": \"SYN1/BLR-71/HW_SUP_TEMP\", \"detail\": \"compare the trended value with a handheld thermometer at the sensor to confirm the reading is real, then review what the equipment was doing while it stayed out.\"}",
+        "ok": true,
+        "detail": "ok",
+        "elapsed_s": 0.0004
+       }
+      ],
+      "written_by": "template, no model",
+      "rank": 3,
+      "reason": "BLR-71's hot water supply temperature stayed below its 168 degF limit for 85.4% of the window, and it was still out when the export ended, which makes it a standing problem rather than control noise.",
+      "verb": "verify",
+      "target": "SYN1/BLR-71/HW_SUP_TEMP",
+      "detail": "compare the trended value with a handheld thermometer at the sensor to confirm the reading is real, then review what the equipment was doing while it stayed out.",
+      "next_step": "Verify SYN1/BLR-71/HW_SUP_TEMP: compare the trended value with a handheld thermometer at the sensor to confirm the reading is real, then review what the equipment was doing while it stayed out."
+     },
+     {
+      "point": "SYN1/BLR-71/HW_RET_TEMP",
+      "equipment": "BLR-71",
+      "start": "2026-07-30T15:40:00-07:00",
+      "label": "DefaultAlarmClass",
+      "rule": "R-P2",
+      "consequences": [],
+      "consequence_starts": [],
+      "attempts": [
+       {
+        "raw": "{\"reason\": \"BLR-71's hot water return temperature moved steadily toward and past its 145 degF limit without reversing, peaking 3.2 deadbands out, and the single alarm it raised understates a condition that is getting worse.\", \"verb\": \"review\", \"target\": \"SYN1/BLR-71/HW_RET_TEMP\", \"detail\": \"trace the trend back to where the drift began, then compare the value with a handheld thermometer at the sensor to separate a drifting sensor from a drifting process.\"}",
+        "ok": true,
+        "detail": "ok",
+        "elapsed_s": 0.0003
+       }
+      ],
+      "written_by": "template, no model",
+      "rank": 4,
+      "reason": "BLR-71's hot water return temperature moved steadily toward and past its 145 degF limit without reversing, peaking 3.2 deadbands out, and the single alarm it raised understates a condition that is getting worse.",
+      "verb": "review",
+      "target": "SYN1/BLR-71/HW_RET_TEMP",
+      "detail": "trace the trend back to where the drift began, then compare the value with a handheld thermometer at the sensor to separate a drifting sensor from a drifting process.",
+      "next_step": "Review SYN1/BLR-71/HW_RET_TEMP: trace the trend back to where the drift began, then compare the value with a handheld thermometer at the sensor to separate a drifting sensor from a drifting process."
+     },
+     {
+      "point": "SYN1/BLR-71/FIRING_RATE",
+      "equipment": "BLR-71",
+      "start": "2026-07-30T07:02:00-07:00",
+      "label": "DefaultAlarmClass",
+      "rule": "",
+      "consequences": [],
+      "consequence_starts": [],
+      "attempts": [
+       {
+        "raw": "{\"reason\": \"No trend rule moved this one, so it ranks on the alarm log alone: BLR-71's firing rate raised 4 alarms at priority 4 over 11.5 hours in alarm, and it was still past the limit when the export ended.\", \"verb\": \"check\", \"target\": \"SYN1/BLR-71/FIRING_RATE\", \"detail\": \"compare the reading with the firing rate shown on the boiler's burner controller, and look at why it alarmed as often as it did.\"}",
+        "ok": true,
+        "detail": "ok",
+        "elapsed_s": 0.0004
+       }
+      ],
+      "written_by": "template, no model",
+      "rank": 5,
+      "reason": "No trend rule moved this one, so it ranks on the alarm log alone: BLR-71's firing rate raised 4 alarms at priority 4 over 11.5 hours in alarm, and it was still past the limit when the export ended.",
+      "verb": "check",
+      "target": "SYN1/BLR-71/FIRING_RATE",
+      "detail": "compare the reading with the firing rate shown on the boiler's burner controller, and look at why it alarmed as often as it did.",
+      "next_step": "Check SYN1/BLR-71/FIRING_RATE: compare the reading with the firing rate shown on the boiler's burner controller, and look at why it alarmed as often as it did."
+     }
+    ],
+    "dropped": [],
+    "nuisance": [
+     {
+      "point": "SYN1/BLR-71-B/FIRING_RATE",
+      "signal": "DefaultAlarmClass",
+      "label": "DefaultAlarmClass",
+      "rule": "",
+      "finding": "no rule fired; the alarm-side classification repeating carried through"
+     },
+     {
+      "point": "SYN1/BLR-71-B/HW_RET_TEMP",
+      "signal": "DefaultAlarmClass",
+      "label": "DefaultAlarmClass",
+      "rule": "R-D3",
+      "finding": "returned to normal and held 57600 s at no closer than 5.80 deadbands inside the limit, so the condition cleared itself and stayed clear"
+     },
+     {
+      "point": "SYN1/BLR-71/COMB_AIR_DP",
+      "signal": "DefaultAlarmClass",
+      "label": "DefaultAlarmClass",
+      "rule": "R-D1",
+      "finding": "peak overshoot 0.67 deadbands, at or under the 1.00 allowed, so the alarm sat on its limit rather than departing from it"
+     },
+     {
+      "point": "SYN1/BLR-71-B/STACK_TEMP",
+      "signal": "CriticalAlarmClass",
+      "label": "CriticalAlarmClass",
+      "rule": "R-D2",
+      "finding": "total 180 s beyond the limit is under the 600 s minimum, a fleeting excursion with no dwell behind it"
+     },
+     {
+      "point": "SYN1/BLR-71-B/HW_RET_TEMP",
+      "signal": "DefaultAlarmClass",
+      "label": "DefaultAlarmClass",
+      "rule": "R-D3",
+      "finding": "returned to normal and held 57600 s at no closer than 5.80 deadbands inside the limit, so the condition cleared itself and stayed clear"
+     }
+    ],
+    "unresolved": [
+     {
+      "point": "SYN1/BLR-71-B/COMB_AIR_DP",
+      "signal": "DefaultAlarmClass",
+      "reason": "no trend series for this point in the trend export"
+     }
+    ]
+   }
+  },
+  {
+   "id": "hvac-chiller-ch-61-b-chw-ret-temp",
+   "type": "fleeting",
+   "tags": [
+    "hvac",
+    "single_condition"
+   ],
+   "status": "pass",
+   "graders": {
+    "grounding": {
+     "status": "n/a",
+     "checks": 0,
+     "failures": []
+    },
+    "root_cause": {
+     "status": "n/a",
+     "checks": 0,
+     "failures": []
+    },
+    "escalation": {
+     "status": "pass",
+     "checks": 0,
+     "failures": []
+    },
+    "uncertainty": {
+     "status": "n/a",
+     "checks": 0,
+     "failures": []
+    },
+    "next_step": {
+     "status": "n/a",
+     "checks": 0,
+     "failures": []
+    },
+    "format": {
+     "status": "n/a",
+     "checks": 0,
+     "failures": []
+    }
+   },
+   "writeup": {
+    "cards": [],
+    "dropped": [],
+    "nuisance": [
+     {
+      "point": "SYN1/CH-61-B/CHW_RET_TEMP",
+      "signal": "DefaultAlarmClass",
+      "label": "DefaultAlarmClass",
+      "rule": "R-D2",
+      "finding": "total 180 s beyond the limit is under the 600 s minimum, a fleeting excursion with no dwell behind it"
+     }
+    ],
+    "unresolved": []
+   }
+  },
+  {
+   "id": "hvac-chiller-ch-61-b-chw-sup-temp",
+   "type": "severe_excursion",
+   "tags": [
+    "hvac",
+    "single_condition"
+   ],
+   "status": "pass",
+   "graders": {
+    "grounding": {
+     "status": "pass",
+     "checks": 3,
+     "failures": []
+    },
+    "root_cause": {
+     "status": "pass",
+     "checks": 6,
+     "failures": []
+    },
+    "escalation": {
+     "status": "pass",
+     "checks": 2,
+     "failures": []
+    },
+    "uncertainty": {
+     "status": "pass",
+     "checks": 2,
+     "failures": []
+    },
+    "next_step": {
+     "status": "pass",
+     "checks": 5,
+     "failures": []
+    },
+    "format": {
+     "status": "pass",
+     "checks": 5,
+     "failures": []
+    }
+   },
+   "writeup": {
+    "cards": [
+     {
+      "point": "SYN1/CH-61-B/CHW_SUP_TEMP",
+      "equipment": "CH-61-B",
+      "start": "2026-07-29T04:01:00-07:00",
+      "label": "CriticalAlarmClass",
+      "rule": "R-P3",
+      "consequences": [],
+      "consequence_starts": [],
+      "attempts": [
+       {
+        "raw": "{\"reason\": \"CH-61-B's chilled water supply temperature went 9.2 deadbands above its 46 degF limit, well past normal control error, across 5 alarms and 12.3 hours in alarm.\", \"verb\": \"inspect\", \"target\": \"SYN1/CH-61-B/CHW_SUP_TEMP\", \"detail\": \"look at what the equipment was doing at each excursion, and confirm the peak against a handheld thermometer at the sensor.\"}",
+        "ok": true,
+        "detail": "ok",
+        "elapsed_s": 0.0005
+       }
+      ],
+      "written_by": "template, no model",
+      "rank": 1,
+      "reason": "CH-61-B's chilled water supply temperature went 9.2 deadbands above its 46 degF limit, well past normal control error, across 5 alarms and 12.3 hours in alarm.",
+      "verb": "inspect",
+      "target": "SYN1/CH-61-B/CHW_SUP_TEMP",
+      "detail": "look at what the equipment was doing at each excursion, and confirm the peak against a handheld thermometer at the sensor.",
+      "next_step": "Inspect SYN1/CH-61-B/CHW_SUP_TEMP: look at what the equipment was doing at each excursion, and confirm the peak against a handheld thermometer at the sensor."
+     }
+    ],
+    "dropped": [],
+    "nuisance": [],
+    "unresolved": []
+   }
+  },
+  {
+   "id": "hvac-chiller-ch-61-b-cond-approach",
+   "type": "self_recovered",
+   "tags": [
+    "hvac",
+    "single_condition"
+   ],
+   "status": "pass",
+   "graders": {
+    "grounding": {
+     "status": "n/a",
+     "checks": 0,
+     "failures": []
+    },
+    "root_cause": {
+     "status": "n/a",
+     "checks": 0,
+     "failures": []
+    },
+    "escalation": {
+     "status": "pass",
+     "checks": 0,
+     "failures": []
+    },
+    "uncertainty": {
+     "status": "n/a",
+     "checks": 0,
+     "failures": []
+    },
+    "next_step": {
+     "status": "n/a",
+     "checks": 0,
+     "failures": []
+    },
+    "format": {
+     "status": "n/a",
+     "checks": 0,
+     "failures": []
+    }
+   },
+   "writeup": {
+    "cards": [],
+    "dropped": [],
+    "nuisance": [
+     {
+      "point": "SYN1/CH-61-B/COND_APPROACH",
+      "signal": "DefaultAlarmClass",
+      "label": "DefaultAlarmClass",
+      "rule": "R-D3",
+      "finding": "returned to normal and held 57600 s at no closer than 5.80 deadbands inside the limit, so the condition cleared itself and stayed clear"
+     },
+     {
+      "point": "SYN1/CH-61-B/COND_APPROACH",
+      "signal": "DefaultAlarmClass",
+      "label": "DefaultAlarmClass",
+      "rule": "R-D3",
+      "finding": "returned to normal and held 57600 s at no closer than 5.80 deadbands inside the limit, so the condition cleared itself and stayed clear"
+     }
+    ],
+    "unresolved": []
+   }
+  },
+  {
+   "id": "hvac-chiller-ch-61-b-evap-press",
+   "type": "repeating",
+   "tags": [
+    "hvac",
+    "single_condition"
+   ],
+   "status": "pass",
+   "graders": {
+    "grounding": {
+     "status": "n/a",
+     "checks": 0,
+     "failures": []
+    },
+    "root_cause": {
+     "status": "n/a",
+     "checks": 0,
+     "failures": []
+    },
+    "escalation": {
+     "status": "pass",
+     "checks": 0,
+     "failures": []
+    },
+    "uncertainty": {
+     "status": "n/a",
+     "checks": 0,
+     "failures": []
+    },
+    "next_step": {
+     "status": "n/a",
+     "checks": 0,
+     "failures": []
+    },
+    "format": {
+     "status": "n/a",
+     "checks": 0,
+     "failures": []
+    }
+   },
+   "writeup": {
+    "cards": [],
+    "dropped": [],
+    "nuisance": [
+     {
+      "point": "SYN1/CH-61-B/EVAP_PRESS",
+      "signal": "DefaultAlarmClass",
+      "label": "DefaultAlarmClass",
+      "rule": "",
+      "finding": "no rule fired; the alarm-side classification repeating carried through"
+     }
+    ],
+    "unresolved": []
+   }
+  },
+  {
+   "id": "hvac-chiller-ch-61-b-oil-press",
+   "type": "missing_trend",
+   "tags": [
+    "hvac",
+    "single_condition"
+   ],
+   "status": "pass",
+   "graders": {
+    "grounding": {
+     "status": "n/a",
+     "checks": 0,
+     "failures": []
+    },
+    "root_cause": {
+     "status": "n/a",
+     "checks": 0,
+     "failures": []
+    },
+    "escalation": {
+     "status": "pass",
+     "checks": 0,
+     "failures": []
+    },
+    "uncertainty": {
+     "status": "pass",
+     "checks": 3,
+     "failures": []
+    },
+    "next_step": {
+     "status": "n/a",
+     "checks": 0,
+     "failures": []
+    },
+    "format": {
+     "status": "n/a",
+     "checks": 0,
+     "failures": []
+    }
+   },
+   "writeup": {
+    "cards": [],
+    "dropped": [],
+    "nuisance": [],
+    "unresolved": [
+     {
+      "point": "SYN1/CH-61-B/OIL_PRESS",
+      "signal": "CriticalAlarmClass",
+      "reason": "no trend series for this point in the trend export"
+     }
+    ]
+   }
+  },
+  {
+   "id": "hvac-chiller-ch-61-chw-ret-temp",
+   "type": "severe_excursion",
+   "tags": [
+    "hvac",
+    "single_condition"
+   ],
+   "status": "pass",
+   "graders": {
+    "grounding": {
+     "status": "pass",
+     "checks": 3,
+     "failures": []
+    },
+    "root_cause": {
+     "status": "pass",
+     "checks": 6,
+     "failures": []
+    },
+    "escalation": {
+     "status": "pass",
+     "checks": 2,
+     "failures": []
+    },
+    "uncertainty": {
+     "status": "pass",
+     "checks": 2,
+     "failures": []
+    },
+    "next_step": {
+     "status": "pass",
+     "checks": 5,
+     "failures": []
+    },
+    "format": {
+     "status": "pass",
+     "checks": 5,
+     "failures": []
+    }
+   },
+   "writeup": {
+    "cards": [
+     {
+      "point": "SYN1/CH-61/CHW_RET_TEMP",
+      "equipment": "CH-61",
+      "start": "2026-07-29T04:00:00-07:00",
+      "label": "DefaultAlarmClass",
+      "rule": "R-P3",
+      "consequences": [],
+      "consequence_starts": [],
+      "attempts": [
+       {
+        "raw": "{\"reason\": \"CH-61's chilled water return temperature went 9.2 deadbands above its 58 degF limit, well past normal control error, across 5 alarms and 12.3 hours in alarm.\", \"verb\": \"inspect\", \"target\": \"SYN1/CH-61/CHW_RET_TEMP\", \"detail\": \"look at what the equipment was doing at each excursion, and confirm the peak against a handheld thermometer at the sensor.\"}",
+        "ok": true,
+        "detail": "ok",
+        "elapsed_s": 0.0004
+       }
+      ],
+      "written_by": "template, no model",
+      "rank": 1,
+      "reason": "CH-61's chilled water return temperature went 9.2 deadbands above its 58 degF limit, well past normal control error, across 5 alarms and 12.3 hours in alarm.",
+      "verb": "inspect",
+      "target": "SYN1/CH-61/CHW_RET_TEMP",
+      "detail": "look at what the equipment was doing at each excursion, and confirm the peak against a handheld thermometer at the sensor.",
+      "next_step": "Inspect SYN1/CH-61/CHW_RET_TEMP: look at what the equipment was doing at each excursion, and confirm the peak against a handheld thermometer at the sensor."
+     }
+    ],
+    "dropped": [],
+    "nuisance": [],
+    "unresolved": []
+   }
+  },
+  {
+   "id": "hvac-chiller-ch-61-chw-sup-temp",
+   "type": "sustained_fault",
+   "tags": [
+    "hvac",
+    "single_condition"
+   ],
+   "status": "pass",
+   "graders": {
+    "grounding": {
+     "status": "pass",
+     "checks": 3,
+     "failures": []
+    },
+    "root_cause": {
+     "status": "pass",
+     "checks": 6,
+     "failures": []
+    },
+    "escalation": {
+     "status": "pass",
+     "checks": 2,
+     "failures": []
+    },
+    "uncertainty": {
+     "status": "pass",
+     "checks": 2,
+     "failures": []
+    },
+    "next_step": {
+     "status": "pass",
+     "checks": 5,
+     "failures": []
+    },
+    "format": {
+     "status": "pass",
+     "checks": 5,
+     "failures": []
+    }
+   },
+   "writeup": {
+    "cards": [
+     {
+      "point": "SYN1/CH-61/CHW_SUP_TEMP",
+      "equipment": "CH-61",
+      "start": "2026-07-29T03:31:00-07:00",
+      "label": "CriticalAlarmClass",
+      "rule": "R-P1",
+      "consequences": [],
+      "consequence_starts": [],
+      "attempts": [
+       {
+        "raw": "{\"reason\": \"CH-61's chilled water supply temperature stayed above its 46 degF limit for 85.4% of the window, and it was still out when the export ended, which makes it a standing problem rather than control noise.\", \"verb\": \"verify\", \"target\": \"SYN1/CH-61/CHW_SUP_TEMP\", \"detail\": \"compare the trended value with a handheld thermometer at the sensor to confirm the reading is real, then review what the equipment was doing while it stayed out.\"}",
+        "ok": true,
+        "detail": "ok",
+        "elapsed_s": 0.0004
+       }
+      ],
+      "written_by": "template, no model",
+      "rank": 1,
+      "reason": "CH-61's chilled water supply temperature stayed above its 46 degF limit for 85.4% of the window, and it was still out when the export ended, which makes it a standing problem rather than control noise.",
+      "verb": "verify",
+      "target": "SYN1/CH-61/CHW_SUP_TEMP",
+      "detail": "compare the trended value with a handheld thermometer at the sensor to confirm the reading is real, then review what the equipment was doing while it stayed out.",
+      "next_step": "Verify SYN1/CH-61/CHW_SUP_TEMP: compare the trended value with a handheld thermometer at the sensor to confirm the reading is real, then review what the equipment was doing while it stayed out."
+     }
+    ],
+    "dropped": [],
+    "nuisance": [],
+    "unresolved": []
+   }
+  },
+  {
+   "id": "hvac-chiller-ch-61-cond-approach",
+   "type": "drift",
+   "tags": [
+    "hvac",
+    "single_condition"
+   ],
+   "status": "pass",
+   "graders": {
+    "grounding": {
+     "status": "pass",
+     "checks": 3,
+     "failures": []
+    },
+    "root_cause": {
+     "status": "pass",
+     "checks": 6,
+     "failures": []
+    },
+    "escalation": {
+     "status": "pass",
+     "checks": 2,
+     "failures": []
+    },
+    "uncertainty": {
+     "status": "pass",
+     "checks": 2,
+     "failures": []
+    },
+    "next_step": {
+     "status": "pass",
+     "checks": 5,
+     "failures": []
+    },
+    "format": {
+     "status": "pass",
+     "checks": 5,
+     "failures": []
+    }
+   },
+   "writeup": {
+    "cards": [
+     {
+      "point": "SYN1/CH-61/COND_APPROACH",
+      "equipment": "CH-61",
+      "start": "2026-07-29T15:46:00-07:00",
+      "label": "DefaultAlarmClass",
+      "rule": "R-P2",
+      "consequences": [],
+      "consequence_starts": [],
+      "attempts": [
+       {
+        "raw": "{\"reason\": \"CH-61's condenser approach moved steadily toward and past its 6 degF limit without reversing, peaking 3.2 deadbands out, and the single alarm it raised understates a condition that is getting worse.\", \"verb\": \"review\", \"target\": \"SYN1/CH-61/COND_APPROACH\", \"detail\": \"trace the trend back to where the drift began, then compare the value with the two temperatures it is calculated from at the unit to separate a drifting sensor from a drifting process.\"}",
+        "ok": true,
+        "detail": "ok",
+        "elapsed_s": 0.0006
+       }
+      ],
+      "written_by": "template, no model",
+      "rank": 1,
+      "reason": "CH-61's condenser approach moved steadily toward and past its 6 degF limit without reversing, peaking 3.2 deadbands out, and the single alarm it raised understates a condition that is getting worse.",
+      "verb": "review",
+      "target": "SYN1/CH-61/COND_APPROACH",
+      "detail": "trace the trend back to where the drift began, then compare the value with the two temperatures it is calculated from at the unit to separate a drifting sensor from a drifting process.",
+      "next_step": "Review SYN1/CH-61/COND_APPROACH: trace the trend back to where the drift began, then compare the value with the two temperatures it is calculated from at the unit to separate a drifting sensor from a drifting process."
+     }
+    ],
+    "dropped": [],
+    "nuisance": [],
+    "unresolved": []
+   }
+  },
+  {
+   "id": "hvac-chiller-ch-61-evap-press",
+   "type": "alarm_log_only",
+   "tags": [
+    "hvac",
+    "single_condition"
+   ],
+   "status": "pass",
+   "graders": {
+    "grounding": {
+     "status": "pass",
+     "checks": 3,
+     "failures": []
+    },
+    "root_cause": {
+     "status": "pass",
+     "checks": 6,
+     "failures": []
+    },
+    "escalation": {
+     "status": "pass",
+     "checks": 2,
+     "failures": []
+    },
+    "uncertainty": {
+     "status": "pass",
+     "checks": 3,
+     "failures": []
+    },
+    "next_step": {
+     "status": "pass",
+     "checks": 5,
+     "failures": []
+    },
+    "format": {
+     "status": "pass",
+     "checks": 5,
+     "failures": []
+    }
+   },
+   "writeup": {
+    "cards": [
+     {
+      "point": "SYN1/CH-61/EVAP_PRESS",
+      "equipment": "CH-61",
+      "start": "2026-07-29T07:00:00-07:00",
+      "label": "DefaultAlarmClass",
+      "rule": "",
+      "consequences": [],
+      "consequence_starts": [],
+      "attempts": [
+       {
+        "raw": "{\"reason\": \"No trend rule moved this one, so it ranks on the alarm log alone: CH-61's evaporator pressure raised 4 alarms at priority 3 over 11.5 hours in alarm, and it was still past the limit when the export ended.\", \"verb\": \"check\", \"target\": \"SYN1/CH-61/EVAP_PRESS\", \"detail\": \"compare the reading with a test gauge on the same port, and look at why it alarmed as often as it did.\"}",
+        "ok": true,
+        "detail": "ok",
+        "elapsed_s": 0.0004
+       }
+      ],
+      "written_by": "template, no model",
+      "rank": 1,
+      "reason": "No trend rule moved this one, so it ranks on the alarm log alone: CH-61's evaporator pressure raised 4 alarms at priority 3 over 11.5 hours in alarm, and it was still past the limit when the export ended.",
+      "verb": "check",
+      "target": "SYN1/CH-61/EVAP_PRESS",
+      "detail": "compare the reading with a test gauge on the same port, and look at why it alarmed as often as it did.",
+      "next_step": "Check SYN1/CH-61/EVAP_PRESS: compare the reading with a test gauge on the same port, and look at why it alarmed as often as it did."
+     }
+    ],
+    "dropped": [],
+    "nuisance": [],
+    "unresolved": []
+   }
+  },
+  {
+   "id": "hvac-chiller-ch-61-oil-press",
+   "type": "chattering",
+   "tags": [
+    "hvac",
+    "single_condition"
+   ],
+   "status": "pass",
+   "graders": {
+    "grounding": {
+     "status": "n/a",
+     "checks": 0,
+     "failures": []
+    },
+    "root_cause": {
+     "status": "n/a",
+     "checks": 0,
+     "failures": []
+    },
+    "escalation": {
+     "status": "pass",
+     "checks": 0,
+     "failures": []
+    },
+    "uncertainty": {
+     "status": "n/a",
+     "checks": 0,
+     "failures": []
+    },
+    "next_step": {
+     "status": "n/a",
+     "checks": 0,
+     "failures": []
+    },
+    "format": {
+     "status": "n/a",
+     "checks": 0,
+     "failures": []
+    }
+   },
+   "writeup": {
+    "cards": [],
+    "dropped": [],
+    "nuisance": [
+     {
+      "point": "SYN1/CH-61/OIL_PRESS",
+      "signal": "CriticalAlarmClass",
+      "label": "CriticalAlarmClass",
+      "rule": "R-D1",
+      "finding": "peak overshoot 0.65 deadbands, at or under the 1.00 allowed, so the alarm sat on its limit rather than departing from it"
+     }
+    ],
+    "unresolved": []
+   }
+  },
+  {
+   "id": "hvac-chiller-chw-ret-temp-trend-removed",
+   "type": "not_enough_evidence",
+   "tags": [
+    "hvac",
+    "single_condition",
+    "missing_trend"
+   ],
+   "status": "pass",
+   "graders": {
+    "grounding": {
+     "status": "n/a",
+     "checks": 0,
+     "failures": []
+    },
+    "root_cause": {
+     "status": "n/a",
+     "checks": 0,
+     "failures": []
+    },
+    "escalation": {
+     "status": "pass",
+     "checks": 0,
+     "failures": []
+    },
+    "uncertainty": {
+     "status": "pass",
+     "checks": 3,
+     "failures": []
+    },
+    "next_step": {
+     "status": "n/a",
+     "checks": 0,
+     "failures": []
+    },
+    "format": {
+     "status": "n/a",
+     "checks": 0,
+     "failures": []
+    }
+   },
+   "writeup": {
+    "cards": [],
+    "dropped": [],
+    "nuisance": [],
+    "unresolved": [
+     {
+      "point": "SYN1/CH-61/CHW_RET_TEMP",
+      "signal": "DefaultAlarmClass",
+      "reason": "no trend series for this point in the trend export"
+     }
+    ]
+   }
+  },
+  {
+   "id": "hvac-chiller-window",
+   "type": "flood_with_real_faults",
+   "tags": [
+    "hvac",
+    "flood",
+    "multiple_causes"
+   ],
+   "status": "pass",
+   "graders": {
+    "grounding": {
+     "status": "pass",
+     "checks": 15,
+     "failures": []
+    },
+    "root_cause": {
+     "status": "pass",
+     "checks": 26,
+     "failures": []
+    },
+    "escalation": {
+     "status": "pass",
+     "checks": 10,
+     "failures": []
+    },
+    "uncertainty": {
+     "status": "pass",
+     "checks": 19,
+     "failures": []
+    },
+    "next_step": {
+     "status": "pass",
+     "checks": 25,
+     "failures": []
+    },
+    "format": {
+     "status": "pass",
+     "checks": 25,
+     "failures": []
+    }
+   },
+   "writeup": {
+    "cards": [
+     {
+      "point": "SYN1/CH-61-B/CHW_SUP_TEMP",
+      "equipment": "CH-61-B",
+      "start": "2026-07-29T04:01:00-07:00",
+      "label": "CriticalAlarmClass",
+      "rule": "R-P3",
+      "consequences": [],
+      "consequence_starts": [],
+      "attempts": [
+       {
+        "raw": "{\"reason\": \"CH-61-B's chilled water supply temperature went 9.2 deadbands above its 46 degF limit, well past normal control error, across 5 alarms and 12.3 hours in alarm.\", \"verb\": \"inspect\", \"target\": \"SYN1/CH-61-B/CHW_SUP_TEMP\", \"detail\": \"look at what the equipment was doing at each excursion, and confirm the peak against a handheld thermometer at the sensor.\"}",
+        "ok": true,
+        "detail": "ok",
+        "elapsed_s": 0.0004
+       }
+      ],
+      "written_by": "template, no model",
+      "rank": 1,
+      "reason": "CH-61-B's chilled water supply temperature went 9.2 deadbands above its 46 degF limit, well past normal control error, across 5 alarms and 12.3 hours in alarm.",
+      "verb": "inspect",
+      "target": "SYN1/CH-61-B/CHW_SUP_TEMP",
+      "detail": "look at what the equipment was doing at each excursion, and confirm the peak against a handheld thermometer at the sensor.",
+      "next_step": "Inspect SYN1/CH-61-B/CHW_SUP_TEMP: look at what the equipment was doing at each excursion, and confirm the peak against a handheld thermometer at the sensor."
+     },
+     {
+      "point": "SYN1/CH-61/CHW_RET_TEMP",
+      "equipment": "CH-61",
+      "start": "2026-07-29T04:00:00-07:00",
+      "label": "DefaultAlarmClass",
+      "rule": "R-P3",
+      "consequences": [],
+      "consequence_starts": [],
+      "attempts": [
+       {
+        "raw": "{\"reason\": \"CH-61's chilled water return temperature went 9.2 deadbands above its 58 degF limit, well past normal control error, across 5 alarms and 12.3 hours in alarm.\", \"verb\": \"inspect\", \"target\": \"SYN1/CH-61/CHW_RET_TEMP\", \"detail\": \"look at what the equipment was doing at each excursion, and confirm the peak against a handheld thermometer at the sensor.\"}",
+        "ok": true,
+        "detail": "ok",
+        "elapsed_s": 0.0003
+       }
+      ],
+      "written_by": "template, no model",
+      "rank": 2,
+      "reason": "CH-61's chilled water return temperature went 9.2 deadbands above its 58 degF limit, well past normal control error, across 5 alarms and 12.3 hours in alarm.",
+      "verb": "inspect",
+      "target": "SYN1/CH-61/CHW_RET_TEMP",
+      "detail": "look at what the equipment was doing at each excursion, and confirm the peak against a handheld thermometer at the sensor.",
+      "next_step": "Inspect SYN1/CH-61/CHW_RET_TEMP: look at what the equipment was doing at each excursion, and confirm the peak against a handheld thermometer at the sensor."
+     },
+     {
+      "point": "SYN1/CH-61/CHW_SUP_TEMP",
+      "equipment": "CH-61",
+      "start": "2026-07-29T03:31:00-07:00",
+      "label": "CriticalAlarmClass",
+      "rule": "R-P1",
+      "consequences": [],
+      "consequence_starts": [],
+      "attempts": [
+       {
+        "raw": "{\"reason\": \"CH-61's chilled water supply temperature stayed above its 46 degF limit for 85.4% of the window, and it was still out when the export ended, which makes it a standing problem rather than control noise.\", \"verb\": \"verify\", \"target\": \"SYN1/CH-61/CHW_SUP_TEMP\", \"detail\": \"compare the trended value with a handheld thermometer at the sensor to confirm the reading is real, then review what the equipment was doing while it stayed out.\"}",
+        "ok": true,
+        "detail": "ok",
+        "elapsed_s": 0.0004
+       }
+      ],
+      "written_by": "template, no model",
+      "rank": 3,
+      "reason": "CH-61's chilled water supply temperature stayed above its 46 degF limit for 85.4% of the window, and it was still out when the export ended, which makes it a standing problem rather than control noise.",
+      "verb": "verify",
+      "target": "SYN1/CH-61/CHW_SUP_TEMP",
+      "detail": "compare the trended value with a handheld thermometer at the sensor to confirm the reading is real, then review what the equipment was doing while it stayed out.",
+      "next_step": "Verify SYN1/CH-61/CHW_SUP_TEMP: compare the trended value with a handheld thermometer at the sensor to confirm the reading is real, then review what the equipment was doing while it stayed out."
+     },
+     {
+      "point": "SYN1/CH-61/COND_APPROACH",
+      "equipment": "CH-61",
+      "start": "2026-07-29T15:46:00-07:00",
+      "label": "DefaultAlarmClass",
+      "rule": "R-P2",
+      "consequences": [],
+      "consequence_starts": [],
+      "attempts": [
+       {
+        "raw": "{\"reason\": \"CH-61's condenser approach moved steadily toward and past its 6 degF limit without reversing, peaking 3.2 deadbands out, and the single alarm it raised understates a condition that is getting worse.\", \"verb\": \"review\", \"target\": \"SYN1/CH-61/COND_APPROACH\", \"detail\": \"trace the trend back to where the drift began, then compare the value with the two temperatures it is calculated from at the unit to separate a drifting sensor from a drifting process.\"}",
+        "ok": true,
+        "detail": "ok",
+        "elapsed_s": 0.0003
+       }
+      ],
+      "written_by": "template, no model",
+      "rank": 4,
+      "reason": "CH-61's condenser approach moved steadily toward and past its 6 degF limit without reversing, peaking 3.2 deadbands out, and the single alarm it raised understates a condition that is getting worse.",
+      "verb": "review",
+      "target": "SYN1/CH-61/COND_APPROACH",
+      "detail": "trace the trend back to where the drift began, then compare the value with the two temperatures it is calculated from at the unit to separate a drifting sensor from a drifting process.",
+      "next_step": "Review SYN1/CH-61/COND_APPROACH: trace the trend back to where the drift began, then compare the value with the two temperatures it is calculated from at the unit to separate a drifting sensor from a drifting process."
+     },
+     {
+      "point": "SYN1/CH-61/EVAP_PRESS",
+      "equipment": "CH-61",
+      "start": "2026-07-29T07:00:00-07:00",
+      "label": "DefaultAlarmClass",
+      "rule": "",
+      "consequences": [],
+      "consequence_starts": [],
+      "attempts": [
+       {
+        "raw": "{\"reason\": \"No trend rule moved this one, so it ranks on the alarm log alone: CH-61's evaporator pressure raised 4 alarms at priority 3 over 11.5 hours in alarm, and it was still past the limit when the export ended.\", \"verb\": \"check\", \"target\": \"SYN1/CH-61/EVAP_PRESS\", \"detail\": \"compare the reading with a test gauge on the same port, and look at why it alarmed as often as it did.\"}",
+        "ok": true,
+        "detail": "ok",
+        "elapsed_s": 0.0003
+       }
+      ],
+      "written_by": "template, no model",
+      "rank": 5,
+      "reason": "No trend rule moved this one, so it ranks on the alarm log alone: CH-61's evaporator pressure raised 4 alarms at priority 3 over 11.5 hours in alarm, and it was still past the limit when the export ended.",
+      "verb": "check",
+      "target": "SYN1/CH-61/EVAP_PRESS",
+      "detail": "compare the reading with a test gauge on the same port, and look at why it alarmed as often as it did.",
+      "next_step": "Check SYN1/CH-61/EVAP_PRESS: compare the reading with a test gauge on the same port, and look at why it alarmed as often as it did."
+     }
+    ],
+    "dropped": [],
+    "nuisance": [
+     {
+      "point": "SYN1/CH-61-B/EVAP_PRESS",
+      "signal": "DefaultAlarmClass",
+      "label": "DefaultAlarmClass",
+      "rule": "",
+      "finding": "no rule fired; the alarm-side classification repeating carried through"
+     },
+     {
+      "point": "SYN1/CH-61-B/COND_APPROACH",
+      "signal": "DefaultAlarmClass",
+      "label": "DefaultAlarmClass",
+      "rule": "R-D3",
+      "finding": "returned to normal and held 57600 s at no closer than 5.80 deadbands inside the limit, so the condition cleared itself and stayed clear"
+     },
+     {
+      "point": "SYN1/CH-61/OIL_PRESS",
+      "signal": "CriticalAlarmClass",
+      "label": "CriticalAlarmClass",
+      "rule": "R-D1",
+      "finding": "peak overshoot 0.65 deadbands, at or under the 1.00 allowed, so the alarm sat on its limit rather than departing from it"
+     },
+     {
+      "point": "SYN1/CH-61-B/COND_APPROACH",
+      "signal": "DefaultAlarmClass",
+      "label": "DefaultAlarmClass",
+      "rule": "R-D3",
+      "finding": "returned to normal and held 57600 s at no closer than 5.80 deadbands inside the limit, so the condition cleared itself and stayed clear"
+     },
+     {
+      "point": "SYN1/CH-61-B/CHW_RET_TEMP",
+      "signal": "DefaultAlarmClass",
+      "label": "DefaultAlarmClass",
+      "rule": "R-D2",
+      "finding": "total 180 s beyond the limit is under the 600 s minimum, a fleeting excursion with no dwell behind it"
+     }
+    ],
+    "unresolved": [
+     {
+      "point": "SYN1/CH-61-B/OIL_PRESS",
+      "signal": "CriticalAlarmClass",
+      "reason": "no trend series for this point in the trend export"
+     }
+    ]
+   }
+  },
+  {
+   "id": "power-battery-alarms-first",
+   "type": "consequence_looks_like_cause",
+   "tags": [
+    "power"
+   ],
+   "status": "pass",
+   "graders": {
+    "grounding": {
+     "status": "pass",
+     "checks": 3,
+     "failures": []
+    },
+    "root_cause": {
+     "status": "pass",
+     "checks": 16,
+     "failures": []
+    },
+    "escalation": {
+     "status": "pass",
+     "checks": 2,
+     "failures": []
+    },
+    "uncertainty": {
+     "status": "pass",
+     "checks": 2,
+     "failures": []
+    },
+    "next_step": {
+     "status": "pass",
+     "checks": 5,
+     "failures": []
+    },
+    "format": {
+     "status": "pass",
+     "checks": 5,
+     "failures": []
+    }
+   },
+   "writeup": {
+    "cards": [
+     {
+      "point": "SYN1/UTIL-1/FAIL",
+      "equipment": "UTIL-1",
+      "start": "2026-07-14T10:08:02+00:00",
+      "label": "utility power failure",
+      "rule": "E-P1",
+      "consequences": [
+       "SYN1/UPS-A/ONBATT",
+       "SYN1/UPS-B/ONBATT",
+       "SYN1/GEN-1/RUN",
+       "SYN1/ATS-1/EMERG",
+       "SYN1/GEN-1/F_LO"
+      ],
+      "consequence_starts": [
+       "2026-07-14T10:08:00+00:00",
+       "2026-07-14T10:08:00+00:00",
+       "2026-07-14T10:08:08+00:00",
+       "2026-07-14T10:08:12+00:00",
+       "2026-07-14T10:08:12+00:00"
+      ],
+      "attempts": [
+       {
+        "raw": "{\"reason\": \"Utility power failure at UTIL-1 is confirmed in the trend from 10:08:00 UTC to 10:09:48 UTC (about 108 seconds), and it accounts for 5 other alarms: UPS on battery at UPS-A, UPS on battery at UPS-B, generator start at GEN-1, ATS transfer to the emergency source at ATS-1, generator frequency dip at GEN-1.\", \"verb\": \"review\", \"target\": \"UTIL-1\", \"detail\": \"the utility voltage trend from loss to return, confirm the generator carried the load and both UPS batteries recovered their charge, and note the outage times for the utility report.\"}",
+        "ok": true,
+        "detail": "ok",
+        "elapsed_s": 0.001
+       }
+      ],
+      "written_by": "template, no model",
+      "rank": 1,
+      "reason": "Utility power failure at UTIL-1 is confirmed in the trend from 10:08:00 UTC to 10:09:48 UTC (about 108 seconds), and it accounts for 5 other alarms: UPS on battery at UPS-A, UPS on battery at UPS-B, generator start at GEN-1, ATS transfer to the emergency source at ATS-1, generator frequency dip at GEN-1.",
+      "verb": "review",
+      "target": "UTIL-1",
+      "detail": "the utility voltage trend from loss to return, confirm the generator carried the load and both UPS batteries recovered their charge, and note the outage times for the utility report.",
+      "next_step": "Review UTIL-1: the utility voltage trend from loss to return, confirm the generator carried the load and both UPS batteries recovered their charge, and note the outage times for the utility report."
+     }
+    ],
+    "dropped": [],
+    "nuisance": [],
+    "unresolved": []
+   }
+  },
+  {
+   "id": "power-fleeting-sag",
+   "type": "fleeting",
+   "tags": [
+    "power"
+   ],
+   "status": "pass",
+   "graders": {
+    "grounding": {
+     "status": "n/a",
+     "checks": 0,
+     "failures": []
+    },
+    "root_cause": {
+     "status": "n/a",
+     "checks": 0,
+     "failures": []
+    },
+    "escalation": {
+     "status": "pass",
+     "checks": 0,
+     "failures": []
+    },
+    "uncertainty": {
+     "status": "n/a",
+     "checks": 0,
+     "failures": []
+    },
+    "next_step": {
+     "status": "n/a",
+     "checks": 0,
+     "failures": []
+    },
+    "format": {
+     "status": "n/a",
+     "checks": 0,
+     "failures": []
+    }
+   },
+   "writeup": {
+    "cards": [],
+    "dropped": [],
+    "nuisance": [
+     {
+      "point": "SYN1/UTIL-1/V_LO",
+      "signal": "voltage_sag",
+      "label": "utility voltage sag",
+      "rule": "E-D1",
+      "finding": "the journal reports it but none of the 2 trend samples around it is past the limit, so the alarm is not corroborated"
+     }
+    ],
+    "unresolved": []
+   }
+  },
+  {
+   "id": "power-generator-test",
+   "type": "consequence_looks_like_cause",
+   "tags": [
+    "power",
+    "no_cause_in_export"
+   ],
+   "status": "pass",
+   "graders": {
+    "grounding": {
+     "status": "pass",
+     "checks": 6,
+     "failures": []
+    },
+    "root_cause": {
+     "status": "pass",
+     "checks": 6,
+     "failures": []
+    },
+    "escalation": {
+     "status": "pass",
+     "checks": 4,
+     "failures": []
+    },
+    "uncertainty": {
+     "status": "pass",
+     "checks": 6,
+     "failures": []
+    },
+    "next_step": {
+     "status": "pass",
+     "checks": 10,
+     "failures": []
+    },
+    "format": {
+     "status": "pass",
+     "checks": 10,
+     "failures": []
+    }
+   },
+   "writeup": {
+    "cards": [
+     {
+      "point": "SYN1/ATS-1/EMERG",
+      "equipment": "ATS-1",
+      "start": "2026-07-14T10:08:12+00:00",
+      "label": "ATS transfer to the emergency source",
+      "rule": "E-P2",
+      "consequences": [
+       "SYN1/GEN-1/F_LO"
+      ],
+      "consequence_starts": [
+       "2026-07-14T10:08:12+00:00"
+      ],
+      "attempts": [
+       {
+        "raw": "{\"reason\": \"ATS transfer to the emergency source at ATS-1 is confirmed in the trend from 10:08:12 UTC to 10:10:18 UTC (about 126 seconds), and no confirmed utility failure, sag, or overload in this export explains it, so it needs its own look.\", \"verb\": \"confirm\", \"target\": \"ATS-1\", \"detail\": \"the ATS source position and the utility voltage at that time, since no confirmed utility failure in this export accounts for the transfer.\"}",
+        "ok": true,
+        "detail": "ok",
+        "elapsed_s": 0.0003
+       }
+      ],
+      "written_by": "template, no model",
+      "rank": 1,
+      "reason": "ATS transfer to the emergency source at ATS-1 is confirmed in the trend from 10:08:12 UTC to 10:10:18 UTC (about 126 seconds), and no confirmed utility failure, sag, or overload in this export explains it, so it needs its own look.",
+      "verb": "confirm",
+      "target": "ATS-1",
+      "detail": "the ATS source position and the utility voltage at that time, since no confirmed utility failure in this export accounts for the transfer.",
+      "next_step": "Confirm ATS-1: the ATS source position and the utility voltage at that time, since no confirmed utility failure in this export accounts for the transfer."
+     },
+     {
+      "point": "SYN1/GEN-1/RUN",
+      "equipment": "GEN-1",
+      "start": "2026-07-14T10:08:08+00:00",
+      "label": "generator start",
+      "rule": "E-P2",
+      "consequences": [],
+      "consequence_starts": [],
+      "attempts": [
+       {
+        "raw": "{\"reason\": \"Generator start at GEN-1 is confirmed in the trend from 10:08:08 UTC to 10:10:18 UTC (about 130 seconds), and no confirmed utility failure, sag, or overload in this export explains it, so it needs its own look.\", \"verb\": \"confirm\", \"target\": \"GEN-1\", \"detail\": \"what called for the generator, since no confirmed utility failure in this export accounts for it running.\"}",
+        "ok": true,
+        "detail": "ok",
+        "elapsed_s": 0.0002
+       }
+      ],
+      "written_by": "template, no model",
+      "rank": 2,
+      "reason": "Generator start at GEN-1 is confirmed in the trend from 10:08:08 UTC to 10:10:18 UTC (about 130 seconds), and no confirmed utility failure, sag, or overload in this export explains it, so it needs its own look.",
+      "verb": "confirm",
+      "target": "GEN-1",
+      "detail": "what called for the generator, since no confirmed utility failure in this export accounts for it running.",
+      "next_step": "Confirm GEN-1: what called for the generator, since no confirmed utility failure in this export accounts for it running."
+     }
+    ],
+    "dropped": [],
+    "nuisance": [],
+    "unresolved": []
+   }
+  },
+  {
+   "id": "power-lone-battery-trend-missing",
+   "type": "not_enough_evidence",
+   "tags": [
+    "power"
+   ],
+   "status": "pass",
+   "graders": {
+    "grounding": {
+     "status": "pass",
+     "checks": 3,
+     "failures": []
+    },
+    "root_cause": {
+     "status": "pass",
+     "checks": 6,
+     "failures": []
+    },
+    "escalation": {
+     "status": "pass",
+     "checks": 2,
+     "failures": []
+    },
+    "uncertainty": {
+     "status": "pass",
+     "checks": 6,
+     "failures": []
+    },
+    "next_step": {
+     "status": "pass",
+     "checks": 5,
+     "failures": []
+    },
+    "format": {
+     "status": "pass",
+     "checks": 5,
+     "failures": []
+    }
+   },
+   "writeup": {
+    "cards": [
+     {
+      "point": "SYN1/MECH-1/PF_LO",
+      "equipment": "MECH-1",
+      "start": "2026-07-14T10:13:08+00:00",
+      "label": "low power factor",
+      "rule": "E-P1",
+      "consequences": [],
+      "consequence_starts": [],
+      "attempts": [
+       {
+        "raw": "{\"reason\": \"Low power factor at MECH-1 is confirmed in the trend from 10:13:06 UTC to 10:14:34 UTC (about 88 seconds), worst value 0.794, and no other alarm in this export depends on it.\", \"verb\": \"inspect\", \"target\": \"MECH-1\", \"detail\": \"the capacitor bank and its fuses at the panel, and compare the power factor trend with the panel load to see whether the bank dropped out.\"}",
+        "ok": true,
+        "detail": "ok",
+        "elapsed_s": 0.0002
+       }
+      ],
+      "written_by": "template, no model",
+      "rank": 1,
+      "reason": "Low power factor at MECH-1 is confirmed in the trend from 10:13:06 UTC to 10:14:34 UTC (about 88 seconds), worst value 0.794, and no other alarm in this export depends on it.",
+      "verb": "inspect",
+      "target": "MECH-1",
+      "detail": "the capacitor bank and its fuses at the panel, and compare the power factor trend with the panel load to see whether the bank dropped out.",
+      "next_step": "Inspect MECH-1: the capacitor bank and its fuses at the panel, and compare the power factor trend with the panel load to see whether the bank dropped out."
+     }
+    ],
+    "dropped": [],
+    "nuisance": [],
+    "unresolved": [
+     {
+      "point": "SYN1/UPS-B/ONBATT",
+      "signal": "ups_on_battery",
+      "reason": "no trend series for this point in the trend export"
+     }
+    ]
+   }
+  },
+  {
+   "id": "power-outage-kolkata",
+   "type": "cause_and_consequences",
+   "tags": [
+    "power",
+    "time_zone"
+   ],
+   "status": "pass",
+   "graders": {
+    "grounding": {
+     "status": "pass",
+     "checks": 3,
+     "failures": []
+    },
+    "root_cause": {
+     "status": "pass",
+     "checks": 16,
+     "failures": []
+    },
+    "escalation": {
+     "status": "pass",
+     "checks": 2,
+     "failures": []
+    },
+    "uncertainty": {
+     "status": "pass",
+     "checks": 2,
+     "failures": []
+    },
+    "next_step": {
+     "status": "pass",
+     "checks": 5,
+     "failures": []
+    },
+    "format": {
+     "status": "pass",
+     "checks": 5,
+     "failures": []
+    }
+   },
+   "writeup": {
+    "cards": [
+     {
+      "point": "SYN1/UTIL-1/FAIL",
+      "equipment": "UTIL-1",
+      "start": "2026-07-14T10:08:00+00:00",
+      "label": "utility power failure",
+      "rule": "E-P1",
+      "consequences": [
+       "SYN1/UPS-A/ONBATT",
+       "SYN1/UPS-B/ONBATT",
+       "SYN1/GEN-1/RUN",
+       "SYN1/ATS-1/EMERG",
+       "SYN1/GEN-1/F_LO"
+      ],
+      "consequence_starts": [
+       "2026-07-14T10:08:00+00:00",
+       "2026-07-14T10:08:00+00:00",
+       "2026-07-14T10:08:08+00:00",
+       "2026-07-14T10:08:12+00:00",
+       "2026-07-14T10:08:12+00:00"
+      ],
+      "attempts": [
+       {
+        "raw": "{\"reason\": \"Utility power failure at UTIL-1 is confirmed in the trend from 15:38:00 IST to 15:39:48 IST (about 108 seconds), and it accounts for 5 other alarms: UPS on battery at UPS-A, UPS on battery at UPS-B, generator start at GEN-1, ATS transfer to the emergency source at ATS-1, generator frequency dip at GEN-1.\", \"verb\": \"review\", \"target\": \"UTIL-1\", \"detail\": \"the utility voltage trend from loss to return, confirm the generator carried the load and both UPS batteries recovered their charge, and note the outage times for the utility report.\"}",
+        "ok": true,
+        "detail": "ok",
+        "elapsed_s": 0.0003
+       }
+      ],
+      "written_by": "template, no model",
+      "rank": 1,
+      "reason": "Utility power failure at UTIL-1 is confirmed in the trend from 15:38:00 IST to 15:39:48 IST (about 108 seconds), and it accounts for 5 other alarms: UPS on battery at UPS-A, UPS on battery at UPS-B, generator start at GEN-1, ATS transfer to the emergency source at ATS-1, generator frequency dip at GEN-1.",
+      "verb": "review",
+      "target": "UTIL-1",
+      "detail": "the utility voltage trend from loss to return, confirm the generator carried the load and both UPS batteries recovered their charge, and note the outage times for the utility report.",
+      "next_step": "Review UTIL-1: the utility voltage trend from loss to return, confirm the generator carried the load and both UPS batteries recovered their charge, and note the outage times for the utility report."
+     }
+    ],
+    "dropped": [],
+    "nuisance": [],
+    "unresolved": []
+   }
+  },
+  {
+   "id": "power-outage-new-york",
+   "type": "cause_and_consequences",
+   "tags": [
+    "power",
+    "time_zone"
+   ],
+   "status": "pass",
+   "graders": {
+    "grounding": {
+     "status": "pass",
+     "checks": 3,
+     "failures": []
+    },
+    "root_cause": {
+     "status": "pass",
+     "checks": 16,
+     "failures": []
+    },
+    "escalation": {
+     "status": "pass",
+     "checks": 2,
+     "failures": []
+    },
+    "uncertainty": {
+     "status": "pass",
+     "checks": 2,
+     "failures": []
+    },
+    "next_step": {
+     "status": "pass",
+     "checks": 5,
+     "failures": []
+    },
+    "format": {
+     "status": "pass",
+     "checks": 5,
+     "failures": []
+    }
+   },
+   "writeup": {
+    "cards": [
+     {
+      "point": "SYN1/UTIL-1/FAIL",
+      "equipment": "UTIL-1",
+      "start": "2026-07-14T10:08:00+00:00",
+      "label": "utility power failure",
+      "rule": "E-P1",
+      "consequences": [
+       "SYN1/UPS-A/ONBATT",
+       "SYN1/UPS-B/ONBATT",
+       "SYN1/GEN-1/RUN",
+       "SYN1/ATS-1/EMERG",
+       "SYN1/GEN-1/F_LO"
+      ],
+      "consequence_starts": [
+       "2026-07-14T10:08:00+00:00",
+       "2026-07-14T10:08:00+00:00",
+       "2026-07-14T10:08:08+00:00",
+       "2026-07-14T10:08:12+00:00",
+       "2026-07-14T10:08:12+00:00"
+      ],
+      "attempts": [
+       {
+        "raw": "{\"reason\": \"Utility power failure at UTIL-1 is confirmed in the trend from 06:08:00 EDT to 06:09:48 EDT (about 108 seconds), and it accounts for 5 other alarms: UPS on battery at UPS-A, UPS on battery at UPS-B, generator start at GEN-1, ATS transfer to the emergency source at ATS-1, generator frequency dip at GEN-1.\", \"verb\": \"review\", \"target\": \"UTIL-1\", \"detail\": \"the utility voltage trend from loss to return, confirm the generator carried the load and both UPS batteries recovered their charge, and note the outage times for the utility report.\"}",
+        "ok": true,
+        "detail": "ok",
+        "elapsed_s": 0.0003
+       }
+      ],
+      "written_by": "template, no model",
+      "rank": 1,
+      "reason": "Utility power failure at UTIL-1 is confirmed in the trend from 06:08:00 EDT to 06:09:48 EDT (about 108 seconds), and it accounts for 5 other alarms: UPS on battery at UPS-A, UPS on battery at UPS-B, generator start at GEN-1, ATS transfer to the emergency source at ATS-1, generator frequency dip at GEN-1.",
+      "verb": "review",
+      "target": "UTIL-1",
+      "detail": "the utility voltage trend from loss to return, confirm the generator carried the load and both UPS batteries recovered their charge, and note the outage times for the utility report.",
+      "next_step": "Review UTIL-1: the utility voltage trend from loss to return, confirm the generator carried the load and both UPS batteries recovered their charge, and note the outage times for the utility report."
+     }
+    ],
+    "dropped": [],
+    "nuisance": [],
+    "unresolved": []
+   }
+  },
+  {
+   "id": "power-outage-then-lone-battery",
+   "type": "flood_with_real_faults",
+   "tags": [
+    "power",
+    "flood",
+    "hidden_fault"
+   ],
+   "status": "fail",
+   "graders": {
+    "grounding": {
+     "status": "pass",
+     "checks": 3,
+     "failures": []
+    },
+    "root_cause": {
+     "status": "pass",
+     "checks": 16,
+     "failures": []
+    },
+    "escalation": {
+     "status": "fail",
+     "checks": 3,
+     "failures": [
+      {
+       "code": "X1",
+       "layer": "pipeline",
+       "point": "SYN1/UPS-B/ONBATT",
+       "reason": "missed: SYN1/UPS-B/ONBATT (the episode starting 2026-07-14T10:15:00+00:00) should escalate and has no card"
+      }
+     ]
+    },
+    "uncertainty": {
+     "status": "pass",
+     "checks": 2,
+     "failures": []
+    },
+    "next_step": {
+     "status": "pass",
+     "checks": 5,
+     "failures": []
+    },
+    "format": {
+     "status": "pass",
+     "checks": 5,
+     "failures": []
+    }
+   },
+   "writeup": {
+    "cards": [
+     {
+      "point": "SYN1/UTIL-1/FAIL",
+      "equipment": "UTIL-1",
+      "start": "2026-07-14T10:05:00+00:00",
+      "label": "utility power failure",
+      "rule": "E-P1",
+      "consequences": [
+       "SYN1/UPS-A/ONBATT",
+       "SYN1/UPS-B/ONBATT",
+       "SYN1/GEN-1/RUN",
+       "SYN1/ATS-1/EMERG",
+       "SYN1/GEN-1/F_LO"
+      ],
+      "consequence_starts": [
+       "2026-07-14T10:05:00+00:00",
+       "2026-07-14T10:05:00+00:00",
+       "2026-07-14T10:05:08+00:00",
+       "2026-07-14T10:05:12+00:00",
+       "2026-07-14T10:05:12+00:00"
+      ],
+      "attempts": [
+       {
+        "raw": "{\"reason\": \"Utility power failure at UTIL-1 is confirmed in the trend from 10:05:00 UTC to 10:06:48 UTC (about 108 seconds), and it accounts for 5 other alarms: UPS on battery at UPS-A, UPS on battery at UPS-B, generator start at GEN-1, ATS transfer to the emergency source at ATS-1, generator frequency dip at GEN-1.\", \"verb\": \"review\", \"target\": \"UTIL-1\", \"detail\": \"the utility voltage trend from loss to return, confirm the generator carried the load and both UPS batteries recovered their charge, and note the outage times for the utility report.\"}",
+        "ok": true,
+        "detail": "ok",
+        "elapsed_s": 0.0003
+       }
+      ],
+      "written_by": "template, no model",
+      "rank": 1,
+      "reason": "Utility power failure at UTIL-1 is confirmed in the trend from 10:05:00 UTC to 10:06:48 UTC (about 108 seconds), and it accounts for 5 other alarms: UPS on battery at UPS-A, UPS on battery at UPS-B, generator start at GEN-1, ATS transfer to the emergency source at ATS-1, generator frequency dip at GEN-1.",
+      "verb": "review",
+      "target": "UTIL-1",
+      "detail": "the utility voltage trend from loss to return, confirm the generator carried the load and both UPS batteries recovered their charge, and note the outage times for the utility report.",
+      "next_step": "Review UTIL-1: the utility voltage trend from loss to return, confirm the generator carried the load and both UPS batteries recovered their charge, and note the outage times for the utility report."
+     }
+    ],
+    "dropped": [],
+    "nuisance": [],
+    "unresolved": []
+   }
+  },
+  {
+   "id": "power-outage-then-overload-chicago",
+   "type": "flood_with_real_faults",
+   "tags": [
+    "power",
+    "flood",
+    "multiple_causes",
+    "time_zone"
+   ],
+   "status": "pass",
+   "graders": {
+    "grounding": {
+     "status": "pass",
+     "checks": 6,
+     "failures": []
+    },
+    "root_cause": {
+     "status": "pass",
+     "checks": 25,
+     "failures": []
+    },
+    "escalation": {
+     "status": "pass",
+     "checks": 4,
+     "failures": []
+    },
+    "uncertainty": {
+     "status": "pass",
+     "checks": 4,
+     "failures": []
+    },
+    "next_step": {
+     "status": "pass",
+     "checks": 10,
+     "failures": []
+    },
+    "format": {
+     "status": "pass",
+     "checks": 10,
+     "failures": []
+    }
+   },
+   "writeup": {
+    "cards": [
+     {
+      "point": "SYN1/UTIL-1/FAIL",
+      "equipment": "UTIL-1",
+      "start": "2026-07-14T10:05:00+00:00",
+      "label": "utility power failure",
+      "rule": "E-P1",
+      "consequences": [
+       "SYN1/UPS-A/ONBATT",
+       "SYN1/UPS-B/ONBATT",
+       "SYN1/GEN-1/RUN",
+       "SYN1/ATS-1/EMERG",
+       "SYN1/GEN-1/F_LO"
+      ],
+      "consequence_starts": [
+       "2026-07-14T10:05:00+00:00",
+       "2026-07-14T10:05:00+00:00",
+       "2026-07-14T10:05:08+00:00",
+       "2026-07-14T10:05:12+00:00",
+       "2026-07-14T10:05:12+00:00"
+      ],
+      "attempts": [
+       {
+        "raw": "{\"reason\": \"Utility power failure at UTIL-1 is confirmed in the trend from 05:05:00 CDT to 05:06:48 CDT (about 108 seconds), and it accounts for 5 other alarms: UPS on battery at UPS-A, UPS on battery at UPS-B, generator start at GEN-1, ATS transfer to the emergency source at ATS-1, generator frequency dip at GEN-1.\", \"verb\": \"review\", \"target\": \"UTIL-1\", \"detail\": \"the utility voltage trend from loss to return, confirm the generator carried the load and both UPS batteries recovered their charge, and note the outage times for the utility report.\"}",
+        "ok": true,
+        "detail": "ok",
+        "elapsed_s": 0.0003
+       }
+      ],
+      "written_by": "template, no model",
+      "rank": 1,
+      "reason": "Utility power failure at UTIL-1 is confirmed in the trend from 05:05:00 CDT to 05:06:48 CDT (about 108 seconds), and it accounts for 5 other alarms: UPS on battery at UPS-A, UPS on battery at UPS-B, generator start at GEN-1, ATS transfer to the emergency source at ATS-1, generator frequency dip at GEN-1.",
+      "verb": "review",
+      "target": "UTIL-1",
+      "detail": "the utility voltage trend from loss to return, confirm the generator carried the load and both UPS batteries recovered their charge, and note the outage times for the utility report.",
+      "next_step": "Review UTIL-1: the utility voltage trend from loss to return, confirm the generator carried the load and both UPS batteries recovered their charge, and note the outage times for the utility report."
+     },
+     {
+      "point": "SYN1/PDU-A1/LOAD_HIHI",
+      "equipment": "PDU-A1",
+      "start": "2026-07-14T10:15:40+00:00",
+      "label": "PDU overload",
+      "rule": "E-P1",
+      "consequences": [
+       "SYN1/PDU-A1/LOAD_HI",
+       "SYN1/UPS-A/LOAD_HI"
+      ],
+      "consequence_starts": [
+       "2026-07-14T10:15:32+00:00",
+       "2026-07-14T10:15:36+00:00"
+      ],
+      "attempts": [
+       {
+        "raw": "{\"reason\": \"PDU overload at PDU-A1 is confirmed in the trend from 05:15:40 CDT to 05:16:56 CDT (about 76 seconds), and it accounts for 2 other alarms: PDU overload at PDU-A1, UPS load above its limit at UPS-A.\", \"verb\": \"review\", \"target\": \"PDU-A1\", \"detail\": \"the rack load added on this PDU before the alarm, and compare it with the partner PDU on the other side before any load is moved.\"}",
+        "ok": true,
+        "detail": "ok",
+        "elapsed_s": 0.0002
+       }
+      ],
+      "written_by": "template, no model",
+      "rank": 2,
+      "reason": "PDU overload at PDU-A1 is confirmed in the trend from 05:15:40 CDT to 05:16:56 CDT (about 76 seconds), and it accounts for 2 other alarms: PDU overload at PDU-A1, UPS load above its limit at UPS-A.",
+      "verb": "review",
+      "target": "PDU-A1",
+      "detail": "the rack load added on this PDU before the alarm, and compare it with the partner PDU on the other side before any load is moved.",
+      "next_step": "Review PDU-A1: the rack load added on this PDU before the alarm, and compare it with the partner PDU on the other side before any load is moved."
+     }
+    ],
+    "dropped": [],
+    "nuisance": [],
+    "unresolved": []
+   }
+  },
+  {
+   "id": "power-outage-then-overload-utc",
+   "type": "flood_with_real_faults",
+   "tags": [
+    "power",
+    "flood",
+    "multiple_causes"
+   ],
+   "status": "pass",
+   "graders": {
+    "grounding": {
+     "status": "pass",
+     "checks": 6,
+     "failures": []
+    },
+    "root_cause": {
+     "status": "pass",
+     "checks": 25,
+     "failures": []
+    },
+    "escalation": {
+     "status": "pass",
+     "checks": 4,
+     "failures": []
+    },
+    "uncertainty": {
+     "status": "pass",
+     "checks": 4,
+     "failures": []
+    },
+    "next_step": {
+     "status": "pass",
+     "checks": 10,
+     "failures": []
+    },
+    "format": {
+     "status": "pass",
+     "checks": 10,
+     "failures": []
+    }
+   },
+   "writeup": {
+    "cards": [
+     {
+      "point": "SYN1/UTIL-1/FAIL",
+      "equipment": "UTIL-1",
+      "start": "2026-07-14T10:05:00+00:00",
+      "label": "utility power failure",
+      "rule": "E-P1",
+      "consequences": [
+       "SYN1/UPS-A/ONBATT",
+       "SYN1/UPS-B/ONBATT",
+       "SYN1/GEN-1/RUN",
+       "SYN1/ATS-1/EMERG",
+       "SYN1/GEN-1/F_LO"
+      ],
+      "consequence_starts": [
+       "2026-07-14T10:05:00+00:00",
+       "2026-07-14T10:05:00+00:00",
+       "2026-07-14T10:05:08+00:00",
+       "2026-07-14T10:05:12+00:00",
+       "2026-07-14T10:05:12+00:00"
+      ],
+      "attempts": [
+       {
+        "raw": "{\"reason\": \"Utility power failure at UTIL-1 is confirmed in the trend from 10:05:00 UTC to 10:06:48 UTC (about 108 seconds), and it accounts for 5 other alarms: UPS on battery at UPS-A, UPS on battery at UPS-B, generator start at GEN-1, ATS transfer to the emergency source at ATS-1, generator frequency dip at GEN-1.\", \"verb\": \"review\", \"target\": \"UTIL-1\", \"detail\": \"the utility voltage trend from loss to return, confirm the generator carried the load and both UPS batteries recovered their charge, and note the outage times for the utility report.\"}",
+        "ok": true,
+        "detail": "ok",
+        "elapsed_s": 0.0003
+       }
+      ],
+      "written_by": "template, no model",
+      "rank": 1,
+      "reason": "Utility power failure at UTIL-1 is confirmed in the trend from 10:05:00 UTC to 10:06:48 UTC (about 108 seconds), and it accounts for 5 other alarms: UPS on battery at UPS-A, UPS on battery at UPS-B, generator start at GEN-1, ATS transfer to the emergency source at ATS-1, generator frequency dip at GEN-1.",
+      "verb": "review",
+      "target": "UTIL-1",
+      "detail": "the utility voltage trend from loss to return, confirm the generator carried the load and both UPS batteries recovered their charge, and note the outage times for the utility report.",
+      "next_step": "Review UTIL-1: the utility voltage trend from loss to return, confirm the generator carried the load and both UPS batteries recovered their charge, and note the outage times for the utility report."
+     },
+     {
+      "point": "SYN1/PDU-A1/LOAD_HIHI",
+      "equipment": "PDU-A1",
+      "start": "2026-07-14T10:15:40+00:00",
+      "label": "PDU overload",
+      "rule": "E-P1",
+      "consequences": [
+       "SYN1/PDU-A1/LOAD_HI",
+       "SYN1/UPS-A/LOAD_HI"
+      ],
+      "consequence_starts": [
+       "2026-07-14T10:15:32+00:00",
+       "2026-07-14T10:15:36+00:00"
+      ],
+      "attempts": [
+       {
+        "raw": "{\"reason\": \"PDU overload at PDU-A1 is confirmed in the trend from 10:15:40 UTC to 10:16:56 UTC (about 76 seconds), and it accounts for 2 other alarms: PDU overload at PDU-A1, UPS load above its limit at UPS-A.\", \"verb\": \"review\", \"target\": \"PDU-A1\", \"detail\": \"the rack load added on this PDU before the alarm, and compare it with the partner PDU on the other side before any load is moved.\"}",
+        "ok": true,
+        "detail": "ok",
+        "elapsed_s": 0.0003
+       }
+      ],
+      "written_by": "template, no model",
+      "rank": 2,
+      "reason": "PDU overload at PDU-A1 is confirmed in the trend from 10:15:40 UTC to 10:16:56 UTC (about 76 seconds), and it accounts for 2 other alarms: PDU overload at PDU-A1, UPS load above its limit at UPS-A.",
+      "verb": "review",
+      "target": "PDU-A1",
+      "detail": "the rack load added on this PDU before the alarm, and compare it with the partner PDU on the other side before any load is moved.",
+      "next_step": "Review PDU-A1: the rack load added on this PDU before the alarm, and compare it with the partner PDU on the other side before any load is moved."
+     }
+    ],
+    "dropped": [],
+    "nuisance": [],
+    "unresolved": []
+   }
+  },
+  {
+   "id": "power-outage-ups-trend-missing",
+   "type": "missing_trend",
+   "tags": [
+    "power"
+   ],
+   "status": "pass",
+   "graders": {
+    "grounding": {
+     "status": "pass",
+     "checks": 3,
+     "failures": []
+    },
+    "root_cause": {
+     "status": "pass",
+     "checks": 14,
+     "failures": []
+    },
+    "escalation": {
+     "status": "pass",
+     "checks": 2,
+     "failures": []
+    },
+    "uncertainty": {
+     "status": "pass",
+     "checks": 6,
+     "failures": []
+    },
+    "next_step": {
+     "status": "pass",
+     "checks": 5,
+     "failures": []
+    },
+    "format": {
+     "status": "pass",
+     "checks": 5,
+     "failures": []
+    }
+   },
+   "writeup": {
+    "cards": [
+     {
+      "point": "SYN1/UTIL-1/FAIL",
+      "equipment": "UTIL-1",
+      "start": "2026-07-14T10:08:00+00:00",
+      "label": "utility power failure",
+      "rule": "E-P1",
+      "consequences": [
+       "SYN1/UPS-A/ONBATT",
+       "SYN1/GEN-1/RUN",
+       "SYN1/ATS-1/EMERG",
+       "SYN1/GEN-1/F_LO"
+      ],
+      "consequence_starts": [
+       "2026-07-14T10:08:00+00:00",
+       "2026-07-14T10:08:08+00:00",
+       "2026-07-14T10:08:12+00:00",
+       "2026-07-14T10:08:12+00:00"
+      ],
+      "attempts": [
+       {
+        "raw": "{\"reason\": \"Utility power failure at UTIL-1 is confirmed in the trend from 10:08:00 UTC to 10:09:48 UTC (about 108 seconds), and it accounts for 4 other alarms: UPS on battery at UPS-A, generator start at GEN-1, ATS transfer to the emergency source at ATS-1, generator frequency dip at GEN-1.\", \"verb\": \"review\", \"target\": \"UTIL-1\", \"detail\": \"the utility voltage trend from loss to return, confirm the generator carried the load and both UPS batteries recovered their charge, and note the outage times for the utility report.\"}",
+        "ok": true,
+        "detail": "ok",
+        "elapsed_s": 0.0003
+       }
+      ],
+      "written_by": "template, no model",
+      "rank": 1,
+      "reason": "Utility power failure at UTIL-1 is confirmed in the trend from 10:08:00 UTC to 10:09:48 UTC (about 108 seconds), and it accounts for 4 other alarms: UPS on battery at UPS-A, generator start at GEN-1, ATS transfer to the emergency source at ATS-1, generator frequency dip at GEN-1.",
+      "verb": "review",
+      "target": "UTIL-1",
+      "detail": "the utility voltage trend from loss to return, confirm the generator carried the load and both UPS batteries recovered their charge, and note the outage times for the utility report.",
+      "next_step": "Review UTIL-1: the utility voltage trend from loss to return, confirm the generator carried the load and both UPS batteries recovered their charge, and note the outage times for the utility report."
+     }
+    ],
+    "dropped": [],
+    "nuisance": [],
+    "unresolved": [
+     {
+      "point": "SYN1/UPS-B/ONBATT",
+      "signal": "ups_on_battery",
+      "reason": "no trend series for this point in the trend export"
+     }
+    ]
+   }
+  },
+  {
+   "id": "power-outage-utc",
+   "type": "cause_and_consequences",
+   "tags": [
+    "power"
+   ],
+   "status": "pass",
+   "graders": {
+    "grounding": {
+     "status": "pass",
+     "checks": 3,
+     "failures": []
+    },
+    "root_cause": {
+     "status": "pass",
+     "checks": 16,
+     "failures": []
+    },
+    "escalation": {
+     "status": "pass",
+     "checks": 2,
+     "failures": []
+    },
+    "uncertainty": {
+     "status": "pass",
+     "checks": 2,
+     "failures": []
+    },
+    "next_step": {
+     "status": "pass",
+     "checks": 5,
+     "failures": []
+    },
+    "format": {
+     "status": "pass",
+     "checks": 5,
+     "failures": []
+    }
+   },
+   "writeup": {
+    "cards": [
+     {
+      "point": "SYN1/UTIL-1/FAIL",
+      "equipment": "UTIL-1",
+      "start": "2026-07-14T10:08:00+00:00",
+      "label": "utility power failure",
+      "rule": "E-P1",
+      "consequences": [
+       "SYN1/UPS-A/ONBATT",
+       "SYN1/UPS-B/ONBATT",
+       "SYN1/GEN-1/RUN",
+       "SYN1/ATS-1/EMERG",
+       "SYN1/GEN-1/F_LO"
+      ],
+      "consequence_starts": [
+       "2026-07-14T10:08:00+00:00",
+       "2026-07-14T10:08:00+00:00",
+       "2026-07-14T10:08:08+00:00",
+       "2026-07-14T10:08:12+00:00",
+       "2026-07-14T10:08:12+00:00"
+      ],
+      "attempts": [
+       {
+        "raw": "{\"reason\": \"Utility power failure at UTIL-1 is confirmed in the trend from 10:08:00 UTC to 10:09:48 UTC (about 108 seconds), and it accounts for 5 other alarms: UPS on battery at UPS-A, UPS on battery at UPS-B, generator start at GEN-1, ATS transfer to the emergency source at ATS-1, generator frequency dip at GEN-1.\", \"verb\": \"review\", \"target\": \"UTIL-1\", \"detail\": \"the utility voltage trend from loss to return, confirm the generator carried the load and both UPS batteries recovered their charge, and note the outage times for the utility report.\"}",
+        "ok": true,
+        "detail": "ok",
+        "elapsed_s": 0.0002
+       }
+      ],
+      "written_by": "template, no model",
+      "rank": 1,
+      "reason": "Utility power failure at UTIL-1 is confirmed in the trend from 10:08:00 UTC to 10:09:48 UTC (about 108 seconds), and it accounts for 5 other alarms: UPS on battery at UPS-A, UPS on battery at UPS-B, generator start at GEN-1, ATS transfer to the emergency source at ATS-1, generator frequency dip at GEN-1.",
+      "verb": "review",
+      "target": "UTIL-1",
+      "detail": "the utility voltage trend from loss to return, confirm the generator carried the load and both UPS batteries recovered their charge, and note the outage times for the utility report.",
+      "next_step": "Review UTIL-1: the utility voltage trend from loss to return, confirm the generator carried the load and both UPS batteries recovered their charge, and note the outage times for the utility report."
+     }
+    ],
+    "dropped": [],
+    "nuisance": [],
+    "unresolved": []
+   }
+  },
+  {
+   "id": "power-outage-utility-trend-missing",
+   "type": "not_enough_evidence",
+   "tags": [
+    "power",
+    "no_cause_in_export"
+   ],
+   "status": "pass",
+   "graders": {
+    "grounding": {
+     "status": "pass",
+     "checks": 12,
+     "failures": []
+    },
+    "root_cause": {
+     "status": "pass",
+     "checks": 10,
+     "failures": []
+    },
+    "escalation": {
+     "status": "pass",
+     "checks": 8,
+     "failures": []
+    },
+    "uncertainty": {
+     "status": "pass",
+     "checks": 19,
+     "failures": []
+    },
+    "next_step": {
+     "status": "pass",
+     "checks": 20,
+     "failures": []
+    },
+    "format": {
+     "status": "pass",
+     "checks": 20,
+     "failures": []
+    }
+   },
+   "writeup": {
+    "cards": [
+     {
+      "point": "SYN1/UPS-A/ONBATT",
+      "equipment": "UPS-A",
+      "start": "2026-07-14T10:08:00+00:00",
+      "label": "UPS on battery",
+      "rule": "E-P2",
+      "consequences": [],
+      "consequence_starts": [],
+      "attempts": [
+       {
+        "raw": "{\"reason\": \"UPS on battery at UPS-A is confirmed in the trend from 10:08:00 UTC to 10:08:14 UTC (about 14 seconds), and no confirmed utility failure, sag, or overload in this export explains it, so it needs its own look.\", \"verb\": \"inspect\", \"target\": \"UPS-A\", \"detail\": \"the UPS input breaker status and rectifier alarms at the unit, since nothing confirmed upstream in this export explains the time on battery.\"}",
+        "ok": true,
+        "detail": "ok",
+        "elapsed_s": 0.0002
+       }
+      ],
+      "written_by": "template, no model",
+      "rank": 1,
+      "reason": "UPS on battery at UPS-A is confirmed in the trend from 10:08:00 UTC to 10:08:14 UTC (about 14 seconds), and no confirmed utility failure, sag, or overload in this export explains it, so it needs its own look.",
+      "verb": "inspect",
+      "target": "UPS-A",
+      "detail": "the UPS input breaker status and rectifier alarms at the unit, since nothing confirmed upstream in this export explains the time on battery.",
+      "next_step": "Inspect UPS-A: the UPS input breaker status and rectifier alarms at the unit, since nothing confirmed upstream in this export explains the time on battery."
+     },
+     {
+      "point": "SYN1/UPS-B/ONBATT",
+      "equipment": "UPS-B",
+      "start": "2026-07-14T10:08:00+00:00",
+      "label": "UPS on battery",
+      "rule": "E-P2",
+      "consequences": [],
+      "consequence_starts": [],
+      "attempts": [
+       {
+        "raw": "{\"reason\": \"UPS on battery at UPS-B is confirmed in the trend from 10:08:00 UTC to 10:08:14 UTC (about 14 seconds), and no confirmed utility failure, sag, or overload in this export explains it, so it needs its own look.\", \"verb\": \"inspect\", \"target\": \"UPS-B\", \"detail\": \"the UPS input breaker status and rectifier alarms at the unit, since nothing confirmed upstream in this export explains the time on battery.\"}",
+        "ok": true,
+        "detail": "ok",
+        "elapsed_s": 0.0002
+       }
+      ],
+      "written_by": "template, no model",
+      "rank": 2,
+      "reason": "UPS on battery at UPS-B is confirmed in the trend from 10:08:00 UTC to 10:08:14 UTC (about 14 seconds), and no confirmed utility failure, sag, or overload in this export explains it, so it needs its own look.",
+      "verb": "inspect",
+      "target": "UPS-B",
+      "detail": "the UPS input breaker status and rectifier alarms at the unit, since nothing confirmed upstream in this export explains the time on battery.",
+      "next_step": "Inspect UPS-B: the UPS input breaker status and rectifier alarms at the unit, since nothing confirmed upstream in this export explains the time on battery."
+     },
+     {
+      "point": "SYN1/ATS-1/EMERG",
+      "equipment": "ATS-1",
+      "start": "2026-07-14T10:08:12+00:00",
+      "label": "ATS transfer to the emergency source",
+      "rule": "E-P2",
+      "consequences": [
+       "SYN1/GEN-1/F_LO"
+      ],
+      "consequence_starts": [
+       "2026-07-14T10:08:12+00:00"
+      ],
+      "attempts": [
+       {
+        "raw": "{\"reason\": \"ATS transfer to the emergency source at ATS-1 is confirmed in the trend from 10:08:12 UTC to 10:10:18 UTC (about 126 seconds), and no confirmed utility failure, sag, or overload in this export explains it, so it needs its own look.\", \"verb\": \"confirm\", \"target\": \"ATS-1\", \"detail\": \"the ATS source position and the utility voltage at that time, since no confirmed utility failure in this export accounts for the transfer.\"}",
+        "ok": true,
+        "detail": "ok",
+        "elapsed_s": 0.0002
+       }
+      ],
+      "written_by": "template, no model",
+      "rank": 3,
+      "reason": "ATS transfer to the emergency source at ATS-1 is confirmed in the trend from 10:08:12 UTC to 10:10:18 UTC (about 126 seconds), and no confirmed utility failure, sag, or overload in this export explains it, so it needs its own look.",
+      "verb": "confirm",
+      "target": "ATS-1",
+      "detail": "the ATS source position and the utility voltage at that time, since no confirmed utility failure in this export accounts for the transfer.",
+      "next_step": "Confirm ATS-1: the ATS source position and the utility voltage at that time, since no confirmed utility failure in this export accounts for the transfer."
+     },
+     {
+      "point": "SYN1/GEN-1/RUN",
+      "equipment": "GEN-1",
+      "start": "2026-07-14T10:08:08+00:00",
+      "label": "generator start",
+      "rule": "E-P2",
+      "consequences": [],
+      "consequence_starts": [],
+      "attempts": [
+       {
+        "raw": "{\"reason\": \"Generator start at GEN-1 is confirmed in the trend from 10:08:08 UTC to 10:10:18 UTC (about 130 seconds), and no confirmed utility failure, sag, or overload in this export explains it, so it needs its own look.\", \"verb\": \"confirm\", \"target\": \"GEN-1\", \"detail\": \"what called for the generator, since no confirmed utility failure in this export accounts for it running.\"}",
+        "ok": true,
+        "detail": "ok",
+        "elapsed_s": 0.0002
+       }
+      ],
+      "written_by": "template, no model",
+      "rank": 4,
+      "reason": "Generator start at GEN-1 is confirmed in the trend from 10:08:08 UTC to 10:10:18 UTC (about 130 seconds), and no confirmed utility failure, sag, or overload in this export explains it, so it needs its own look.",
+      "verb": "confirm",
+      "target": "GEN-1",
+      "detail": "what called for the generator, since no confirmed utility failure in this export accounts for it running.",
+      "next_step": "Confirm GEN-1: what called for the generator, since no confirmed utility failure in this export accounts for it running."
+     }
+    ],
+    "dropped": [],
+    "nuisance": [],
+    "unresolved": [
+     {
+      "point": "SYN1/UTIL-1/FAIL",
+      "signal": "utility_failure",
+      "reason": "no trend series for this point in the trend export"
+     }
+    ]
+   }
+  },
+  {
+   "id": "power-pdu-overload-kolkata",
+   "type": "cause_and_consequences",
+   "tags": [
+    "power",
+    "time_zone"
+   ],
+   "status": "pass",
+   "graders": {
+    "grounding": {
+     "status": "pass",
+     "checks": 3,
+     "failures": []
+    },
+    "root_cause": {
+     "status": "pass",
+     "checks": 10,
+     "failures": []
+    },
+    "escalation": {
+     "status": "pass",
+     "checks": 2,
+     "failures": []
+    },
+    "uncertainty": {
+     "status": "pass",
+     "checks": 2,
+     "failures": []
+    },
+    "next_step": {
+     "status": "pass",
+     "checks": 5,
+     "failures": []
+    },
+    "format": {
+     "status": "pass",
+     "checks": 5,
+     "failures": []
+    }
+   },
+   "writeup": {
+    "cards": [
+     {
+      "point": "SYN1/PDU-A1/LOAD_HIHI",
+      "equipment": "PDU-A1",
+      "start": "2026-07-14T10:08:40+00:00",
+      "label": "PDU overload",
+      "rule": "E-P1",
+      "consequences": [
+       "SYN1/PDU-A1/LOAD_HI",
+       "SYN1/UPS-A/LOAD_HI"
+      ],
+      "consequence_starts": [
+       "2026-07-14T10:08:32+00:00",
+       "2026-07-14T10:08:36+00:00"
+      ],
+      "attempts": [
+       {
+        "raw": "{\"reason\": \"PDU overload at PDU-A1 is confirmed in the trend from 15:38:40 IST to 15:39:56 IST (about 76 seconds), and it accounts for 2 other alarms: PDU overload at PDU-A1, UPS load above its limit at UPS-A.\", \"verb\": \"review\", \"target\": \"PDU-A1\", \"detail\": \"the rack load added on this PDU before the alarm, and compare it with the partner PDU on the other side before any load is moved.\"}",
+        "ok": true,
+        "detail": "ok",
+        "elapsed_s": 0.0003
+       }
+      ],
+      "written_by": "template, no model",
+      "rank": 1,
+      "reason": "PDU overload at PDU-A1 is confirmed in the trend from 15:38:40 IST to 15:39:56 IST (about 76 seconds), and it accounts for 2 other alarms: PDU overload at PDU-A1, UPS load above its limit at UPS-A.",
+      "verb": "review",
+      "target": "PDU-A1",
+      "detail": "the rack load added on this PDU before the alarm, and compare it with the partner PDU on the other side before any load is moved.",
+      "next_step": "Review PDU-A1: the rack load added on this PDU before the alarm, and compare it with the partner PDU on the other side before any load is moved."
+     }
+    ],
+    "dropped": [],
+    "nuisance": [],
+    "unresolved": []
+   }
+  },
+  {
+   "id": "power-pdu-overload-new-york",
+   "type": "cause_and_consequences",
+   "tags": [
+    "power",
+    "time_zone"
+   ],
+   "status": "pass",
+   "graders": {
+    "grounding": {
+     "status": "pass",
+     "checks": 3,
+     "failures": []
+    },
+    "root_cause": {
+     "status": "pass",
+     "checks": 10,
+     "failures": []
+    },
+    "escalation": {
+     "status": "pass",
+     "checks": 2,
+     "failures": []
+    },
+    "uncertainty": {
+     "status": "pass",
+     "checks": 2,
+     "failures": []
+    },
+    "next_step": {
+     "status": "pass",
+     "checks": 5,
+     "failures": []
+    },
+    "format": {
+     "status": "pass",
+     "checks": 5,
+     "failures": []
+    }
+   },
+   "writeup": {
+    "cards": [
+     {
+      "point": "SYN1/PDU-A1/LOAD_HIHI",
+      "equipment": "PDU-A1",
+      "start": "2026-07-14T10:08:40+00:00",
+      "label": "PDU overload",
+      "rule": "E-P1",
+      "consequences": [
+       "SYN1/PDU-A1/LOAD_HI",
+       "SYN1/UPS-A/LOAD_HI"
+      ],
+      "consequence_starts": [
+       "2026-07-14T10:08:32+00:00",
+       "2026-07-14T10:08:36+00:00"
+      ],
+      "attempts": [
+       {
+        "raw": "{\"reason\": \"PDU overload at PDU-A1 is confirmed in the trend from 06:08:40 EDT to 06:09:56 EDT (about 76 seconds), and it accounts for 2 other alarms: PDU overload at PDU-A1, UPS load above its limit at UPS-A.\", \"verb\": \"review\", \"target\": \"PDU-A1\", \"detail\": \"the rack load added on this PDU before the alarm, and compare it with the partner PDU on the other side before any load is moved.\"}",
+        "ok": true,
+        "detail": "ok",
+        "elapsed_s": 0.0003
+       }
+      ],
+      "written_by": "template, no model",
+      "rank": 1,
+      "reason": "PDU overload at PDU-A1 is confirmed in the trend from 06:08:40 EDT to 06:09:56 EDT (about 76 seconds), and it accounts for 2 other alarms: PDU overload at PDU-A1, UPS load above its limit at UPS-A.",
+      "verb": "review",
+      "target": "PDU-A1",
+      "detail": "the rack load added on this PDU before the alarm, and compare it with the partner PDU on the other side before any load is moved.",
+      "next_step": "Review PDU-A1: the rack load added on this PDU before the alarm, and compare it with the partner PDU on the other side before any load is moved."
+     }
+    ],
+    "dropped": [],
+    "nuisance": [],
+    "unresolved": []
+   }
+  },
+  {
+   "id": "power-pdu-overload-utc",
+   "type": "cause_and_consequences",
+   "tags": [
+    "power"
+   ],
+   "status": "pass",
+   "graders": {
+    "grounding": {
+     "status": "pass",
+     "checks": 3,
+     "failures": []
+    },
+    "root_cause": {
+     "status": "pass",
+     "checks": 10,
+     "failures": []
+    },
+    "escalation": {
+     "status": "pass",
+     "checks": 2,
+     "failures": []
+    },
+    "uncertainty": {
+     "status": "pass",
+     "checks": 2,
+     "failures": []
+    },
+    "next_step": {
+     "status": "pass",
+     "checks": 5,
+     "failures": []
+    },
+    "format": {
+     "status": "pass",
+     "checks": 5,
+     "failures": []
+    }
+   },
+   "writeup": {
+    "cards": [
+     {
+      "point": "SYN1/PDU-A1/LOAD_HIHI",
+      "equipment": "PDU-A1",
+      "start": "2026-07-14T10:08:40+00:00",
+      "label": "PDU overload",
+      "rule": "E-P1",
+      "consequences": [
+       "SYN1/PDU-A1/LOAD_HI",
+       "SYN1/UPS-A/LOAD_HI"
+      ],
+      "consequence_starts": [
+       "2026-07-14T10:08:32+00:00",
+       "2026-07-14T10:08:36+00:00"
+      ],
+      "attempts": [
+       {
+        "raw": "{\"reason\": \"PDU overload at PDU-A1 is confirmed in the trend from 10:08:40 UTC to 10:09:56 UTC (about 76 seconds), and it accounts for 2 other alarms: PDU overload at PDU-A1, UPS load above its limit at UPS-A.\", \"verb\": \"review\", \"target\": \"PDU-A1\", \"detail\": \"the rack load added on this PDU before the alarm, and compare it with the partner PDU on the other side before any load is moved.\"}",
+        "ok": true,
+        "detail": "ok",
+        "elapsed_s": 0.0004
+       }
+      ],
+      "written_by": "template, no model",
+      "rank": 1,
+      "reason": "PDU overload at PDU-A1 is confirmed in the trend from 10:08:40 UTC to 10:09:56 UTC (about 76 seconds), and it accounts for 2 other alarms: PDU overload at PDU-A1, UPS load above its limit at UPS-A.",
+      "verb": "review",
+      "target": "PDU-A1",
+      "detail": "the rack load added on this PDU before the alarm, and compare it with the partner PDU on the other side before any load is moved.",
+      "next_step": "Review PDU-A1: the rack load added on this PDU before the alarm, and compare it with the partner PDU on the other side before any load is moved."
+     }
+    ],
+    "dropped": [],
+    "nuisance": [],
+    "unresolved": []
+   }
+  },
+  {
+   "id": "power-power-factor-chattering",
+   "type": "chattering",
+   "tags": [
+    "power"
+   ],
+   "status": "pass",
+   "graders": {
+    "grounding": {
+     "status": "n/a",
+     "checks": 0,
+     "failures": []
+    },
+    "root_cause": {
+     "status": "n/a",
+     "checks": 0,
+     "failures": []
+    },
+    "escalation": {
+     "status": "pass",
+     "checks": 0,
+     "failures": []
+    },
+    "uncertainty": {
+     "status": "n/a",
+     "checks": 0,
+     "failures": []
+    },
+    "next_step": {
+     "status": "n/a",
+     "checks": 0,
+     "failures": []
+    },
+    "format": {
+     "status": "n/a",
+     "checks": 0,
+     "failures": []
+    }
+   },
+   "writeup": {
+    "cards": [],
+    "dropped": [],
+    "nuisance": [
+     {
+      "point": "SYN1/MECH-1/PF_LO",
+      "signal": "power_factor_low",
+      "label": "low power factor",
+      "rule": "E-D1",
+      "finding": "the journal reports it but none of the 11 trend samples around it is past the limit, so the alarm is not corroborated"
+     }
+    ],
+    "unresolved": []
+   }
+  },
+  {
+   "id": "power-power-factor-new-york",
+   "type": "standalone",
+   "tags": [
+    "power",
+    "time_zone"
+   ],
+   "status": "pass",
+   "graders": {
+    "grounding": {
+     "status": "pass",
+     "checks": 3,
+     "failures": []
+    },
+    "root_cause": {
+     "status": "pass",
+     "checks": 6,
+     "failures": []
+    },
+    "escalation": {
+     "status": "pass",
+     "checks": 2,
+     "failures": []
+    },
+    "uncertainty": {
+     "status": "pass",
+     "checks": 2,
+     "failures": []
+    },
+    "next_step": {
+     "status": "pass",
+     "checks": 5,
+     "failures": []
+    },
+    "format": {
+     "status": "pass",
+     "checks": 5,
+     "failures": []
+    }
+   },
+   "writeup": {
+    "cards": [
+     {
+      "point": "SYN1/MECH-1/PF_LO",
+      "equipment": "MECH-1",
+      "start": "2026-07-14T10:08:08+00:00",
+      "label": "low power factor",
+      "rule": "E-P1",
+      "consequences": [],
+      "consequence_starts": [],
+      "attempts": [
+       {
+        "raw": "{\"reason\": \"Low power factor at MECH-1 is confirmed in the trend from 06:08:06 EDT to 06:09:34 EDT (about 88 seconds), worst value 0.796, and no other alarm in this export depends on it.\", \"verb\": \"inspect\", \"target\": \"MECH-1\", \"detail\": \"the capacitor bank and its fuses at the panel, and compare the power factor trend with the panel load to see whether the bank dropped out.\"}",
+        "ok": true,
+        "detail": "ok",
+        "elapsed_s": 0.0003
+       }
+      ],
+      "written_by": "template, no model",
+      "rank": 1,
+      "reason": "Low power factor at MECH-1 is confirmed in the trend from 06:08:06 EDT to 06:09:34 EDT (about 88 seconds), worst value 0.796, and no other alarm in this export depends on it.",
+      "verb": "inspect",
+      "target": "MECH-1",
+      "detail": "the capacitor bank and its fuses at the panel, and compare the power factor trend with the panel load to see whether the bank dropped out.",
+      "next_step": "Inspect MECH-1: the capacitor bank and its fuses at the panel, and compare the power factor trend with the panel load to see whether the bank dropped out."
+     }
+    ],
+    "dropped": [],
+    "nuisance": [],
+    "unresolved": []
+   }
+  },
+  {
+   "id": "power-power-factor-utc",
+   "type": "standalone",
+   "tags": [
+    "power"
+   ],
+   "status": "pass",
+   "graders": {
+    "grounding": {
+     "status": "pass",
+     "checks": 3,
+     "failures": []
+    },
+    "root_cause": {
+     "status": "pass",
+     "checks": 6,
+     "failures": []
+    },
+    "escalation": {
+     "status": "pass",
+     "checks": 2,
+     "failures": []
+    },
+    "uncertainty": {
+     "status": "pass",
+     "checks": 2,
+     "failures": []
+    },
+    "next_step": {
+     "status": "pass",
+     "checks": 5,
+     "failures": []
+    },
+    "format": {
+     "status": "pass",
+     "checks": 5,
+     "failures": []
+    }
+   },
+   "writeup": {
+    "cards": [
+     {
+      "point": "SYN1/MECH-1/PF_LO",
+      "equipment": "MECH-1",
+      "start": "2026-07-14T10:08:08+00:00",
+      "label": "low power factor",
+      "rule": "E-P1",
+      "consequences": [],
+      "consequence_starts": [],
+      "attempts": [
+       {
+        "raw": "{\"reason\": \"Low power factor at MECH-1 is confirmed in the trend from 10:08:06 UTC to 10:09:34 UTC (about 88 seconds), worst value 0.796, and no other alarm in this export depends on it.\", \"verb\": \"inspect\", \"target\": \"MECH-1\", \"detail\": \"the capacitor bank and its fuses at the panel, and compare the power factor trend with the panel load to see whether the bank dropped out.\"}",
+        "ok": true,
+        "detail": "ok",
+        "elapsed_s": 0.0002
+       }
+      ],
+      "written_by": "template, no model",
+      "rank": 1,
+      "reason": "Low power factor at MECH-1 is confirmed in the trend from 10:08:06 UTC to 10:09:34 UTC (about 88 seconds), worst value 0.796, and no other alarm in this export depends on it.",
+      "verb": "inspect",
+      "target": "MECH-1",
+      "detail": "the capacitor bank and its fuses at the panel, and compare the power factor trend with the panel load to see whether the bank dropped out.",
+      "next_step": "Inspect MECH-1: the capacitor bank and its fuses at the panel, and compare the power factor trend with the panel load to see whether the bank dropped out."
+     }
+    ],
+    "dropped": [],
+    "nuisance": [],
+    "unresolved": []
+   }
+  },
+  {
+   "id": "power-sag-long-ride-through",
+   "type": "consequence_looks_like_cause",
+   "tags": [
+    "power"
+   ],
+   "status": "pass",
+   "graders": {
+    "grounding": {
+     "status": "pass",
+     "checks": 3,
+     "failures": []
+    },
+    "root_cause": {
+     "status": "pass",
+     "checks": 10,
+     "failures": []
+    },
+    "escalation": {
+     "status": "pass",
+     "checks": 2,
+     "failures": []
+    },
+    "uncertainty": {
+     "status": "pass",
+     "checks": 2,
+     "failures": []
+    },
+    "next_step": {
+     "status": "pass",
+     "checks": 5,
+     "failures": []
+    },
+    "format": {
+     "status": "pass",
+     "checks": 5,
+     "failures": []
+    }
+   },
+   "writeup": {
+    "cards": [
+     {
+      "point": "SYN1/UTIL-1/V_LO",
+      "equipment": "UTIL-1",
+      "start": "2026-07-14T10:08:00+00:00",
+      "label": "utility voltage sag",
+      "rule": "E-P1",
+      "consequences": [
+       "SYN1/UPS-A/ONBATT",
+       "SYN1/UPS-B/ONBATT"
+      ],
+      "consequence_starts": [
+       "2026-07-14T10:08:00+00:00",
+       "2026-07-14T10:08:00+00:00"
+      ],
+      "attempts": [
+       {
+        "raw": "{\"reason\": \"Utility voltage sag at UTIL-1 is confirmed in the trend from 10:08:00 UTC to 10:08:04 UTC (about 4 seconds), and it accounts for 2 other alarms: UPS on battery at UPS-A, UPS on battery at UPS-B.\", \"verb\": \"check\", \"target\": \"UTIL-1\", \"detail\": \"the depth and length of the sag in the utility voltage trend, and confirm each UPS came back off battery with no battery alarm afterward.\"}",
+        "ok": true,
+        "detail": "ok",
+        "elapsed_s": 0.0002
+       }
+      ],
+      "written_by": "template, no model",
+      "rank": 1,
+      "reason": "Utility voltage sag at UTIL-1 is confirmed in the trend from 10:08:00 UTC to 10:08:04 UTC (about 4 seconds), and it accounts for 2 other alarms: UPS on battery at UPS-A, UPS on battery at UPS-B.",
+      "verb": "check",
+      "target": "UTIL-1",
+      "detail": "the depth and length of the sag in the utility voltage trend, and confirm each UPS came back off battery with no battery alarm afterward.",
+      "next_step": "Check UTIL-1: the depth and length of the sag in the utility voltage trend, and confirm each UPS came back off battery with no battery alarm afterward."
+     }
+    ],
+    "dropped": [],
+    "nuisance": [],
+    "unresolved": []
+   }
+  },
+  {
+   "id": "power-sag-new-york",
+   "type": "cause_and_consequences",
+   "tags": [
+    "power",
+    "time_zone"
+   ],
+   "status": "pass",
+   "graders": {
+    "grounding": {
+     "status": "pass",
+     "checks": 3,
+     "failures": []
+    },
+    "root_cause": {
+     "status": "pass",
+     "checks": 10,
+     "failures": []
+    },
+    "escalation": {
+     "status": "pass",
+     "checks": 2,
+     "failures": []
+    },
+    "uncertainty": {
+     "status": "pass",
+     "checks": 2,
+     "failures": []
+    },
+    "next_step": {
+     "status": "pass",
+     "checks": 5,
+     "failures": []
+    },
+    "format": {
+     "status": "pass",
+     "checks": 5,
+     "failures": []
+    }
+   },
+   "writeup": {
+    "cards": [
+     {
+      "point": "SYN1/UTIL-1/V_LO",
+      "equipment": "UTIL-1",
+      "start": "2026-07-14T10:08:00+00:00",
+      "label": "utility voltage sag",
+      "rule": "E-P1",
+      "consequences": [
+       "SYN1/UPS-A/ONBATT",
+       "SYN1/UPS-B/ONBATT"
+      ],
+      "consequence_starts": [
+       "2026-07-14T10:08:00+00:00",
+       "2026-07-14T10:08:00+00:00"
+      ],
+      "attempts": [
+       {
+        "raw": "{\"reason\": \"Utility voltage sag at UTIL-1 is confirmed in the trend from 06:08:00 EDT to 06:08:04 EDT (about 4 seconds), and it accounts for 2 other alarms: UPS on battery at UPS-A, UPS on battery at UPS-B.\", \"verb\": \"check\", \"target\": \"UTIL-1\", \"detail\": \"the depth and length of the sag in the utility voltage trend, and confirm each UPS came back off battery with no battery alarm afterward.\"}",
+        "ok": true,
+        "detail": "ok",
+        "elapsed_s": 0.0003
+       }
+      ],
+      "written_by": "template, no model",
+      "rank": 1,
+      "reason": "Utility voltage sag at UTIL-1 is confirmed in the trend from 06:08:00 EDT to 06:08:04 EDT (about 4 seconds), and it accounts for 2 other alarms: UPS on battery at UPS-A, UPS on battery at UPS-B.",
+      "verb": "check",
+      "target": "UTIL-1",
+      "detail": "the depth and length of the sag in the utility voltage trend, and confirm each UPS came back off battery with no battery alarm afterward.",
+      "next_step": "Check UTIL-1: the depth and length of the sag in the utility voltage trend, and confirm each UPS came back off battery with no battery alarm afterward."
+     }
+    ],
+    "dropped": [],
+    "nuisance": [],
+    "unresolved": []
+   }
+  },
+  {
+   "id": "power-sag-utc",
+   "type": "cause_and_consequences",
+   "tags": [
+    "power"
+   ],
+   "status": "pass",
+   "graders": {
+    "grounding": {
+     "status": "pass",
+     "checks": 3,
+     "failures": []
+    },
+    "root_cause": {
+     "status": "pass",
+     "checks": 10,
+     "failures": []
+    },
+    "escalation": {
+     "status": "pass",
+     "checks": 2,
+     "failures": []
+    },
+    "uncertainty": {
+     "status": "pass",
+     "checks": 2,
+     "failures": []
+    },
+    "next_step": {
+     "status": "pass",
+     "checks": 5,
+     "failures": []
+    },
+    "format": {
+     "status": "pass",
+     "checks": 5,
+     "failures": []
+    }
+   },
+   "writeup": {
+    "cards": [
+     {
+      "point": "SYN1/UTIL-1/V_LO",
+      "equipment": "UTIL-1",
+      "start": "2026-07-14T10:08:00+00:00",
+      "label": "utility voltage sag",
+      "rule": "E-P1",
+      "consequences": [
+       "SYN1/UPS-A/ONBATT",
+       "SYN1/UPS-B/ONBATT"
+      ],
+      "consequence_starts": [
+       "2026-07-14T10:08:00+00:00",
+       "2026-07-14T10:08:00+00:00"
+      ],
+      "attempts": [
+       {
+        "raw": "{\"reason\": \"Utility voltage sag at UTIL-1 is confirmed in the trend from 10:08:00 UTC to 10:08:04 UTC (about 4 seconds), and it accounts for 2 other alarms: UPS on battery at UPS-A, UPS on battery at UPS-B.\", \"verb\": \"check\", \"target\": \"UTIL-1\", \"detail\": \"the depth and length of the sag in the utility voltage trend, and confirm each UPS came back off battery with no battery alarm afterward.\"}",
+        "ok": true,
+        "detail": "ok",
+        "elapsed_s": 0.0003
+       }
+      ],
+      "written_by": "template, no model",
+      "rank": 1,
+      "reason": "Utility voltage sag at UTIL-1 is confirmed in the trend from 10:08:00 UTC to 10:08:04 UTC (about 4 seconds), and it accounts for 2 other alarms: UPS on battery at UPS-A, UPS on battery at UPS-B.",
+      "verb": "check",
+      "target": "UTIL-1",
+      "detail": "the depth and length of the sag in the utility voltage trend, and confirm each UPS came back off battery with no battery alarm afterward.",
+      "next_step": "Check UTIL-1: the depth and length of the sag in the utility voltage trend, and confirm each UPS came back off battery with no battery alarm afterward."
+     }
+    ],
+    "dropped": [],
+    "nuisance": [],
+    "unresolved": []
+   }
+  },
+  {
+   "id": "power-two-unrelated-events",
+   "type": "two_events",
+   "tags": [
+    "power",
+    "multiple_causes"
+   ],
+   "status": "pass",
+   "graders": {
+    "grounding": {
+     "status": "pass",
+     "checks": 6,
+     "failures": []
+    },
+    "root_cause": {
+     "status": "pass",
+     "checks": 15,
+     "failures": []
+    },
+    "escalation": {
+     "status": "pass",
+     "checks": 4,
+     "failures": []
+    },
+    "uncertainty": {
+     "status": "pass",
+     "checks": 4,
+     "failures": []
+    },
+    "next_step": {
+     "status": "pass",
+     "checks": 10,
+     "failures": []
+    },
+    "format": {
+     "status": "pass",
+     "checks": 10,
+     "failures": []
+    }
+   },
+   "writeup": {
+    "cards": [
+     {
+      "point": "SYN1/PDU-A1/LOAD_HIHI",
+      "equipment": "PDU-A1",
+      "start": "2026-07-14T10:08:40+00:00",
+      "label": "PDU overload",
+      "rule": "E-P1",
+      "consequences": [
+       "SYN1/PDU-A1/LOAD_HI",
+       "SYN1/UPS-A/LOAD_HI"
+      ],
+      "consequence_starts": [
+       "2026-07-14T10:08:32+00:00",
+       "2026-07-14T10:08:36+00:00"
+      ],
+      "attempts": [
+       {
+        "raw": "{\"reason\": \"PDU overload at PDU-A1 is confirmed in the trend from 10:08:38 UTC to 10:09:56 UTC (about 78 seconds), and it accounts for 2 other alarms: PDU overload at PDU-A1, UPS load above its limit at UPS-A.\", \"verb\": \"review\", \"target\": \"PDU-A1\", \"detail\": \"the rack load added on this PDU before the alarm, and compare it with the partner PDU on the other side before any load is moved.\"}",
+        "ok": true,
+        "detail": "ok",
+        "elapsed_s": 0.0002
+       }
+      ],
+      "written_by": "template, no model",
+      "rank": 1,
+      "reason": "PDU overload at PDU-A1 is confirmed in the trend from 10:08:38 UTC to 10:09:56 UTC (about 78 seconds), and it accounts for 2 other alarms: PDU overload at PDU-A1, UPS load above its limit at UPS-A.",
+      "verb": "review",
+      "target": "PDU-A1",
+      "detail": "the rack load added on this PDU before the alarm, and compare it with the partner PDU on the other side before any load is moved.",
+      "next_step": "Review PDU-A1: the rack load added on this PDU before the alarm, and compare it with the partner PDU on the other side before any load is moved."
+     },
+     {
+      "point": "SYN1/MECH-1/PF_LO",
+      "equipment": "MECH-1",
+      "start": "2026-07-14T10:08:28+00:00",
+      "label": "low power factor",
+      "rule": "E-P1",
+      "consequences": [],
+      "consequence_starts": [],
+      "attempts": [
+       {
+        "raw": "{\"reason\": \"Low power factor at MECH-1 is confirmed in the trend from 10:08:26 UTC to 10:09:54 UTC (about 88 seconds), worst value 0.794, and no other alarm in this export depends on it.\", \"verb\": \"inspect\", \"target\": \"MECH-1\", \"detail\": \"the capacitor bank and its fuses at the panel, and compare the power factor trend with the panel load to see whether the bank dropped out.\"}",
+        "ok": true,
+        "detail": "ok",
+        "elapsed_s": 0.0002
+       }
+      ],
+      "written_by": "template, no model",
+      "rank": 2,
+      "reason": "Low power factor at MECH-1 is confirmed in the trend from 10:08:26 UTC to 10:09:54 UTC (about 88 seconds), worst value 0.794, and no other alarm in this export depends on it.",
+      "verb": "inspect",
+      "target": "MECH-1",
+      "detail": "the capacitor bank and its fuses at the panel, and compare the power factor trend with the panel load to see whether the bank dropped out.",
+      "next_step": "Inspect MECH-1: the capacitor bank and its fuses at the panel, and compare the power factor trend with the panel load to see whether the bank dropped out."
+     }
+    ],
+    "dropped": [],
+    "nuisance": [],
+    "unresolved": []
+   }
+  },
+  {
+   "id": "power-ups-on-battery-new-york",
+   "type": "unexplained_alarm",
+   "tags": [
+    "power",
+    "time_zone"
+   ],
+   "status": "pass",
+   "graders": {
+    "grounding": {
+     "status": "pass",
+     "checks": 3,
+     "failures": []
+    },
+    "root_cause": {
+     "status": "pass",
+     "checks": 2,
+     "failures": []
+    },
+    "escalation": {
+     "status": "pass",
+     "checks": 2,
+     "failures": []
+    },
+    "uncertainty": {
+     "status": "pass",
+     "checks": 3,
+     "failures": []
+    },
+    "next_step": {
+     "status": "pass",
+     "checks": 5,
+     "failures": []
+    },
+    "format": {
+     "status": "pass",
+     "checks": 5,
+     "failures": []
+    }
+   },
+   "writeup": {
+    "cards": [
+     {
+      "point": "SYN1/UPS-B/ONBATT",
+      "equipment": "UPS-B",
+      "start": "2026-07-14T10:08:00+00:00",
+      "label": "UPS on battery",
+      "rule": "E-P2",
+      "consequences": [],
+      "consequence_starts": [],
+      "attempts": [
+       {
+        "raw": "{\"reason\": \"UPS on battery at UPS-B is confirmed in the trend from 06:08:00 EDT to 06:08:18 EDT (about 18 seconds), and no confirmed utility failure, sag, or overload in this export explains it, so it needs its own look.\", \"verb\": \"inspect\", \"target\": \"UPS-B\", \"detail\": \"the UPS input breaker status and rectifier alarms at the unit, since nothing confirmed upstream in this export explains the time on battery.\"}",
+        "ok": true,
+        "detail": "ok",
+        "elapsed_s": 0.0004
+       }
+      ],
+      "written_by": "template, no model",
+      "rank": 1,
+      "reason": "UPS on battery at UPS-B is confirmed in the trend from 06:08:00 EDT to 06:08:18 EDT (about 18 seconds), and no confirmed utility failure, sag, or overload in this export explains it, so it needs its own look.",
+      "verb": "inspect",
+      "target": "UPS-B",
+      "detail": "the UPS input breaker status and rectifier alarms at the unit, since nothing confirmed upstream in this export explains the time on battery.",
+      "next_step": "Inspect UPS-B: the UPS input breaker status and rectifier alarms at the unit, since nothing confirmed upstream in this export explains the time on battery."
+     }
+    ],
+    "dropped": [],
+    "nuisance": [],
+    "unresolved": []
+   }
+  },
+  {
+   "id": "power-ups-on-battery-utc",
+   "type": "unexplained_alarm",
+   "tags": [
+    "power"
+   ],
+   "status": "pass",
+   "graders": {
+    "grounding": {
+     "status": "pass",
+     "checks": 3,
+     "failures": []
+    },
+    "root_cause": {
+     "status": "pass",
+     "checks": 2,
+     "failures": []
+    },
+    "escalation": {
+     "status": "pass",
+     "checks": 2,
+     "failures": []
+    },
+    "uncertainty": {
+     "status": "pass",
+     "checks": 3,
+     "failures": []
+    },
+    "next_step": {
+     "status": "pass",
+     "checks": 5,
+     "failures": []
+    },
+    "format": {
+     "status": "pass",
+     "checks": 5,
+     "failures": []
+    }
+   },
+   "writeup": {
+    "cards": [
+     {
+      "point": "SYN1/UPS-B/ONBATT",
+      "equipment": "UPS-B",
+      "start": "2026-07-14T10:08:00+00:00",
+      "label": "UPS on battery",
+      "rule": "E-P2",
+      "consequences": [],
+      "consequence_starts": [],
+      "attempts": [
+       {
+        "raw": "{\"reason\": \"UPS on battery at UPS-B is confirmed in the trend from 10:08:00 UTC to 10:08:18 UTC (about 18 seconds), and no confirmed utility failure, sag, or overload in this export explains it, so it needs its own look.\", \"verb\": \"inspect\", \"target\": \"UPS-B\", \"detail\": \"the UPS input breaker status and rectifier alarms at the unit, since nothing confirmed upstream in this export explains the time on battery.\"}",
+        "ok": true,
+        "detail": "ok",
+        "elapsed_s": 0.0002
+       }
+      ],
+      "written_by": "template, no model",
+      "rank": 1,
+      "reason": "UPS on battery at UPS-B is confirmed in the trend from 10:08:00 UTC to 10:08:18 UTC (about 18 seconds), and no confirmed utility failure, sag, or overload in this export explains it, so it needs its own look.",
+      "verb": "inspect",
+      "target": "UPS-B",
+      "detail": "the UPS input breaker status and rectifier alarms at the unit, since nothing confirmed upstream in this export explains the time on battery.",
+      "next_step": "Inspect UPS-B: the UPS input breaker status and rectifier alarms at the unit, since nothing confirmed upstream in this export explains the time on battery."
+     }
+    ],
+    "dropped": [],
+    "nuisance": [],
+    "unresolved": []
+   }
+  }
+ ],
+ "model_graded": {
+  "clarity": null
+ },
+ "results_file": "evals/results/template-2026-10-21.json"
+}
