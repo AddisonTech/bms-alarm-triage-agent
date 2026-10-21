@@ -1,7 +1,7 @@
 {
  "suite": "write-up eval",
  "synthetic": true,
- "agent_version": "0.3.0",
+ "agent_version": "0.3.1",
  "date": "2026-10-21",
  "writer": {
   "kind": "template",
@@ -204,7 +204,7 @@
         "raw": "{\"reason\": \"AHU-21-B's cooling duct temperature went 9.2 deadbands above its 60 degF limit, well past normal control error, across 5 alarms and 12.3 hours in alarm.\", \"verb\": \"inspect\", \"target\": \"SYN1/AHU-21-B/CLG_DUCT_TEMP\", \"detail\": \"look at what the equipment was doing at each excursion, and confirm the peak against a handheld thermometer at the sensor.\"}",
         "ok": true,
         "detail": "ok",
-        "elapsed_s": 0.0023
+        "elapsed_s": 0.0016
        }
       ],
       "written_by": "template, no model",
@@ -501,7 +501,7 @@
         "raw": "{\"reason\": \"AHU-21's cooling duct temperature stayed above its 60 degF limit for 85.4% of the window, and it was still out when the export ended, which makes it a standing problem rather than control noise.\", \"verb\": \"verify\", \"target\": \"SYN1/AHU-21/CLG_DUCT_TEMP\", \"detail\": \"compare the trended value with a handheld thermometer at the sensor to confirm the reading is real, then review what the equipment was doing while it stayed out.\"}",
         "ok": true,
         "detail": "ok",
-        "elapsed_s": 0.0005
+        "elapsed_s": 0.0004
        }
       ],
       "written_by": "template, no model",
@@ -573,7 +573,7 @@
         "raw": "{\"reason\": \"No trend rule moved this one, so it ranks on the alarm log alone: AHU-21's cooling static pressure raised 4 alarms at priority 3 over 11.5 hours in alarm, and it was still past the limit when the export ended.\", \"verb\": \"check\", \"target\": \"SYN1/AHU-21/CLG_SP\", \"detail\": \"compare the reading with a manometer at the sensor tap, and look at why it alarmed as often as it did.\"}",
         "ok": true,
         "detail": "ok",
-        "elapsed_s": 0.0004
+        "elapsed_s": 0.0003
        }
       ],
       "written_by": "template, no model",
@@ -645,7 +645,7 @@
         "raw": "{\"reason\": \"AHU-21's heating duct temperature went 9.2 deadbands below its 88 degF limit, well past normal control error, across 5 alarms and 12.3 hours in alarm.\", \"verb\": \"inspect\", \"target\": \"SYN1/AHU-21/HTG_DUCT_TEMP\", \"detail\": \"look at what the equipment was doing at each excursion, and confirm the peak against a handheld thermometer at the sensor.\"}",
         "ok": true,
         "detail": "ok",
-        "elapsed_s": 0.0004
+        "elapsed_s": 0.0003
        }
       ],
       "written_by": "template, no model",
@@ -790,7 +790,7 @@
         "raw": "{\"reason\": \"AHU-21's heating duct temperature went 9.2 deadbands below its 88 degF limit, well past normal control error, across 5 alarms and 12.3 hours in alarm.\", \"verb\": \"inspect\", \"target\": \"SYN1/AHU-21/HTG_DUCT_TEMP\", \"detail\": \"look at what the equipment was doing at each excursion, and confirm the peak against a handheld thermometer at the sensor.\"}",
         "ok": true,
         "detail": "ok",
-        "elapsed_s": 0.0007
+        "elapsed_s": 0.0003
        }
       ],
       "written_by": "template, no model",
@@ -814,7 +814,7 @@
         "raw": "{\"reason\": \"AHU-21-B's cooling duct temperature went 9.2 deadbands above its 60 degF limit, well past normal control error, across 5 alarms and 12.3 hours in alarm.\", \"verb\": \"inspect\", \"target\": \"SYN1/AHU-21-B/CLG_DUCT_TEMP\", \"detail\": \"look at what the equipment was doing at each excursion, and confirm the peak against a handheld thermometer at the sensor.\"}",
         "ok": true,
         "detail": "ok",
-        "elapsed_s": 0.0006
+        "elapsed_s": 0.0003
        }
       ],
       "written_by": "template, no model",
@@ -838,7 +838,7 @@
         "raw": "{\"reason\": \"AHU-21's cooling duct temperature stayed above its 60 degF limit for 85.4% of the window, and it was still out when the export ended, which makes it a standing problem rather than control noise.\", \"verb\": \"verify\", \"target\": \"SYN1/AHU-21/CLG_DUCT_TEMP\", \"detail\": \"compare the trended value with a handheld thermometer at the sensor to confirm the reading is real, then review what the equipment was doing while it stayed out.\"}",
         "ok": true,
         "detail": "ok",
-        "elapsed_s": 0.0006
+        "elapsed_s": 0.0003
        }
       ],
       "written_by": "template, no model",
@@ -862,7 +862,7 @@
         "raw": "{\"reason\": \"AHU-21's mixed air temperature moved steadily toward and past its 72 degF limit without reversing, peaking 3.2 deadbands out, and the single alarm it raised understates a condition that is getting worse.\", \"verb\": \"review\", \"target\": \"SYN1/AHU-21/MIXED_AIR_TEMP\", \"detail\": \"trace the trend back to where the drift began, then compare the value with a handheld thermometer at the sensor to separate a drifting sensor from a drifting process.\"}",
         "ok": true,
         "detail": "ok",
-        "elapsed_s": 0.0004
+        "elapsed_s": 0.0002
        }
       ],
       "written_by": "template, no model",
@@ -886,7 +886,7 @@
         "raw": "{\"reason\": \"No trend rule moved this one, so it ranks on the alarm log alone: AHU-21's cooling static pressure raised 4 alarms at priority 3 over 11.5 hours in alarm, and it was still past the limit when the export ended.\", \"verb\": \"check\", \"target\": \"SYN1/AHU-21/CLG_SP\", \"detail\": \"compare the reading with a manometer at the sensor tap, and look at why it alarmed as often as it did.\"}",
         "ok": true,
         "detail": "ok",
-        "elapsed_s": 0.0005
+        "elapsed_s": 0.0003
        }
       ],
       "written_by": "template, no model",
@@ -1163,7 +1163,7 @@
         "raw": "{\"reason\": \"BLR-71-B's hot water supply temperature went 9.2 deadbands below its 168 degF limit, well past normal control error, across 5 alarms and 12.3 hours in alarm.\", \"verb\": \"inspect\", \"target\": \"SYN1/BLR-71-B/HW_SUP_TEMP\", \"detail\": \"look at what the equipment was doing at each excursion, and confirm the peak against a handheld thermometer at the sensor.\"}",
         "ok": true,
         "detail": "ok",
-        "elapsed_s": 0.0005
+        "elapsed_s": 0.0004
        }
       ],
       "written_by": "template, no model",
@@ -1345,7 +1345,7 @@
         "raw": "{\"reason\": \"No trend rule moved this one, so it ranks on the alarm log alone: BLR-71's firing rate raised 4 alarms at priority 4 over 11.5 hours in alarm, and it was still past the limit when the export ended.\", \"verb\": \"check\", \"target\": \"SYN1/BLR-71/FIRING_RATE\", \"detail\": \"compare the reading with the firing rate shown on the boiler's burner controller, and look at why it alarmed as often as it did.\"}",
         "ok": true,
         "detail": "ok",
-        "elapsed_s": 0.0008
+        "elapsed_s": 0.0004
        }
       ],
       "written_by": "template, no model",
@@ -1417,7 +1417,7 @@
         "raw": "{\"reason\": \"BLR-71's hot water return temperature moved steadily toward and past its 145 degF limit without reversing, peaking 3.2 deadbands out, and the single alarm it raised understates a condition that is getting worse.\", \"verb\": \"review\", \"target\": \"SYN1/BLR-71/HW_RET_TEMP\", \"detail\": \"trace the trend back to where the drift began, then compare the value with a handheld thermometer at the sensor to separate a drifting sensor from a drifting process.\"}",
         "ok": true,
         "detail": "ok",
-        "elapsed_s": 0.0008
+        "elapsed_s": 0.0004
        }
       ],
       "written_by": "template, no model",
@@ -1489,7 +1489,7 @@
         "raw": "{\"reason\": \"BLR-71's hot water supply temperature stayed below its 168 degF limit for 85.4% of the window, and it was still out when the export ended, which makes it a standing problem rather than control noise.\", \"verb\": \"verify\", \"target\": \"SYN1/BLR-71/HW_SUP_TEMP\", \"detail\": \"compare the trended value with a handheld thermometer at the sensor to confirm the reading is real, then review what the equipment was doing while it stayed out.\"}",
         "ok": true,
         "detail": "ok",
-        "elapsed_s": 0.0007
+        "elapsed_s": 0.0004
        }
       ],
       "written_by": "template, no model",
@@ -1561,7 +1561,7 @@
         "raw": "{\"reason\": \"BLR-71's stack temperature went 9.2 deadbands above its 420 degF limit, well past normal control error, across 5 alarms and 12.3 hours in alarm.\", \"verb\": \"inspect\", \"target\": \"SYN1/BLR-71/STACK_TEMP\", \"detail\": \"look at what the equipment was doing at each excursion, and confirm the peak against a handheld thermometer at the sensor.\"}",
         "ok": true,
         "detail": "ok",
-        "elapsed_s": 0.0004
+        "elapsed_s": 0.0007
        }
       ],
       "written_by": "template, no model",
@@ -1712,7 +1712,7 @@
         "raw": "{\"reason\": \"BLR-71-B's hot water supply temperature went 9.2 deadbands below its 168 degF limit, well past normal control error, across 5 alarms and 12.3 hours in alarm.\", \"verb\": \"inspect\", \"target\": \"SYN1/BLR-71-B/HW_SUP_TEMP\", \"detail\": \"look at what the equipment was doing at each excursion, and confirm the peak against a handheld thermometer at the sensor.\"}",
         "ok": true,
         "detail": "ok",
-        "elapsed_s": 0.0004
+        "elapsed_s": 0.0005
        }
       ],
       "written_by": "template, no model",
@@ -1736,7 +1736,7 @@
         "raw": "{\"reason\": \"BLR-71's hot water supply temperature stayed below its 168 degF limit for 85.4% of the window, and it was still out when the export ended, which makes it a standing problem rather than control noise.\", \"verb\": \"verify\", \"target\": \"SYN1/BLR-71/HW_SUP_TEMP\", \"detail\": \"compare the trended value with a handheld thermometer at the sensor to confirm the reading is real, then review what the equipment was doing while it stayed out.\"}",
         "ok": true,
         "detail": "ok",
-        "elapsed_s": 0.0004
+        "elapsed_s": 0.0006
        }
       ],
       "written_by": "template, no model",
@@ -1760,7 +1760,7 @@
         "raw": "{\"reason\": \"BLR-71's hot water return temperature moved steadily toward and past its 145 degF limit without reversing, peaking 3.2 deadbands out, and the single alarm it raised understates a condition that is getting worse.\", \"verb\": \"review\", \"target\": \"SYN1/BLR-71/HW_RET_TEMP\", \"detail\": \"trace the trend back to where the drift began, then compare the value with a handheld thermometer at the sensor to separate a drifting sensor from a drifting process.\"}",
         "ok": true,
         "detail": "ok",
-        "elapsed_s": 0.0004
+        "elapsed_s": 0.0005
        }
       ],
       "written_by": "template, no model",
@@ -2195,7 +2195,7 @@
         "raw": "{\"reason\": \"CH-61's chilled water return temperature went 9.2 deadbands above its 58 degF limit, well past normal control error, across 5 alarms and 12.3 hours in alarm.\", \"verb\": \"inspect\", \"target\": \"SYN1/CH-61/CHW_RET_TEMP\", \"detail\": \"look at what the equipment was doing at each excursion, and confirm the peak against a handheld thermometer at the sensor.\"}",
         "ok": true,
         "detail": "ok",
-        "elapsed_s": 0.0004
+        "elapsed_s": 0.0006
        }
       ],
       "written_by": "template, no model",
@@ -2267,7 +2267,7 @@
         "raw": "{\"reason\": \"CH-61's chilled water supply temperature stayed above its 46 degF limit for 85.4% of the window, and it was still out when the export ended, which makes it a standing problem rather than control noise.\", \"verb\": \"verify\", \"target\": \"SYN1/CH-61/CHW_SUP_TEMP\", \"detail\": \"compare the trended value with a handheld thermometer at the sensor to confirm the reading is real, then review what the equipment was doing while it stayed out.\"}",
         "ok": true,
         "detail": "ok",
-        "elapsed_s": 0.0004
+        "elapsed_s": 0.0005
        }
       ],
       "written_by": "template, no model",
@@ -2339,7 +2339,7 @@
         "raw": "{\"reason\": \"CH-61's condenser approach moved steadily toward and past its 6 degF limit without reversing, peaking 3.2 deadbands out, and the single alarm it raised understates a condition that is getting worse.\", \"verb\": \"review\", \"target\": \"SYN1/CH-61/COND_APPROACH\", \"detail\": \"trace the trend back to where the drift began, then compare the value with the two temperatures it is calculated from at the unit to separate a drifting sensor from a drifting process.\"}",
         "ok": true,
         "detail": "ok",
-        "elapsed_s": 0.0005
+        "elapsed_s": 0.0004
        }
       ],
       "written_by": "template, no model",
@@ -2593,7 +2593,7 @@
         "raw": "{\"reason\": \"CH-61-B's chilled water supply temperature went 9.2 deadbands above its 46 degF limit, well past normal control error, across 5 alarms and 12.3 hours in alarm.\", \"verb\": \"inspect\", \"target\": \"SYN1/CH-61-B/CHW_SUP_TEMP\", \"detail\": \"look at what the equipment was doing at each excursion, and confirm the peak against a handheld thermometer at the sensor.\"}",
         "ok": true,
         "detail": "ok",
-        "elapsed_s": 0.0003
+        "elapsed_s": 0.0007
        }
       ],
       "written_by": "template, no model",
@@ -2617,7 +2617,7 @@
         "raw": "{\"reason\": \"CH-61's chilled water return temperature went 9.2 deadbands above its 58 degF limit, well past normal control error, across 5 alarms and 12.3 hours in alarm.\", \"verb\": \"inspect\", \"target\": \"SYN1/CH-61/CHW_RET_TEMP\", \"detail\": \"look at what the equipment was doing at each excursion, and confirm the peak against a handheld thermometer at the sensor.\"}",
         "ok": true,
         "detail": "ok",
-        "elapsed_s": 0.0003
+        "elapsed_s": 0.0006
        }
       ],
       "written_by": "template, no model",
@@ -2641,7 +2641,7 @@
         "raw": "{\"reason\": \"CH-61's chilled water supply temperature stayed above its 46 degF limit for 85.4% of the window, and it was still out when the export ended, which makes it a standing problem rather than control noise.\", \"verb\": \"verify\", \"target\": \"SYN1/CH-61/CHW_SUP_TEMP\", \"detail\": \"compare the trended value with a handheld thermometer at the sensor to confirm the reading is real, then review what the equipment was doing while it stayed out.\"}",
         "ok": true,
         "detail": "ok",
-        "elapsed_s": 0.0003
+        "elapsed_s": 0.0007
        }
       ],
       "written_by": "template, no model",
@@ -2665,7 +2665,7 @@
         "raw": "{\"reason\": \"CH-61's condenser approach moved steadily toward and past its 6 degF limit without reversing, peaking 3.2 deadbands out, and the single alarm it raised understates a condition that is getting worse.\", \"verb\": \"review\", \"target\": \"SYN1/CH-61/COND_APPROACH\", \"detail\": \"trace the trend back to where the drift began, then compare the value with the two temperatures it is calculated from at the unit to separate a drifting sensor from a drifting process.\"}",
         "ok": true,
         "detail": "ok",
-        "elapsed_s": 0.0003
+        "elapsed_s": 0.0007
        }
       ],
       "written_by": "template, no model",
@@ -2689,7 +2689,7 @@
         "raw": "{\"reason\": \"No trend rule moved this one, so it ranks on the alarm log alone: CH-61's evaporator pressure raised 4 alarms at priority 3 over 11.5 hours in alarm, and it was still past the limit when the export ended.\", \"verb\": \"check\", \"target\": \"SYN1/CH-61/EVAP_PRESS\", \"detail\": \"compare the reading with a test gauge on the same port, and look at why it alarmed as often as it did.\"}",
         "ok": true,
         "detail": "ok",
-        "elapsed_s": 0.0003
+        "elapsed_s": 0.0006
        }
       ],
       "written_by": "template, no model",
@@ -2814,7 +2814,7 @@
         "raw": "{\"reason\": \"Utility power failure at UTIL-1 is confirmed in the trend from 10:08:00 UTC to 10:09:48 UTC (about 108 seconds), and it accounts for 5 other alarms: UPS on battery at UPS-A, UPS on battery at UPS-B, generator start at GEN-1, ATS transfer to the emergency source at ATS-1, generator frequency dip at GEN-1.\", \"verb\": \"review\", \"target\": \"UTIL-1\", \"detail\": \"the utility voltage trend from loss to return, confirm the generator carried the load and both UPS batteries recovered their charge, and note the outage times for the utility report.\"}",
         "ok": true,
         "detail": "ok",
-        "elapsed_s": 0.0009
+        "elapsed_s": 0.0015
        }
       ],
       "written_by": "template, no model",
@@ -2944,7 +2944,7 @@
         "raw": "{\"reason\": \"ATS transfer to the emergency source at ATS-1 is confirmed in the trend from 10:08:12 UTC to 10:10:18 UTC (about 126 seconds), and no confirmed utility failure, sag, or overload in this export explains it, so it needs its own look.\", \"verb\": \"confirm\", \"target\": \"ATS-1\", \"detail\": \"the ATS source position and the utility voltage at that time, since no confirmed utility failure in this export accounts for the transfer.\"}",
         "ok": true,
         "detail": "ok",
-        "elapsed_s": 0.0003
+        "elapsed_s": 0.0006
        }
       ],
       "written_by": "template, no model",
@@ -2968,7 +2968,7 @@
         "raw": "{\"reason\": \"Generator start at GEN-1 is confirmed in the trend from 10:08:08 UTC to 10:10:18 UTC (about 130 seconds), and no confirmed utility failure, sag, or overload in this export explains it, so it needs its own look.\", \"verb\": \"confirm\", \"target\": \"GEN-1\", \"detail\": \"what called for the generator, since no confirmed utility failure in this export accounts for it running.\"}",
         "ok": true,
         "detail": "ok",
-        "elapsed_s": 0.0002
+        "elapsed_s": 0.0004
        }
       ],
       "written_by": "template, no model",
@@ -3039,7 +3039,7 @@
         "raw": "{\"reason\": \"Low power factor at MECH-1 is confirmed in the trend from 10:13:06 UTC to 10:14:34 UTC (about 88 seconds), worst value 0.794, and no other alarm in this export depends on it.\", \"verb\": \"inspect\", \"target\": \"MECH-1\", \"detail\": \"the capacitor bank and its fuses at the panel, and compare the power factor trend with the panel load to see whether the bank dropped out.\"}",
         "ok": true,
         "detail": "ok",
-        "elapsed_s": 0.0002
+        "elapsed_s": 0.0005
        }
       ],
       "written_by": "template, no model",
@@ -3213,7 +3213,7 @@
         "raw": "{\"reason\": \"Utility power failure at UTIL-1 is confirmed in the trend from 06:08:00 EDT to 06:09:48 EDT (about 108 seconds), and it accounts for 5 other alarms: UPS on battery at UPS-A, UPS on battery at UPS-B, generator start at GEN-1, ATS transfer to the emergency source at ATS-1, generator frequency dip at GEN-1.\", \"verb\": \"review\", \"target\": \"UTIL-1\", \"detail\": \"the utility voltage trend from loss to return, confirm the generator carried the load and both UPS batteries recovered their charge, and note the outage times for the utility report.\"}",
         "ok": true,
         "detail": "ok",
-        "elapsed_s": 0.0002
+        "elapsed_s": 0.0003
        }
       ],
       "written_by": "template, no model",
@@ -3298,7 +3298,7 @@
         "raw": "{\"reason\": \"Utility power failure at UTIL-1 is confirmed in the trend from 10:05:00 UTC to 10:06:48 UTC (about 108 seconds), and it accounts for 5 other alarms: UPS on battery at UPS-A, UPS on battery at UPS-B, generator start at GEN-1, ATS transfer to the emergency source at ATS-1, generator frequency dip at GEN-1.\", \"verb\": \"review\", \"target\": \"UTIL-1\", \"detail\": \"the utility voltage trend from loss to return, confirm the generator carried the load and both UPS batteries recovered their charge, and note the outage times for the utility report.\"}",
         "ok": true,
         "detail": "ok",
-        "elapsed_s": 0.0005
+        "elapsed_s": 0.0003
        }
       ],
       "written_by": "template, no model",
@@ -3322,7 +3322,7 @@
         "raw": "{\"reason\": \"UPS on battery at UPS-B is confirmed in the trend from 10:15:00 UTC to 10:15:18 UTC (about 18 seconds), and no confirmed utility failure, sag, or overload in this export explains it, so it needs its own look.\", \"verb\": \"inspect\", \"target\": \"UPS-B\", \"detail\": \"the UPS input breaker status and rectifier alarms at the unit, since nothing confirmed upstream in this export explains the time on battery.\"}",
         "ok": true,
         "detail": "ok",
-        "elapsed_s": 0.0005
+        "elapsed_s": 0.0002
        }
       ],
       "written_by": "template, no model",
@@ -3408,7 +3408,7 @@
         "raw": "{\"reason\": \"Utility power failure at UTIL-1 is confirmed in the trend from 05:05:00 CDT to 05:06:48 CDT (about 108 seconds), and it accounts for 5 other alarms: UPS on battery at UPS-A, UPS on battery at UPS-B, generator start at GEN-1, ATS transfer to the emergency source at ATS-1, generator frequency dip at GEN-1.\", \"verb\": \"review\", \"target\": \"UTIL-1\", \"detail\": \"the utility voltage trend from loss to return, confirm the generator carried the load and both UPS batteries recovered their charge, and note the outage times for the utility report.\"}",
         "ok": true,
         "detail": "ok",
-        "elapsed_s": 0.0003
+        "elapsed_s": 0.0005
        }
       ],
       "written_by": "template, no model",
@@ -3438,7 +3438,7 @@
         "raw": "{\"reason\": \"PDU overload at PDU-A1 is confirmed in the trend from 05:15:40 CDT to 05:16:56 CDT (about 76 seconds), and it accounts for 2 other alarms: PDU overload at PDU-A1, UPS load above its limit at UPS-A.\", \"verb\": \"review\", \"target\": \"PDU-A1\", \"detail\": \"the rack load added on this PDU before the alarm, and compare it with the partner PDU on the other side before any load is moved.\"}",
         "ok": true,
         "detail": "ok",
-        "elapsed_s": 0.0002
+        "elapsed_s": 0.0004
        }
       ],
       "written_by": "template, no model",
@@ -3523,7 +3523,7 @@
         "raw": "{\"reason\": \"Utility power failure at UTIL-1 is confirmed in the trend from 10:05:00 UTC to 10:06:48 UTC (about 108 seconds), and it accounts for 5 other alarms: UPS on battery at UPS-A, UPS on battery at UPS-B, generator start at GEN-1, ATS transfer to the emergency source at ATS-1, generator frequency dip at GEN-1.\", \"verb\": \"review\", \"target\": \"UTIL-1\", \"detail\": \"the utility voltage trend from loss to return, confirm the generator carried the load and both UPS batteries recovered their charge, and note the outage times for the utility report.\"}",
         "ok": true,
         "detail": "ok",
-        "elapsed_s": 0.0004
+        "elapsed_s": 0.0005
        }
       ],
       "written_by": "template, no model",
@@ -3553,7 +3553,7 @@
         "raw": "{\"reason\": \"PDU overload at PDU-A1 is confirmed in the trend from 10:15:40 UTC to 10:16:56 UTC (about 76 seconds), and it accounts for 2 other alarms: PDU overload at PDU-A1, UPS load above its limit at UPS-A.\", \"verb\": \"review\", \"target\": \"PDU-A1\", \"detail\": \"the rack load added on this PDU before the alarm, and compare it with the partner PDU on the other side before any load is moved.\"}",
         "ok": true,
         "detail": "ok",
-        "elapsed_s": 0.0002
+        "elapsed_s": 0.0003
        }
       ],
       "written_by": "template, no model",
@@ -3634,7 +3634,7 @@
         "raw": "{\"reason\": \"Utility power failure at UTIL-1 is confirmed in the trend from 10:08:00 UTC to 10:09:48 UTC (about 108 seconds), and it accounts for 4 other alarms: UPS on battery at UPS-A, generator start at GEN-1, ATS transfer to the emergency source at ATS-1, generator frequency dip at GEN-1.\", \"verb\": \"review\", \"target\": \"UTIL-1\", \"detail\": \"the utility voltage trend from loss to return, confirm the generator carried the load and both UPS batteries recovered their charge, and note the outage times for the utility report.\"}",
         "ok": true,
         "detail": "ok",
-        "elapsed_s": 0.0003
+        "elapsed_s": 0.0006
        }
       ],
       "written_by": "template, no model",
@@ -3723,7 +3723,7 @@
         "raw": "{\"reason\": \"Utility power failure at UTIL-1 is confirmed in the trend from 10:08:00 UTC to 10:09:48 UTC (about 108 seconds), and it accounts for 5 other alarms: UPS on battery at UPS-A, UPS on battery at UPS-B, generator start at GEN-1, ATS transfer to the emergency source at ATS-1, generator frequency dip at GEN-1.\", \"verb\": \"review\", \"target\": \"UTIL-1\", \"detail\": \"the utility voltage trend from loss to return, confirm the generator carried the load and both UPS batteries recovered their charge, and note the outage times for the utility report.\"}",
         "ok": true,
         "detail": "ok",
-        "elapsed_s": 0.0003
+        "elapsed_s": 0.0006
        }
       ],
       "written_by": "template, no model",
@@ -3819,7 +3819,7 @@
         "raw": "{\"reason\": \"UPS on battery at UPS-B is confirmed in the trend from 10:08:00 UTC to 10:08:14 UTC (about 14 seconds), and no confirmed utility failure, sag, or overload in this export explains it, so it needs its own look.\", \"verb\": \"inspect\", \"target\": \"UPS-B\", \"detail\": \"the UPS input breaker status and rectifier alarms at the unit, since nothing confirmed upstream in this export explains the time on battery.\"}",
         "ok": true,
         "detail": "ok",
-        "elapsed_s": 0.0003
+        "elapsed_s": 0.0004
        }
       ],
       "written_by": "template, no model",
@@ -3871,7 +3871,7 @@
         "raw": "{\"reason\": \"Generator start at GEN-1 is confirmed in the trend from 10:08:08 UTC to 10:10:18 UTC (about 130 seconds), and no confirmed utility failure, sag, or overload in this export explains it, so it needs its own look.\", \"verb\": \"confirm\", \"target\": \"GEN-1\", \"detail\": \"what called for the generator, since no confirmed utility failure in this export accounts for it running.\"}",
         "ok": true,
         "detail": "ok",
-        "elapsed_s": 0.0003
+        "elapsed_s": 0.0004
        }
       ],
       "written_by": "template, no model",
@@ -3955,7 +3955,7 @@
         "raw": "{\"reason\": \"PDU overload at PDU-A1 is confirmed in the trend from 15:38:40 IST to 15:39:56 IST (about 76 seconds), and it accounts for 2 other alarms: PDU overload at PDU-A1, UPS load above its limit at UPS-A.\", \"verb\": \"review\", \"target\": \"PDU-A1\", \"detail\": \"the rack load added on this PDU before the alarm, and compare it with the partner PDU on the other side before any load is moved.\"}",
         "ok": true,
         "detail": "ok",
-        "elapsed_s": 0.0003
+        "elapsed_s": 0.0005
        }
       ],
       "written_by": "template, no model",
@@ -4033,7 +4033,7 @@
         "raw": "{\"reason\": \"PDU overload at PDU-A1 is confirmed in the trend from 06:08:40 EDT to 06:09:56 EDT (about 76 seconds), and it accounts for 2 other alarms: PDU overload at PDU-A1, UPS load above its limit at UPS-A.\", \"verb\": \"review\", \"target\": \"PDU-A1\", \"detail\": \"the rack load added on this PDU before the alarm, and compare it with the partner PDU on the other side before any load is moved.\"}",
         "ok": true,
         "detail": "ok",
-        "elapsed_s": 0.0003
+        "elapsed_s": 0.0005
        }
       ],
       "written_by": "template, no model",
@@ -4110,7 +4110,7 @@
         "raw": "{\"reason\": \"PDU overload at PDU-A1 is confirmed in the trend from 10:08:40 UTC to 10:09:56 UTC (about 76 seconds), and it accounts for 2 other alarms: PDU overload at PDU-A1, UPS load above its limit at UPS-A.\", \"verb\": \"review\", \"target\": \"PDU-A1\", \"detail\": \"the rack load added on this PDU before the alarm, and compare it with the partner PDU on the other side before any load is moved.\"}",
         "ok": true,
         "detail": "ok",
-        "elapsed_s": 0.0003
+        "elapsed_s": 0.0004
        }
       ],
       "written_by": "template, no model",
@@ -4236,7 +4236,7 @@
         "raw": "{\"reason\": \"Low power factor at MECH-1 is confirmed in the trend from 06:08:06 EDT to 06:09:34 EDT (about 88 seconds), worst value 0.796, and no other alarm in this export depends on it.\", \"verb\": \"inspect\", \"target\": \"MECH-1\", \"detail\": \"the capacitor bank and its fuses at the panel, and compare the power factor trend with the panel load to see whether the bank dropped out.\"}",
         "ok": true,
         "detail": "ok",
-        "elapsed_s": 0.0007
+        "elapsed_s": 0.0003
        }
       ],
       "written_by": "template, no model",
@@ -4462,7 +4462,7 @@
         "raw": "{\"reason\": \"Utility voltage sag at UTIL-1 is confirmed in the trend from 06:08:00 EDT to 06:08:04 EDT (about 4 seconds), and it accounts for 2 other alarms: UPS on battery at UPS-A, UPS on battery at UPS-B.\", \"verb\": \"check\", \"target\": \"UTIL-1\", \"detail\": \"the depth and length of the sag in the utility voltage trend, and confirm each UPS came back off battery with no battery alarm afterward.\"}",
         "ok": true,
         "detail": "ok",
-        "elapsed_s": 0.0002
+        "elapsed_s": 0.0004
        }
       ],
       "written_by": "template, no model",

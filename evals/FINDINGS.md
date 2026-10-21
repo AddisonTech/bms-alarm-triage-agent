@@ -296,8 +296,8 @@ in config/triage.json is the one to remove.
 
 TRIAGE_ANTHROPIC_KEY is not set where this suite is built, so the
 committed Haiku results cover the 34 cases its saved showcase replies
-cover. A full pass needs about 30 new prompts, more if the raw replies of
-an earlier run are not in evals/results. At Haiku's list price that is
+cover. A full pass needs 27 new prompts, plus a retry for any reply N8
+rejects. At Haiku's list price that is
 about one cent, and the worst case, every reply retried at full length, is
 under 15 cents. The runner stops before any call that could pass the
 budget.
