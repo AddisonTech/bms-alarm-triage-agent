@@ -17,8 +17,8 @@
    "model": null,
    "cases_run": 58,
    "cases_total": 58,
-   "cases_passed": 57,
-   "cases_failing_pipeline_only": 1,
+   "cases_passed": 58,
+   "cases_failing_pipeline_only": 0,
    "partial": false,
    "graders": {
     "grounding": {
@@ -28,9 +28,9 @@
      "writer_layer_rate": 1.0
     },
     "root_cause": {
-     "passed": 39,
+     "passed": 40,
      "applicable": 40,
-     "rate": 0.975,
+     "rate": 1.0,
      "writer_layer_rate": 1.0
     },
     "escalation": {

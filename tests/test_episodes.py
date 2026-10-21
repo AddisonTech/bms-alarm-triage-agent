@@ -104,3 +104,32 @@ def test_the_episode_gap_has_to_be_positive(tmp_path):
 
 def test_hvac_points_ignore_the_episode_gap():
     assert not load_config().electrical.is_electrical("CriticalAlarmClass")
+
+
+# ------------------------------------------------------------- ordering
+
+def test_the_outage_ranks_before_a_near_equal_later_battery_event(tmp_path):
+    """22 s on battery against 18 s is not a reason to read the later event first."""
+    final = run(outage_then_battery(600), tmp_path)
+    order = [(e.reassessed.condition.point_path, e.reassessed.condition.start_time.isoformat())
+             for e in final["explained_escalated_conditions"]]
+    assert order == [("SYN1/UTIL-1/FAIL", "2026-07-14T10:05:00+00:00"), (UPS_B, "2026-07-14T10:15:00+00:00")]
+
+
+def test_without_the_tie_step_the_scores_are_compared_exactly(tmp_path):
+    payload = json.loads(REPO_DEFAULT_CONFIG.read_text(encoding="utf-8"))
+    payload["reassessment"]["rank_tie_score"] = 0
+    path = tmp_path / "triage.json"
+    path.write_text(json.dumps(payload), encoding="utf-8")
+    final = run(outage_then_battery(600), tmp_path / "run", config=load_config(path))
+    first = final["explained_escalated_conditions"][0].reassessed.condition
+    assert (first.point_path, first.start_time.isoformat()) == (UPS_B, "2026-07-14T10:15:00+00:00")
+
+
+def test_a_clear_score_difference_still_decides_the_order(tmp_path):
+    """The tie step only merges near-equal scores: a PDU overload's higher group outranks a later power factor drop."""
+    final = run(scenarios.build({"power_factor_low": T, "pdu_overload": T + 300}, "test-order", "test", None), tmp_path)
+    groups = [max([e.reassessed.preliminary_score] + [c.preliminary_score for c in e.reassessed.consequences])
+              for e in final["explained_escalated_conditions"]]
+    assert groups == sorted(groups, reverse=True)
+    assert groups[0] - groups[-1] > load_config().reassessment.rank_tie_score

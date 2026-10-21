@@ -155,17 +155,6 @@
   "note": "UPS-B's first battery event is part of the outage. Its second, at 10:15:00 with utility power back for seven minutes, has no cause in the export and is a real fault of its own. It must escalate, not disappear under the outage.",
   "evidence_facts": [
    {
-    "point": "SYN1/UPS-B/ONBATT",
-    "times": [
-     "10:15:00 UTC",
-     "10:15:18 UTC"
-    ],
-    "values": [
-     "1",
-     "18"
-    ]
-   },
-   {
     "point": "SYN1/UTIL-1/FAIL",
     "times": [
      "10:05:00 UTC",
@@ -174,6 +163,17 @@
     "values": [
      "1",
      "108"
+    ]
+   },
+   {
+    "point": "SYN1/UPS-B/ONBATT",
+    "times": [
+     "10:15:00 UTC",
+     "10:15:18 UTC"
+    ],
+    "values": [
+     "1",
+     "18"
     ]
    }
   ]
@@ -197,49 +197,6 @@
    "journal_entries": 27
   },
   "items": [
-   {
-    "point": "SYN1/UPS-B/ONBATT",
-    "equipment": "UPS-B",
-    "signal": "ups_on_battery",
-    "label": "UPS on battery",
-    "domain": "electrical",
-    "priority": 1,
-    "start": "2026-07-14T10:15:00+00:00",
-    "end": "2026-07-14T10:15:22+00:00",
-    "events": 2,
-    "alarms": 1,
-    "returns": 1,
-    "seconds_in_alarm": 22.0,
-    "band": "PROMOTED",
-    "rule": "E-P2",
-    "rule_name": "UNEXPLAINED_BY_ANY_CAUSE",
-    "finding": "the trend shows it past its limit in 10 of 22 samples around the alarm, 10:15:00 UTC to 10:15:18 UTC, worst value 1, and no confirmed cause in this export explains it, so it stands on its own",
-    "preliminary_score": 0.175127,
-    "evidence": {
-     "kind": "discrete",
-     "limit": 0.5,
-     "deadband": 0.5,
-     "direction": "HIGH",
-     "units": "",
-     "samples": 22,
-     "samples_past_limit": 10,
-     "first_past_limit": "2026-07-14T10:15:00+00:00",
-     "last_past_limit": "2026-07-14T10:15:18+00:00",
-     "seconds_past_limit": 18.0,
-     "worst_value": 1.0,
-     "dip": null
-    },
-    "rank": 1,
-    "consequences": [],
-    "writer_input": {
-     "prompt": "You are helping a controls engineer triage power system alarms.\n\nGiven one alarm condition and its trend evidence, return four fields:\n  reason: one sentence on why this condition matters, stated only from the\n          evidence below. Do not claim anything the evidence does not show.\n  verb:   the diagnostic action, chosen from exactly this list and written\n          in lower case: inspect, verify, check, compare, review, measure, confirm. Nothing else is accepted. You\n          must NOT recommend any change to the building system: no\n          setpoint change, no override, no schedule change, no breaker\n          operation, and no starting or stopping of equipment.\n  target: what to look at. Must be copied exactly from this list and\n          nothing else: SYN1/UPS-B/ONBATT, UPS-B\n  detail: one sentence on what to look for, from the evidence below.\n\nThis is an electrical power condition. Do not describe it as a heating or\ncooling fault.\n\nEvery time below is in UTC and ends with its label (UTC).\nWrite any time exactly as it appears here, label included. Do not convert it.\n\nAnswer with JSON only, exactly:\n{\"reason\": \"...\", \"verb\": \"...\", \"target\": \"...\", \"detail\": \"...\"}\n\nCondition\n  point: SYN1/UPS-B/ONBATT\n  equipment: UPS-B (ups_on_battery, reported priority 1)\n  signal: UPS on battery\n  alarm limit: status point, 1 in the alarm state and 0 normal\n  window: 2026-07-14 10:15:00 UTC to 2026-07-14 10:15:22 UTC\n  alarm transitions: 1 alarms, 0 repeats, 1 returns to normal\n  time in alarm: 22 seconds\n  preliminary score: 0.175\n\nTrend evidence\n  samples: 22\n  samples past the limit: 10\n  first past the limit: 2026-07-14 10:15:00 UTC\n  last past the limit: 2026-07-14 10:15:18 UTC\n  seconds past the limit: 18\n  worst value: 1 (1 is the alarm state)\n\nReassessment\n  band: PROMOTED, set by E-P2\n  finding: the trend shows it past its limit in 10 of 22 samples around the alarm, 10:15:00 UTC to 10:15:18 UTC, worst value 1, and no confirmed cause in this export explains it, so it stands on its own\n\nConditions this one explains: 0\n  none\n",
-     "allowed_targets": [
-      "SYN1/UPS-B/ONBATT",
-      "UPS-B"
-     ],
-     "domains": []
-    }
-   },
    {
     "point": "SYN1/UTIL-1/FAIL",
     "equipment": "UTIL-1",
@@ -272,7 +229,7 @@
      "worst_value": 1.0,
      "dip": null
     },
-    "rank": 2,
+    "rank": 1,
     "consequences": [
      {
       "point": "SYN1/UPS-A/ONBATT",
@@ -340,6 +297,49 @@
      "allowed_targets": [
       "SYN1/UTIL-1/FAIL",
       "UTIL-1"
+     ],
+     "domains": []
+    }
+   },
+   {
+    "point": "SYN1/UPS-B/ONBATT",
+    "equipment": "UPS-B",
+    "signal": "ups_on_battery",
+    "label": "UPS on battery",
+    "domain": "electrical",
+    "priority": 1,
+    "start": "2026-07-14T10:15:00+00:00",
+    "end": "2026-07-14T10:15:22+00:00",
+    "events": 2,
+    "alarms": 1,
+    "returns": 1,
+    "seconds_in_alarm": 22.0,
+    "band": "PROMOTED",
+    "rule": "E-P2",
+    "rule_name": "UNEXPLAINED_BY_ANY_CAUSE",
+    "finding": "the trend shows it past its limit in 10 of 22 samples around the alarm, 10:15:00 UTC to 10:15:18 UTC, worst value 1, and no confirmed cause in this export explains it, so it stands on its own",
+    "preliminary_score": 0.175127,
+    "evidence": {
+     "kind": "discrete",
+     "limit": 0.5,
+     "deadband": 0.5,
+     "direction": "HIGH",
+     "units": "",
+     "samples": 22,
+     "samples_past_limit": 10,
+     "first_past_limit": "2026-07-14T10:15:00+00:00",
+     "last_past_limit": "2026-07-14T10:15:18+00:00",
+     "seconds_past_limit": 18.0,
+     "worst_value": 1.0,
+     "dip": null
+    },
+    "rank": 2,
+    "consequences": [],
+    "writer_input": {
+     "prompt": "You are helping a controls engineer triage power system alarms.\n\nGiven one alarm condition and its trend evidence, return four fields:\n  reason: one sentence on why this condition matters, stated only from the\n          evidence below. Do not claim anything the evidence does not show.\n  verb:   the diagnostic action, chosen from exactly this list and written\n          in lower case: inspect, verify, check, compare, review, measure, confirm. Nothing else is accepted. You\n          must NOT recommend any change to the building system: no\n          setpoint change, no override, no schedule change, no breaker\n          operation, and no starting or stopping of equipment.\n  target: what to look at. Must be copied exactly from this list and\n          nothing else: SYN1/UPS-B/ONBATT, UPS-B\n  detail: one sentence on what to look for, from the evidence below.\n\nThis is an electrical power condition. Do not describe it as a heating or\ncooling fault.\n\nEvery time below is in UTC and ends with its label (UTC).\nWrite any time exactly as it appears here, label included. Do not convert it.\n\nAnswer with JSON only, exactly:\n{\"reason\": \"...\", \"verb\": \"...\", \"target\": \"...\", \"detail\": \"...\"}\n\nCondition\n  point: SYN1/UPS-B/ONBATT\n  equipment: UPS-B (ups_on_battery, reported priority 1)\n  signal: UPS on battery\n  alarm limit: status point, 1 in the alarm state and 0 normal\n  window: 2026-07-14 10:15:00 UTC to 2026-07-14 10:15:22 UTC\n  alarm transitions: 1 alarms, 0 repeats, 1 returns to normal\n  time in alarm: 22 seconds\n  preliminary score: 0.175\n\nTrend evidence\n  samples: 22\n  samples past the limit: 10\n  first past the limit: 2026-07-14 10:15:00 UTC\n  last past the limit: 2026-07-14 10:15:18 UTC\n  seconds past the limit: 18\n  worst value: 1 (1 is the alarm state)\n\nReassessment\n  band: PROMOTED, set by E-P2\n  finding: the trend shows it past its limit in 10 of 22 samples around the alarm, 10:15:00 UTC to 10:15:18 UTC, worst value 1, and no confirmed cause in this export explains it, so it stands on its own\n\nConditions this one explains: 0\n  none\n",
+     "allowed_targets": [
+      "SYN1/UPS-B/ONBATT",
+      "UPS-B"
      ],
      "domains": []
     }

@@ -169,6 +169,11 @@ def n7_reassess(state: TriageState) -> dict:
             for item in reassessed
         ]
 
+    # Group scores are compared in steps of rank_tie_score: a UPS four
+    # seconds longer on battery is not a reason to read it first, so scores
+    # that round to the same step tie, and a tie goes to the earlier event.
+    tie = cfg.rank_tie_score
+
     def order_key(item: ReassessedCondition):
         condition = item.condition
         group_score = max(
@@ -176,7 +181,7 @@ def n7_reassess(state: TriageState) -> dict:
         )
         return (
             BAND_ORDER[item.band],
-            -group_score,
+            -(round(group_score / tie) if tie > 0 else group_score),
             condition.start_time,
             condition.point_path,
         )

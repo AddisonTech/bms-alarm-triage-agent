@@ -80,6 +80,10 @@ class ReassessmentConfig:
     r_p2_min_drift_deadbands_per_hour: float
     r_p2_max_reversal_deadbands: float
     r_p3_min_peak_deadbands: float
+    # Group scores are compared in steps of this size, so two escalations
+    # whose scores round to the same step rank as equal and the earlier one
+    # goes first. 0 compares scores exactly.
+    rank_tie_score: float = 0.0
 
 
 @dataclass(frozen=True)

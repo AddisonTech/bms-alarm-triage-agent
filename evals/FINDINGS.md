@@ -227,74 +227,80 @@ the same way: the cards were the wrong set whatever wrote the words.
   episode under it, scores 0.175104: the same alarm, the same priority,
   and 22 s on battery against 18 s. The order is decided by four seconds.
   Before this fix the card did not exist, so the question never came up.
-  This is a ranking decision, not part of the absorbed episode, and is left
-  open below.
+  That is a ranking decision, not part of the absorbed episode, so it was
+  put to a decision rather than made inside this fix. It is fix 8.
+
+### 8. Four seconds on battery decided which card was read first (0.3.1)
+
+- **What failed.** root_cause R1 on power-outage-then-lone-battery, once
+  fix 7 gave the 10:15:00 UPS-B episode its card: the first card was that
+  episode, not the utility failure.
+- **Why.** N7 ranks escalations by the highest preliminary score in each
+  group, then by start time. The lone episode (0.175127) beat the outage's
+  group (0.175104) because it was on battery 22 s against 18 s. A difference
+  that small is noise in the score, not a reason to read a card first.
+- **What changed.** `reassessment.rank_tie_score`, 0.001 in
+  config/triage.json. Group scores are compared in steps of that size, so
+  scores that round to the same step tie, and a tie goes to the earlier
+  event, as an exact tie always did. A real score difference still decides
+  the order, so a critical unexplained alarm still outranks a low-priority
+  cause. Set to 0, scores compare exactly as before.
+- **Cases.** The builder regenerated the frozen half of
+  power-outage-then-lone-battery, now ranked outage first; its right answer
+  is unchanged. No other case moved, and the HVAC holdout ranks exactly as
+  before (548 events, 18 items, 15 of 15 in the top five, 30.4x, 0.0% false
+  escalation).
+- **Scores.** Template root_cause 39 of 40 (97.5%) to 40 of 40 (100.0%),
+  cases passing every grader 57 of 58 to 58 of 58. Every other grader
+  unchanged.
 
 ## Where the scores stand
 
-Run on 2026-10-20 against the fixed writers.
+The template after 0.3.1, run on 2026-10-21; Claude Haiku as last committed,
+run on 2026-10-20 against 0.3.0.
 
-| Grader | Template (58 cases) | Haiku, own words (34) | Haiku, as served (34) |
-|---|---|---|---|
-| grounding | 40 of 40, 100.0% | 16 of 16, 100.0% | 16 of 16, 100.0% |
-| root_cause | 38 of 40, 95.0% | 16 of 16, 100.0% | 16 of 16, 100.0% |
-| escalation | 55 of 58, 94.8% | 34 of 34, 100.0% | 34 of 34, 100.0% |
-| uncertainty | 45 of 45, 100.0% | 16 of 21, 76.2% | 21 of 21, 100.0% |
-| next_step | 40 of 40, 100.0% | 13 of 16, 81.2% | 16 of 16, 100.0% |
-| format | 40 of 40, 100.0% | 16 of 16, 100.0% | 16 of 16, 100.0% |
-| cases passing every grader | 55 of 58 | 29 of 34 | 34 of 34 |
+| Grader | Template, 0.3.0 | Template, 0.3.1 | Haiku, own words (34) | Haiku, as served (34) |
+|---|---|---|---|---|
+| grounding | 40 of 40, 100.0% | 40 of 40, 100.0% | 16 of 16, 100.0% | 16 of 16, 100.0% |
+| root_cause | 38 of 40, 95.0% | 40 of 40, 100.0% | 16 of 16, 100.0% | 16 of 16, 100.0% |
+| escalation | 55 of 58, 94.8% | 58 of 58, 100.0% | 34 of 34, 100.0% | 34 of 34, 100.0% |
+| uncertainty | 45 of 45, 100.0% | 45 of 45, 100.0% | 16 of 21, 76.2% | 21 of 21, 100.0% |
+| next_step | 40 of 40, 100.0% | 40 of 40, 100.0% | 13 of 16, 81.2% | 16 of 16, 100.0% |
+| format | 40 of 40, 100.0% | 40 of 40, 100.0% | 16 of 16, 100.0% | 16 of 16, 100.0% |
+| cases passing every grader | 55 of 58 | 58 of 58 | 29 of 34 | 34 of 34 |
 
-Every template failure left is a pipeline failure: the words on the cards
-are right, and the cards themselves are not the right set. Those are below.
+The template passes every grader on every case. The Haiku columns were not
+rerun here. The three cases fixes 6 to 8 touched now hand a writer
+different prompts (the transfer's prompt lists the dip it explains, and the
+lone battery episode is a card of its own), so a Haiku run needs new calls
+for those.
 
-## Pipeline findings, not fixed
+## Pipeline findings
 
-The eval is for the write-up layer, but its escalation and root cause
-graders also see which cards exist, and two of the hard cases show the
-pipeline getting the cards wrong. Neither is a writer or guardrail problem,
-and both are changes to the rule set or to N4, so they were left for a
-decision rather than made here. The HVAC holdout still gives 548 alarm
-events to 18 items.
-
-**A frequency dip at a transfer with no utility failure gets its own card.**
-power-generator-test and power-outage-utility-trend-missing (root_cause R3,
-escalation X2). When the generator runs and the ATS transfers with no
-confirmed utility failure, the frequency dip at the instant of the transfer
-is the generator picking up the load. The agent's own dip measurement reads
-it from that transfer. But the only relation that explains a frequency dip
-is UTILITY_FAILURE, so with no confirmed utility failure the dip stands on
-its own as a third card that reads like a governor fault. A relation for it
-in the `electrical` section of config/triage.json, an ATS transfer
-explaining a frequency dip that starts within a few seconds of it, would
-collapse it. That is a rule change, which the README says a person makes.
-
-**A second UPS battery event is lost under an earlier outage.**
-power-outage-then-lone-battery (escalation X1). UPS-B went to battery with
-the outage at 10:05:00 and again at 10:15:00, seven minutes after utility
-power returned, with nothing upstream. N4 collapses every alarm on a point
-into one condition, so both episodes become one UPS-B condition that starts
-at 10:05:00, inside the outage's window, and it is filed as a consequence.
-The second event, a real fault on its own, never gets a card. Splitting a
-point's alarms into separate conditions when they are far apart in time, or
-judging each episode against the cause window, would fix it; either one
-touches N4 or N7 and the frozen HVAC result, so it needs its own change.
+Both pipeline findings recorded with 0.3.0 are fixed in 0.3.1, as fixes 6
+and 7 above, and fix 8 settles the ranking question fix 7 uncovered. A full
+Haiku run had shown the same three failures for Haiku, which is what marked
+them as pipeline failures rather than writer failures: the cards were the
+wrong set whatever wrote the words.
 
 ## A case to look at
 
-No case was found to be wrong. One rests on a judgment worth checking:
-**power-generator-test** expects the frequency dip to be a consequence of
-the ATS transfer, not its own escalation. If you would rather a dip during
-an unexplained generator run escalate on its own, that case (and the same
-call in power-outage-utility-trend-missing) is the one to change, and the
-first pipeline finding above goes away with it.
+No case was found to be wrong. power-generator-test and
+power-outage-utility-trend-missing expect the frequency dip to be a
+consequence of the ATS transfer, and fix 6 builds the rule set to agree.
+If you would rather a dip during an unexplained generator run escalate on
+its own, those two cases are the ones to change, and the LOAD_STEP relation
+in config/triage.json is the one to remove.
 
 ## Running the Haiku pass
 
-TRIAGE_ANTHROPIC_KEY was not set here, so Claude Haiku was graded only on
-the 34 cases its saved showcase replies cover. The other 24 cases need 29
-new prompts. At Haiku's list price that is about one cent, and the worst
-case, every reply retried at full length, is under 15 cents. The runner
-stops before any call that could pass the budget.
+TRIAGE_ANTHROPIC_KEY is not set where this suite is built, so the
+committed Haiku results cover the 34 cases its saved showcase replies
+cover. A full pass needs about 30 new prompts, more if the raw replies of
+an earlier run are not in evals/results. At Haiku's list price that is
+about one cent, and the worst case, every reply retried at full length, is
+under 15 cents. The runner stops before any call that could pass the
+budget.
 
 On Windows, from the repository root:
 
